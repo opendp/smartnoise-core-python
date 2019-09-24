@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-import "types.proto";
-
-message Release {
-    
-}
