@@ -59,8 +59,6 @@ def build_python(spec):
 
 setup(
     packages=find_namespace_packages(include=["opendp.*"]),
-    package_data={"opendp": ["whitenoise/variant_message_map.json"]},
-    # package_dir={"opendp-whitenoise-core": "opendp/whitenoise_core"},
     extras_require={
         "plotting": [
             "networkx",

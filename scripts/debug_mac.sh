@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e
-cd ..
 
 # enables full stack traces
 export RUST_BACKTRACE=1
 
+# reset all the files
+bash scripts/clean.sh
 
 # rebuilds the validator, runtime, protobuf, components.py and python package
 python3 -m pip install -e . -v | tee scripts/debug_build.log

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-cd ..
 
 # fixes matplotlib plotting bug on ubuntu
 export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
@@ -8,6 +7,8 @@ export QT_XKB_CONFIG_ROOT=/usr/share/X11/xkb
 # enables full stack traces
 export RUST_BACKTRACE=1
 
+# reset all the files
+bash scripts/clean.sh
 
 # rebuilds the validator, runtime, protobuf, components.py and python package
 python3 -m pip install -e . |& tee scripts/debug_build.log

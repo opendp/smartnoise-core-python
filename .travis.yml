@@ -1,0 +1,183 @@
+
+
+branches:
+  # all branches
+  only:
+  - gh-pages
+  - /.*/
+
+# all jobs should enable the release flag for compiler optimizations
+env:
+  global:
+  - WHITENOISE_RELEASE=True
+  - PROTO_VERSION=3.11.4
+  - TWINE_USERNAME=__token__
+
+notifications:
+  email: false
+
+jobs:
+  include:
+  - name: Test Python
+    os: linux
+    language: rust
+    rust: stable
+    before_install:
+      # Python + sphinx for generating python documentation
+      - sudo apt-get -y install python3-pip python-dev
+      - python3 -V
+      # Install dependencies
+      - pip3 -V;
+      - pip3 install -r requirements-sphinx-only.txt;
+      - pip3 install -r requirements.txt;
+    script:
+    # Build python bindings and run tests
+    - export RUST_BACKTRACE=1; python3 -m pip install -e . -v;
+    - python3 -m pytest -x -v;
+
+    after_success:
+    #
+    # Build the documentation for gh-pages
+    #
+    - echo $TRAVIS_BRANCH;
+    # switch to master after initial version
+    - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+        cd scripts;
+        bash generate_docs.sh;
+        cd ..;
+      fi;
+    # -------------------------------------------
+    # Deploy the Rust documentation to
+    # GitHub pages
+    # - Triggered when the branch is "master"
+    # -------------------------------------------
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      local_dir: docs
+      # Set in the settings page of your repository, as a secure variable
+      github_token: $GITHUB_TOKEN
+      keep_history: true
+      target_branch: gh-pages
+      on:
+        branch: develop # switch to master after initial version
+
+  - name: Deploy manylinux2010_i686 32-bit
+    services:
+    - docker
+    addons:
+     apt:
+       update: true
+       packages:
+       - python3-pip
+    env: DOCKER_IMAGE=quay.io/pypa/manylinux2010_i686
+        PROTO_PLAT=linux-x86_32.zip
+        PYTHON_PLAT=manylinux2010_i686
+    install:
+    - docker pull $DOCKER_IMAGE
+    script:
+    - docker run --rm -e PLAT=$PYTHON_PLAT -v `pwd`:/io $DOCKER_IMAGE linux32 /io/scripts/build_manylinux_wheels.sh $PROTO_VERSION $PROTO_PLAT
+    - ls wheelhouse/
+    deploy:
+     skip_cleanup: true
+     provider: script
+     script:
+       python3 -m pip install --upgrade pip &&
+       python3 -m pip install twine &&
+       python3 -m twine upload --verbose --skip-existing wheelhouse/*
+     on:
+       branch: develop
+
+  - name: Deploy manylinux2010_x86_64 64-bit
+    services:
+    - docker
+    addons:
+     apt:
+       update: true
+       packages:
+       - python3-pip
+    env: DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
+        PROTO_PLAT=linux-x86_64.zip
+        PYTHON_PLAT=manylinux2010_x86_64
+    install:
+    - docker pull $DOCKER_IMAGE
+    - chmod +x travis/manylinux-build-wheels.sh
+    script:
+    - docker run --rm -e PLAT=$PYTHON_PLAT -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_manylinux_wheels.sh $PROTO_VERSION $PROTO_PLAT
+    - ls wheelhouse/
+    deploy:
+     skip_cleanup: true
+     provider: script
+     script:
+       python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
+     on:
+       branch: develop
+
+
+  # RISC
+  # - name: Deploy manylinux2014_aarch64
+  #   services:
+  #   - docker
+  #   arch:
+  #   - arm64
+  #   env: DOCKER_IMAGE=quay.io/pypa/manylinux2014_aarch64
+  #        PROTO_PLAT=linux-aarch_64.zip
+  #        PYTHON_PLAT=manylinux2014_aarch64
+  #   install:
+  #   - docker pull $DOCKER_IMAGE
+  #   - chmod +x travis/manylinux-build-wheels.sh
+  #   script:
+  #   - docker run --rm -e PLAT=$PYTHON_PLAT -v `pwd`:/io $DOCKER_IMAGE /io/travis/manylinux-build-wheels.sh $PROTO_VERSION $PROTO_PLAT
+  #   - ls wheelhouse/
+  #   deploy:
+  #     skip_cleanup: true
+  #     provider: script
+  #     script: pip3 install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
+  #     on:
+  #       branch: master
+
+
+
+  - name: Deploy osx
+    # adapted from: https://github.com/cclauss/Travis-CI-Python-on-three-OSes/blob/master/.travis.yml
+    os: osx
+    osx_image: xcode11 # python3.7 comes installed with xcode11 image
+    language: rust
+    rust: stable
+    install:
+    - python3 -m pip install delocate
+    script:
+    - bash scripts/build_wheel.sh;
+    - for whl in /wheelhouse/*.whl; do
+       delocate-wheel -v whl
+     done
+    deploy:
+     skip_cleanup: true
+     provider: script
+     script:
+       python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
+     on:
+       branch: develop
+
+
+  # - name: Deploy windows
+  #   language: rust
+  #   rust: stable
+  #   os: windows
+  #   before_install:
+  #     - choco install python --version 3.7.5  # this install takes at least 1 min 30 sec
+  #     - python -m pip install --upgrade pip
+  #     - choco install protoc
+  #     - choco install rust
+  #   env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+  #   script:
+  #   - refreshenv
+  #   - cd bindings-python
+  #   - python3 setup.py bdist_wheel -d ../wheelhouse/
+  #   deploy:
+  #     skip_cleanup: true
+  #     provider: script
+  #     script: pip3 install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
+  #     on:
+  #       branch: master
+  #

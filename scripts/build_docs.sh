@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-cd ..
 
 # make sure the opendp/_native* files exist
 if [[ ! -f "opendp/_native_runtime.py" ]]

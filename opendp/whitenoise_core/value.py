@@ -4,11 +4,7 @@ import os
 import json
 import numpy as np
 import pkgutil
-
-variant_message_map_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'variant_message_map.json')
-
-with open(variant_message_map_path, 'r') as variant_message_map_file:
-    variant_message_map = json.load(variant_message_map_file)
+from .variant_message_map import variant_message_map
 
 
 def serialize_privacy_usage(usage):

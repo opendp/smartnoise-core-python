@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -e
-cd ..
 
 bash scripts/clean.sh
 

@@ -148,6 +148,7 @@ output_path = os.path.join(package_dir, 'components.py')
 with open(output_path, 'w') as generated_file:
     generated_file.write(generated_code)
 
-variant_message_map_path = os.path.join(package_dir, 'variant_message_map.json')
+variant_message_map_path = os.path.join(package_dir, 'variant_message_map.py')
 with open(variant_message_map_path, 'w') as generated_map_file:
-    json.dump(variant_message_map, generated_map_file, indent=4)
+    map_text = 'variant_message_map = ' + json.dumps(variant_message_map, indent=4)
+    generated_map_file.write(map_text)
