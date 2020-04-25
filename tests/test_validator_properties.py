@@ -1,5 +1,4 @@
-import opendp.whitenoise as whitenoise
-import opendp.whitenoise.components as op
+import opendp.whitenoise_core as wn
 import random
 import string
 import numpy as np
@@ -58,13 +57,13 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
 
 
 def test_divide():
-    with whitenoise.Analysis():
-        data_A = whitenoise.Dataset(**generate_synthetic(float, variants=['Random']))
+    with wn.Analysis():
+        data_A = wn.Dataset(**generate_synthetic(float, variants=['Random']))
 
         f_random = data_A['F_Random']
-        imputed = op.impute(f_random, lower=0., upper=10.)
-        clamped_nonzero = op.clamp(imputed, lower=1., upper=10.)
-        clamped_zero = op.clamp(imputed, lower=0., upper=10.)
+        imputed = wn.impute(f_random, lower=0., upper=10.)
+        clamped_nonzero = wn.clamp(imputed, lower=1., upper=10.)
+        clamped_zero = wn.clamp(imputed, lower=0., upper=10.)
 
         # test properties
         assert f_random.nullity
@@ -79,9 +78,9 @@ def test_divide():
 
 
 def  test_dp_mean():
-    with whitenoise.Analysis():
-        data = whitenoise.Dataset(**generate_synthetic(float, variants=['Random']))
-        mean = op.dp_mean(
+    with wn.Analysis():
+        data = wn.Dataset(**generate_synthetic(float, variants=['Random']))
+        mean = wn.dp_mean(
             data['F_Random'],
             accuracy={'value': .2, 'alpha': .05},
             data_lower=0.,
@@ -93,8 +92,8 @@ def  test_dp_mean():
 
 
 def test_equal():
-    with whitenoise.Analysis(filter_level='all') as analysis:
-        data = whitenoise.Dataset(**dataset_bools)
+    with wn.Analysis(filter_level='all') as analysis:
+        data = wn.Dataset(**dataset_bools)
 
         equality = data[0] == data[1]
 
@@ -103,10 +102,10 @@ def test_equal():
 
 
 def test_partition():
-    with whitenoise.Analysis(filter_level='all') as analysis:
-        data = whitenoise.Dataset(**dataset_bools)[[0, 1]]
+    with wn.Analysis(filter_level='all') as analysis:
+        data = wn.Dataset(**dataset_bools)[[0, 1]]
 
-        partitioned = op.partition(data, num_partitions=3)
+        partitioned = wn.partition(data, num_partitions=3)
         analysis.release()
         # print(partitioned.value)
 
@@ -116,8 +115,8 @@ def test_partition():
 
 
 def test_index():
-    with whitenoise.Analysis(filter_level='all') as analysis:
-        data = whitenoise.Dataset(**dataset_bools)
+    with wn.Analysis(filter_level='all') as analysis:
+        data = wn.Dataset(**dataset_bools)
 
         index_0 = data[0]
 

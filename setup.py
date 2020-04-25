@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 import os
 
 # turn on backtraces in rust (for build.rs)
@@ -9,6 +9,11 @@ os.environ['RUSTFLAGS'] = ""
 WN_RELEASE = os.environ.get("WN_RELEASE", "false") != "false"
 # set the environment variable to use precompiled external libraries
 WN_USE_SYSTEM_LIBS = os.environ.get("WN_USE_SYSTEM_LIBS", "false") != "false"
+
+root_dir = os.path.dirname(os.path.abspath(__file__))
+rust_dir = os.path.join(root_dir, 'rust')
+prototypes_dir = os.path.join(rust_dir, "validator-rust", "prototypes")
+components_dir = os.path.join(prototypes_dir, "components")
 
 rust_build_path = os.path.join('target', 'release' if WN_RELEASE else 'debug')
 rust_build_cmd = 'cargo build'
@@ -22,7 +27,7 @@ runtime_build_cmd = ['bash', '-c', rust_build_cmd + (' --features use-system-lib
 def build_native(spec):
     build_validator = spec.add_external_build(
         cmd=validator_build_cmd,
-        path=os.path.join('..', 'validator-rust')
+        path=os.path.join(rust_dir, 'validator-rust')
     )
 
     spec.add_cffi_module(
@@ -34,7 +39,7 @@ def build_native(spec):
 
     build_runtime = spec.add_external_build(
         cmd=runtime_build_cmd,
-        path=os.path.join('..', 'runtime-rust')
+        path=os.path.join(rust_dir, 'runtime-rust')
     )
 
     spec.add_cffi_module(
@@ -47,15 +52,15 @@ def build_native(spec):
 
 def build_python(spec):
     spec.add_external_build(
-        cmd=['bash', '-c', 'python3 code_generation.py'],
+        cmd=['bash', '-c', 'python3 scripts/code_generation.py'],
         path="."
     )
 
 
 setup(
-    package_dir={"opendp": "opendp"},
+    packages=find_namespace_packages(include=["opendp.*"]),
     package_data={"opendp": ["whitenoise/variant_message_map.json"]},
-    packages=find_packages(),
+    # package_dir={"opendp-whitenoise-core": "opendp/whitenoise_core"},
     extras_require={
         "plotting": [
             "networkx",

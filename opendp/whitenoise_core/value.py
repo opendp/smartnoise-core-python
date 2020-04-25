@@ -1,11 +1,9 @@
-from opendp.whitenoise import base_pb2
-from opendp.whitenoise import components_pb2
-from opendp.whitenoise import value_pb2
+from opendp.whitenoise_core import base_pb2, components_pb2, value_pb2
 
 import os
 import json
 import numpy as np
-
+import pkgutil
 
 variant_message_map_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'variant_message_map.json')
 

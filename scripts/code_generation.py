@@ -6,8 +6,12 @@ import re
 import subprocess
 
 # protoc must be installed and on path
-package_dir = os.path.join(os.getcwd(), 'opendp', 'whitenoise')
-subprocess.call(f"protoc --python_out={package_dir} *.proto", shell=True, cwd=os.path.abspath('../prototypes/'))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+package_dir = os.path.join(root_dir, 'opendp', 'whitenoise_core')
+prototypes_dir = os.path.join(root_dir, "rust", "validator-rust", "prototypes")
+components_dir = os.path.join(prototypes_dir, "components")
+
+subprocess.call(f"protoc --python_out={package_dir} *.proto", shell=True, cwd=prototypes_dir)
 
 for proto_name in os.listdir(package_dir):
     if not proto_name.endswith("_pb2.py"):
@@ -19,8 +23,6 @@ for proto_name in os.listdir(package_dir):
 
     with open(proto_path, 'w') as proto_file:
         proto_file.write(proto_text)
-
-components_dir = os.path.abspath("../prototypes/components")
 
 generated_code = """
 from .base import Component

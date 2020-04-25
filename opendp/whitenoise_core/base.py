@@ -1,8 +1,8 @@
 import warnings
 
-from opendp.whitenoise import api_pb2, value_pb2
-from opendp.whitenoise.api import LibraryWrapper, format_error
-from opendp.whitenoise.value import *
+from opendp.whitenoise_core import api_pb2, value_pb2, base_pb2
+from opendp.whitenoise_core.api import LibraryWrapper, format_error
+from opendp.whitenoise_core.value import *
 
 core_wrapper = LibraryWrapper()
 
@@ -11,19 +11,21 @@ ALL_CONSTRAINTS = ["n", "lower", "upper", "categories"]
 
 
 class Dataset(object):
+    """
+    Datasets represent a single tabular resource. Datasets are assumed to be private, and may be loaded from csv files or as literal arrays.
+
+    :param path: Path to a csv file on the filesystem. It is assumed that the csv file is well-formed.
+    :param value: Alternatively, a literal value/array to pass via protobuf. It is preferred to pass a path to a csv, to keep the data out of the analysis object.
+    :param num_columns: The number of columns in the data resource.
+    :param column_names: Alternatively, the set of column names in the data resource.
+    :param value_format: If ambiguous, the data format of the value (either array, hashmap or jagged)
+    :param skip_row: Set to True if the first row is the csv header. The csv header is always ignored.
+    :param public: Whether to flag the data in the dataset as public. This is of course private by default.
+    """
+
     def __init__(self, *, path=None, value=None,
                  num_columns=None, column_names=None,
                  value_format=None, skip_row=True, public=False):
-        """
-        Datasets represent a single tabular resource. Datasets are assumed to be private, and may be loaded from csv files or as literal arrays.
-        :param path: Path to a csv file on the filesystem. It is assumed that the csv file is well-formed.
-        :param value: Alternatively, a literal value/array to pass via protobuf. It is preferred to pass a path to a csv, to keep the data out of the analysis object.
-        :param num_columns: The number of columns in the data resource.
-        :param column_names: Alternatively, the set of column names in the data resource.
-        :param value_format: If ambiguous, the data format of the value (either array, hashmap or jagged)
-        :param skip_row: Set to True if the first row is the csv header. The csv header is always ignored.
-        :param public: Whether to flag the data in the dataset as public. This is of course private by default.
-        """
 
         global context
         if not context:
@@ -61,25 +63,25 @@ class Dataset(object):
 
 
 class Component(object):
+    """
+    Representation for the most atomic computation. There are helpers to construct these in components.py.
+
+    The response from the helper functions are instances of this class.
+    This class facilitates accessing releases, extending the graph, and viewing static properties.
+
+    Many components are linked together to form an analysis graph.
+
+    :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html
+    :param arguments: Inputs to the component that come from prior nodes on the graph.
+    :param options: Inputs to the component that are passed directly via protobuf.
+    :param constraints: Additional modifiers on data inputs, like data_lower, or left_categories.
+    :param value: A value that is already known about the data, to be stored in the release.
+    :param value_format: The format of the value, one of `array`, `jagged`, `hashmap`
+    """
     def __init__(self, name: str,
                  arguments: dict = None, options: dict = None,
                  constraints: dict = None,
                  value=None, value_format=None, value_public=False):
-        """
-        Representation for the most atomic computation. There are helpers to construct these in components.py.
-
-        The response from the helper functions are instances of this class.
-        This class facilitates accessing releases, extending the graph, and viewing static properties.
-
-        Many components are linked together to form an analysis graph.
-
-        :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html
-        :param arguments: Inputs to the component that come from prior nodes on the graph.
-        :param options: Inputs to the component that are passed directly via protobuf.
-        :param constraints: Additional modifiers on data inputs, like data_lower, or left_categories.
-        :param value: A value that is already known about the data, to be stored in the release.
-        :param value_format: The format of the value, one of `array`, `jagged`, `hashmap`
-        """
 
         accuracy = None
         if constraints:
@@ -498,39 +500,37 @@ class Component(object):
 
 
 class Analysis(object):
+    """
+    Top-level class that contains a definition of privacy and collection of statistics.
+    This class tracks cumulative privacy usage for all components within.
+
+    The dynamic flag makes the library easier to use, because multiple batches may be strung together before calling release().
+    However, it opens the execution up to potential side channel attacks. Disable this if side channels are a concern.
+
+    The eager flag makes the library easier to debug, because stack traces pass through malformed components.
+    As a library user, it may be useful to enable eager and find a small, similar public dataset to help shape your analysis.
+    Building an analysis with a large dataset and eager enabled is not recommended, because every additional node causes an additional release.
+
+    Stack traces on the runtime may be disabled to help reduce the amount of leaked private information when an error is encountered.
+    The library does not take into account epsilon consumed from errors.
+
+    The filter level determines what data is included in the release.
+
+    - `public` only newly released public data is included in the release
+    - `public_and_prior` will also retain private values previously included in the release
+    - `all` for including all evaluations from all nodes, which is useful for system debugging
+
+    :param dynamic: flag for enabling dynamic validation
+    :param eager: release every time a component is added
+    :param distance: currently may be `pure` or `approximate`
+    :param neighboring: may be `substitute` or `add_remove`
+    :param stack_traces: set to False to suppress potentially sensitive stack traces
+    :param filter_level: may be `public`, `public_and_prior` or `all`
+    """
     def __init__(self,
                  dynamic=True, eager=False,
                  distance='approximate', neighboring='substitute',
-                 stack_traces=True, filter_level='public_and_prior'):
-        """
-        Top-level class that contains a definition of privacy and collection of statistics.
-        This class tracks cumulative privacy usage for all components within.
-
-        The dynamic flag makes the library easier to use, because multiple batches may be strung together before calling release().
-        However, it opens the execution up to potential side channel attacks. Disable this if side channels are a concern.
-
-        The eager flag makes the library easier to debug, because stack traces pass through malformed components.
-        As a library user, it may be useful to enable eager and find a small, similar public dataset to help shape your analysis.
-        Building an analysis with a large dataset and eager enabled is not recommended, because every additional node causes an additional release.
-
-        Stack traces on the runtime may be disabled to help reduce the amount of leaked private information when an error is encountered.
-        The library does not take into account epsilon consumed from errors.
-
-        The filter level determines what data is included in the release.
-        `public` only newly released public data is included in the release
-        `public_and_prior` will also retain values previously included in the release.
-            Useful for noising pre-aggregated aggregated statistics computed on other systems
-            Useful for multiple batches of releases
-        `all` for including all evaluations from all nodes.
-            Useful for system debugging
-
-        :param dynamic: flag for enabling dynamic validation
-        :param eager: release every time a component is added
-        :param distance: currently may be `pure` or `approximate`
-        :param neighboring: may be `substitute` or `add_remove`
-        :param stack_traces: set to False to suppress potentially sensitive stack traces
-        :param filter_level: may be `public`, `public_and_prior` or `all`
-        """
+                 stack_traces=True, filter_level='public'):
 
         # if false, validate the analysis before running it (enforces static validation)
         self.dynamic = dynamic
