@@ -8,7 +8,7 @@ import subprocess
 # protoc must be installed and on path
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 package_dir = os.path.join(root_dir, 'opendp', 'whitenoise_core')
-prototypes_dir = os.path.join(root_dir, "rust", "validator-rust", "prototypes")
+prototypes_dir = os.path.join(root_dir, "whitenoise-core", "validator-rust", "prototypes")
 components_dir = os.path.join(prototypes_dir, "components")
 
 subprocess.call(f"protoc --python_out={package_dir} *.proto", shell=True, cwd=prototypes_dir)

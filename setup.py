@@ -11,7 +11,7 @@ WN_RELEASE = os.environ.get("WN_RELEASE", "false") != "false"
 WN_USE_SYSTEM_LIBS = os.environ.get("WN_USE_SYSTEM_LIBS", "false") != "false"
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
-rust_dir = os.path.join(root_dir, 'rust')
+rust_dir = os.path.join(root_dir, 'whitenoise-core')
 prototypes_dir = os.path.join(rust_dir, "validator-rust", "prototypes")
 components_dir = os.path.join(prototypes_dir, "components")
 
