@@ -60,7 +60,7 @@ The actual execution of the components in the analysis is handled by a native Ru
 
         pip install -e ".[test,plotting]"
 
-    If you are doing package development, I recommend using `bindings-python/debug_*.sh` for debugging.
+    I recommend using `scripts/debug_*.sh` if you are developing the package.
 
 ---
 
