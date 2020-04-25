@@ -17,6 +17,9 @@ Differentially private computations are specified as a protobuf analysis graph t
 - [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-runtime)
   - [Component List](#components)
   - [Architecture](#architecture)
+- [Installation](#installation)
+  - [Binaries](#binaries)
+  - [From Source](#from-source)
 - [WhiteNoise Rust Documentation](#whitenoise-rust-documentation)
 - [Communication](#communication)
 - [Releases and Contributing](#releases-and-contributing)
@@ -36,6 +39,28 @@ This package is an instance of the language bindings. The purpose of the languag
 
 Logic for determining if a component releases differentially private data, as well as the scaling of noise, property tracking, and accuracy estimates are handled by a native rust library called the Validator.
 The actual execution of the components in the analysis is handled by a native Rust runtime.
+
+
+## Installation
+
+### Binaries
+
+- (forthcoming PyPi binaries via milksnake)
+
+### From Source
+
+1. Clone the repository
+
+        git clone $REPOSITORY_URI --recurse-submodules
+
+2. Install Whitenoise-core dependencies   
+   https://github.com/opendifferentialprivacy/whitenoise-core#installation
+    
+3. Install the python bindings
+
+        pip install -e ".[test,plotting]"
+
+    If you are doing package development, I recommend using `bindings-python/debug_*.sh` for debugging.
 
 ---
 

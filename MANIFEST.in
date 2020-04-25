@@ -1,3 +1,2 @@
-recursive-include rust *
-prune rust/validator-rust/target/
-prune rust/runtime-rust/target/
+recursive-include whitenoise-core *
+prune whitenoise-core/target/

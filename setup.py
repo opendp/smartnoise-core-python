@@ -20,32 +20,38 @@ rust_build_cmd = 'cargo build'
 if WN_RELEASE:
     rust_build_cmd += ' --release'
 
-validator_build_cmd = ['bash', '-c', rust_build_cmd]
-runtime_build_cmd = ['bash', '-c', rust_build_cmd + (' --features use-system-libs' if WN_USE_SYSTEM_LIBS else '')]
+validator_build_cmd = [
+    'bash', '-c',
+    rust_build_cmd + " --manifest-path=validator-rust/Cargo.toml"
+]
+runtime_build_cmd = [
+    'bash', '-c',
+    rust_build_cmd + (' --features use-system-libs' if WN_USE_SYSTEM_LIBS else '') + " --manifest-path=runtime-rust/Cargo.toml"
+]
 
 
 def build_native(spec):
     build_validator = spec.add_external_build(
         cmd=validator_build_cmd,
-        path=os.path.join(rust_dir, 'validator-rust')
+        path=os.path.join(rust_dir)
     )
 
     spec.add_cffi_module(
         module_path='opendp._native_validator',
         dylib=lambda: build_validator.find_dylib('whitenoise_validator', in_path=rust_build_path),
-        header_filename=lambda: build_validator.find_header('api.h', in_path='.'),
+        header_filename=lambda: build_validator.find_header('api.h', in_path='validator-rust'),
         rtld_flags=['NOW', 'NODELETE']
     )
 
     build_runtime = spec.add_external_build(
         cmd=runtime_build_cmd,
-        path=os.path.join(rust_dir, 'runtime-rust')
+        path=os.path.join(rust_dir)
     )
 
     spec.add_cffi_module(
         module_path='opendp._native_runtime',
         dylib=lambda: build_runtime.find_dylib('whitenoise_runtime', in_path=rust_build_path),
-        header_filename=lambda: build_runtime.find_header('api.h', in_path='.'),
+        header_filename=lambda: build_runtime.find_header('api.h', in_path='runtime-rust'),
         rtld_flags=['NOW', 'NODELETE']
     )
 
