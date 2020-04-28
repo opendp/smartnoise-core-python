@@ -1,4 +1,4 @@
-import opendp.whitenoise_core as wn
+import opendp.whitenoise.core as wn
 import random
 import string
 import numpy as np
@@ -122,4 +122,3 @@ def test_index():
 
         analysis.release()
         assert all(a == b for a, b in zip(index_0.value, [True, True, False, False]))
-

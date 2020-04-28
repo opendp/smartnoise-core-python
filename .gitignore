@@ -12,8 +12,8 @@ wheelhouse/
 opendp/_native*
 opendp_whitenoise_core.egg-info
 .eggs/
-opendp/whitenoise_core/components.py
-opendp/whitenoise_core/variant_message_map.py
+opendp/whitenoise/core/components.py
+opendp/whitenoise/core/variant_message_map.py
 
 scripts/debug_build.log
 scripts/debug_app.log

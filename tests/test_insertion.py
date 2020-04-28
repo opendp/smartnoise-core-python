@@ -1,4 +1,4 @@
-import opendp.whitenoise_core as wn
+import opendp.whitenoise.core as wn
 
 
 def test_insertion_simple():

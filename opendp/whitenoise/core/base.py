@@ -1,8 +1,9 @@
 import warnings
 
-from opendp.whitenoise_core import api_pb2, value_pb2, base_pb2
-from opendp.whitenoise_core.api import LibraryWrapper, format_error
-from opendp.whitenoise_core.value import *
+from .api import LibraryWrapper, format_error
+from .value import *
+
+from opendp.whitenoise.core import api_pb2, value_pb2, base_pb2
 
 core_wrapper = LibraryWrapper()
 

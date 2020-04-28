@@ -13,10 +13,10 @@ Differentially private computations are specified as an analysis graph that can 
    :maxdepth: {{ mastertocmaxdepth }}
    :caption: Contents:
 
-   opendp.whitenoise_core.api
-   opendp.whitenoise_core.base
-   opendp.whitenoise_core.components
-   opendp.whitenoise_core.value
+   opendp.whitenoise.core.api
+   opendp.whitenoise.core.base
+   opendp.whitenoise.core.components
+   opendp.whitenoise.core.value
 
 Indices and tables
 ==================
