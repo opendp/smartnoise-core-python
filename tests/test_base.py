@@ -1,6 +1,6 @@
 from os.path import abspath, dirname, isfile, join
 import pytest
-import opendp.whitenoise_core as wn
+import opendp.whitenoise.core as wn
 
 # Path to the test csv file
 #
