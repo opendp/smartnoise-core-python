@@ -1,10 +1,13 @@
-from opendp.whitenoise_core import base_pb2, components_pb2, value_pb2
 
 import os
 import json
+
 import numpy as np
-import pkgutil
+
 from .variant_message_map import variant_message_map
+
+from opendp.whitenoise.core import base_pb2, components_pb2, value_pb2
+
 
 
 def serialize_privacy_usage(usage):

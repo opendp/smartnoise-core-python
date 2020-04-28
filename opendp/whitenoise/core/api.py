@@ -1,9 +1,10 @@
-from opendp._native_validator import ffi as ffi_validator, lib as lib_validator
-from opendp._native_runtime import ffi as ffi_runtime, lib as lib_runtime
-
-from . import api_pb2
 import re
 import platform
+
+from . import api_pb2
+
+from opendp._native_validator import ffi as ffi_validator, lib as lib_validator
+from opendp._native_runtime import ffi as ffi_runtime, lib as lib_runtime
 
 
 class LibraryWrapper(object):
