@@ -6,12 +6,11 @@ set -e
 rm -rf build/
 rm -rf dist/
 rm -rf docs_temp/
-
-rm -f opendp/_native*
+rm -rf lib/
 rm -rf opendp_whitenoise_core.egg-info
+rm -rf wheelhouse/
+rm -rf .eggs/
+
 rm -f opendp/whitenoise/core/components.py
 rm -f opendp/whitenoise/core/*_pb2.py
 rm -f opendp/whitenoise/core/variant_message_map.py
-
-rm -rf wheelhouse/
-rm -rf .eggs/
