@@ -527,30 +527,6 @@ def equal(left, right, **kwargs):
         constraints=kwargs)
 
 
-def exponential_mechanism(data, candidates, privacy_usage=None, **kwargs):
-    """
-    ExponentialMechanism Component
-    
-    Returns an element from a finite set with probability relative to its utility.
-    
-    :param data: Result to be released privately via the Gaussian mechanism.
-    :param candidates: Set from which the Exponential mechanism will return an element.
-    :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
-    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
-    :return: Element from the data selected via the Exponential mechanism.
-    """
-    return Component(
-        "ExponentialMechanism",
-        arguments={
-            'data': Component.of(data),
-            'candidates': Component.of(candidates)
-        },
-        options={
-            'privacy_usage': serialize_privacy_usage(privacy_usage)
-        },
-        constraints=kwargs)
-
-
 def filter(data, mask, **kwargs):
     """
     Filter Component

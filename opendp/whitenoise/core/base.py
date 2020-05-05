@@ -107,6 +107,7 @@ class Component(object):
 
         if accuracy:
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])
+            print("privacy_usages", privacy_usages)
             options['privacy_usage'] = serialize_privacy_usage(privacy_usages)
 
         self.batch = self.analysis.batch
@@ -164,6 +165,9 @@ class Component(object):
         """
         Retrieve the privacy usage necessary such that the true value differs from the estimate by at most "value amount" with (1 - alpha)100% confidence
         """
+
+        self.analysis.update_properties()
+
         if not issubclass(type(value), list):
             value = [value for _ in range(self.num_columns)]
 

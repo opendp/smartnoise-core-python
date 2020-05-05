@@ -19,7 +19,6 @@ variant_message_map = {
     "Digitize": "digitize",
     "Divide": "divide",
     "Equal": "equal",
-    "ExponentialMechanism": "exponential_mechanism",
     "Filter": "filter",
     "GaussianMechanism": "gaussian_mechanism",
     "GreaterThan": "greater_than",

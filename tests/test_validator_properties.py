@@ -82,6 +82,7 @@ def  test_dp_mean():
         data = wn.Dataset(**generate_synthetic(float, variants=['Random']))
         mean = wn.dp_mean(
             data['F_Random'],
+            # privacy_usage={'epsilon': 0.1},
             accuracy={'value': .2, 'alpha': .05},
             data_lower=0.,
             data_upper=10.,
