@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>opendp.whitenoise.core.api module &mdash; opendp-whitenoise-core 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="opendp.whitenoise.core.base module" href="opendp.whitenoise.core.base.html" />
+    <link rel="prev" title="Indices and tables" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> opendp-whitenoise-core
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">opendp.whitenoise.core.api module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opendp.whitenoise.core.base.html">opendp.whitenoise.core.base module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opendp.whitenoise.core.components.html">opendp.whitenoise.core.components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opendp.whitenoise.core.value.html">opendp.whitenoise.core.value module</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">opendp-whitenoise-core</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>opendp.whitenoise.core.api module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/opendp.whitenoise.core.api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-opendp.whitenoise.core.api">
+<span id="opendp-whitenoise-core-api-module"></span><h1>opendp.whitenoise.core.api module<a class="headerlink" href="#module-opendp.whitenoise.core.api" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper">
+<em class="property">class </em><code class="sig-prename descclassname">opendp.whitenoise.core.api.</code><code class="sig-name descname">LibraryWrapper</code><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.accuracy_to_privacy_usage">
+<em class="property">static </em><code class="sig-name descname">accuracy_to_privacy_usage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">privacy_definition</span></em>, <em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">properties</span></em>, <em class="sig-param"><span class="n">accuracies</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.accuracy_to_privacy_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.accuracy_to_privacy_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Estimate the privacy usage necessary to bound accuracy to a given value.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privacy_definition</strong> – A descriptive object defining neighboring, distance definitions</p></li>
+<li><p><strong>component</strong> – The component to compute accuracy for</p></li>
+<li><p><strong>properties</strong> – Properties about all of the arguments to the component</p></li>
+<li><p><strong>accuracies</strong> – A value and alpha to convert to privacy usage for each column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A privacy usage response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.compute_privacy_usage">
+<em class="property">static </em><code class="sig-name descname">compute_privacy_usage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.compute_privacy_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.compute_privacy_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Compute the overall privacy usage of an analysis.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analysis</strong> – A description of computation</p></li>
+<li><p><strong>release</strong> – A collection of public values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A privacy usage response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.compute_release">
+<em class="property">static </em><code class="sig-name descname">compute_release</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em>, <em class="sig-param"><span class="n">stack_trace</span></em>, <em class="sig-param"><span class="n">filter_level</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.compute_release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.compute_release" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Evaluate an analysis and release the differentially private results.
+This function touches private data. It calls the runtime rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analysis</strong> – A description of computation</p></li>
+<li><p><strong>release</strong> – A collection of public values</p></li>
+<li><p><strong>stack_trace</strong> – Set to False to suppress stack traces</p></li>
+<li><p><strong>filter_level</strong> – Configures how much data should be included in the release</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A response containing an updated release</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.generate_report">
+<em class="property">static </em><code class="sig-name descname">generate_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.generate_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.generate_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Generate a json string with a summary/report of the Analysis and Release
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analysis</strong> – A description of computation</p></li>
+<li><p><strong>release</strong> – A collection of public values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A protobuf response containing a json summary string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.get_properties">
+<em class="property">static </em><code class="sig-name descname">get_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.get_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.get_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Derive static properties for all components in the graph.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analysis</strong> – A description of computation</p></li>
+<li><p><strong>release</strong> – A collection of public values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of property sets, one set of properties per component</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.privacy_usage_to_accuracy">
+<em class="property">static </em><code class="sig-name descname">privacy_usage_to_accuracy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">privacy_definition</span></em>, <em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">properties</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.privacy_usage_to_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.privacy_usage_to_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Estimate the accuracy of the release of a component, based on a privacy usage.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>privacy_definition</strong> – A descriptive object defining neighboring, distance definitions</p></li>
+<li><p><strong>component</strong> – The component to compute accuracy for</p></li>
+<li><p><strong>properties</strong> – Properties about all of the arguments to the component</p></li>
+<li><p><strong>alpha</strong> – Used to set the confidence level for the accuracy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy estimates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.validate_analysis">
+<em class="property">static </em><code class="sig-name descname">validate_analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.validate_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.validate_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Check if an analysis is differentially private, given a set of released values.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analysis</strong> – A description of computation</p></li>
+<li><p><strong>release</strong> – A collection of public values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A success or failure response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="opendp.whitenoise.core.api.format_error">
+<code class="sig-prename descclassname">opendp.whitenoise.core.api.</code><code class="sig-name descname">format_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">error</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#format_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.format_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="opendp.whitenoise.core.base.html" class="btn btn-neutral float-right" title="opendp.whitenoise.core.base module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Indices and tables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Consequences of Data
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

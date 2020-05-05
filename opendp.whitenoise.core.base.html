@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>opendp.whitenoise.core.base module &mdash; opendp-whitenoise-core 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="opendp.whitenoise.core.components module" href="opendp.whitenoise.core.components.html" />
+    <link rel="prev" title="opendp.whitenoise.core.api module" href="opendp.whitenoise.core.api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> opendp-whitenoise-core
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="opendp.whitenoise.core.api.html">opendp.whitenoise.core.api module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">opendp.whitenoise.core.base module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opendp.whitenoise.core.components.html">opendp.whitenoise.core.components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="opendp.whitenoise.core.value.html">opendp.whitenoise.core.value module</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">opendp-whitenoise-core</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>opendp.whitenoise.core.base module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/opendp.whitenoise.core.base.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-opendp.whitenoise.core.base">
+<span id="opendp-whitenoise-core-base-module"></span><h1>opendp.whitenoise.core.base module<a class="headerlink" href="#module-opendp.whitenoise.core.base" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="opendp.whitenoise.core.base.Analysis">
+<em class="property">class </em><code class="sig-prename descclassname">opendp.whitenoise.core.base.</code><code class="sig-name descname">Analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dynamic</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">eager</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">distance</span><span class="o">=</span><span class="default_value">'approximate'</span></em>, <em class="sig-param"><span class="n">neighboring</span><span class="o">=</span><span class="default_value">'substitute'</span></em>, <em class="sig-param"><span class="n">stack_traces</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">filter_level</span><span class="o">=</span><span class="default_value">'public'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Top-level class that contains a definition of privacy and collection of statistics.
+This class tracks cumulative privacy usage for all components within.</p>
+<p>The dynamic flag makes the library easier to use, because multiple batches may be strung together before calling release().
+However, it opens the execution up to potential side channel attacks. Disable this if side channels are a concern.</p>
+<p>The eager flag makes the library easier to debug, because stack traces pass through malformed components.
+As a library user, it may be useful to enable eager and find a small, similar public dataset to help shape your analysis.
+Building an analysis with a large dataset and eager enabled is not recommended, because every additional node causes an additional release.</p>
+<p>Stack traces on the runtime may be disabled to help reduce the amount of leaked private information when an error is encountered.
+The library does not take into account epsilon consumed from errors.</p>
+<p>The filter level determines what data is included in the release.</p>
+<ul class="simple">
+<li><p><cite>public</cite> only newly released public data is included in the release</p></li>
+<li><p><cite>public_and_prior</cite> will also retain private values previously included in the release</p></li>
+<li><p><cite>all</cite> for including all evaluations from all nodes, which is useful for system debugging</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dynamic</strong> – flag for enabling dynamic validation</p></li>
+<li><p><strong>eager</strong> – release every time a component is added</p></li>
+<li><p><strong>distance</strong> – currently may be <cite>pure</cite> or <cite>approximate</cite></p></li>
+<li><p><strong>neighboring</strong> – may be <cite>substitute</cite> or <cite>add_remove</cite></p></li>
+<li><p><strong>stack_traces</strong> – set to False to suppress potentially sensitive stack traces</p></li>
+<li><p><strong>filter_level</strong> – may be <cite>public</cite>, <cite>public_and_prior</cite> or <cite>all</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.add_component">
+<code class="sig-name descname">add_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value_format</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value_public</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.add_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.add_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Every component must be contained in an analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component</strong> – The description of computation</p></li>
+<li><p><strong>value</strong> – Optionally, the result of the computation.</p></li>
+<li><p><strong>value_format</strong> – Optionally, the format of the result of the computation- <cite>array</cite> <cite>hashmap</cite> <cite>jagged</cite></p></li>
+<li><p><strong>value_public</strong> – set to true if the value is considered public</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.clean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all nodes from the analysis that do not have public descendants with released values.</p>
+<p>This can be helpful to clear away components that fail property checks.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.enter">
+<code class="sig-name descname">enter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.enter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.enter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current analysis as active.
+This allows building analyses outside of context managers, in a REPL environment.
+All new Components will be attributed to the entered analysis.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.exit">
+<code class="sig-name descname">exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current analysis as inactive.</p>
+<p>Components constructed after exit() will not longer be attributed to the previously active analysis.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visual utility for graphing the analysis. Each component is a node, and arguments are edges.
+networkx and matplotlib are necessary, but must be installed separately
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.print_warnings">
+<code class="sig-name descname">print_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.print_warnings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.print_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>print internal warnings about failed nodes after running the graph dynamically</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.privacy_usage">
+<em class="property">property </em><code class="sig-name descname">privacy_usage</code><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.privacy_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the overall privacy usage of an analysis.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A privacy usage response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate an analysis and release the differentially private results.
+This function touches private data. It calls the runtime rust FFI with protobuf objects.</p>
+<p>The response is stored internally in the analysis instance and the all further components are computed in the next batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.report">
+<code class="sig-name descname">report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFI Helper. Generate a json string with a summary/report of the Analysis and Release
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>parsed JSON array of summaries of releases</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.update_properties">
+<code class="sig-name descname">update_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.update_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.update_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>If new nodes have been added or there has been a release, recompute the properties for all of the components.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Analysis.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Analysis.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Analysis.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an analysis is differentially private, given a set of released values.
+This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A success or failure response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="opendp.whitenoise.core.base.Component">
+<em class="property">class </em><code class="sig-prename descclassname">opendp.whitenoise.core.base.</code><code class="sig-name descname">Component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">arguments</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">options</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">constraints</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value_format</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value_public</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation for the most atomic computation. There are helpers to construct these in components.py.</p>
+<p>The response from the helper functions are instances of this class.
+This class facilitates accessing releases, extending the graph, and viewing static properties.</p>
+<p>Many components are linked together to form an analysis graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The id of the component. A list of component id is here: <a class="reference external" href="https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html">https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html</a></p></li>
+<li><p><strong>arguments</strong> – Inputs to the component that come from prior nodes on the graph.</p></li>
+<li><p><strong>options</strong> – Inputs to the component that are passed directly via protobuf.</p></li>
+<li><p><strong>constraints</strong> – Additional modifiers on data inputs, like data_lower, or left_categories.</p></li>
+<li><p><strong>value</strong> – A value that is already known about the data, to be stored in the release.</p></li>
+<li><p><strong>value_format</strong> – The format of the value, one of <cite>array</cite>, <cite>jagged</cite>, <cite>hashmap</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.actual_privacy_usage">
+<em class="property">property </em><code class="sig-name descname">actual_privacy_usage</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.actual_privacy_usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>If a component is designed to potentially use less privacy usage than it was budgeted, this provides the reduced value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A privacy usage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.categories">
+<em class="property">property </em><code class="sig-name descname">categories</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived category set</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.data_type">
+<em class="property">property </em><code class="sig-name descname">data_type</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.data_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived data type</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.dimensionality">
+<em class="property">property </em><code class="sig-name descname">dimensionality</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.dimensionality" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived dimensionality (number of axes)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.from_accuracy">
+<code class="sig-name descname">from_accuracy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Component.from_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Component.from_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the privacy usage necessary such that the true value differs from the estimate by at most “value amount” with (1 - alpha)100% confidence</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.get_accuracy">
+<code class="sig-name descname">get_accuracy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Component.get_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Component.get_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the accuracy for the values released by the component.
+The true value differs from the estimate by at most “accuracy amount” with (1 - alpha)100% confidence.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.get_parents">
+<code class="sig-name descname">get_parents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Component.get_parents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Component.get_parents" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all nodes that use this node as a dependency/argument.
+:return: {[node_id]: [parent]}</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.lower">
+<em class="property">property </em><code class="sig-name descname">lower</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.lower" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived lower bound on the data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.nullity">
+<em class="property">property </em><code class="sig-name descname">nullity</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.nullity" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived nullity property on the data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.num_columns">
+<em class="property">property </em><code class="sig-name descname">num_columns</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.num_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived number of columns</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.num_records">
+<em class="property">property </em><code class="sig-name descname">num_records</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.num_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived number of records</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.of">
+<em class="property">static </em><code class="sig-name descname">of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">value_format</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">public</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Component.of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Component.of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an array, list of lists, or dictionary, attempt to wrap it in a component and place the value in the release.
+Loose literals are by default public.
+This is an alternative constructor for a Literal, that potentially doesn’t wrap the value in a Literal component if it is None or already a Component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The value to be wrapped.</p></li>
+<li><p><strong>value_format</strong> – must be one of <cite>array</cite>, <cite>hashmap</cite>, <cite>jagged</cite></p></li>
+<li><p><strong>public</strong> – Loose literals are by default public.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Literal component with the value attached to the parent analysis’ release.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.properties">
+<em class="property">property </em><code class="sig-name descname">properties</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>view protobuf representing all known properties of the component</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.releasable">
+<em class="property">property </em><code class="sig-name descname">releasable</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.releasable" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the data from this component is releasable/public</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.set">
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Component.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Component.set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.upper">
+<em class="property">property </em><code class="sig-name descname">upper</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.upper" title="Permalink to this definition">¶</a></dt>
+<dd><p>view the statically derived upper bound on the data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.base.Component.value">
+<em class="property">property </em><code class="sig-name descname">value</code><a class="headerlink" href="#opendp.whitenoise.core.base.Component.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the released values from the analysis’ release.
+If this returns None, then either analysis.release() has not yet been called, or this node is not releasable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The value stored in the release corresponding to this node</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="opendp.whitenoise.core.base.Dataset">
+<em class="property">class </em><code class="sig-prename descclassname">opendp.whitenoise.core.base.</code><code class="sig-name descname">Dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">num_columns</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">column_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">value_format</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skip_row</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">public</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/base.html#Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.base.Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Datasets represent a single tabular resource. Datasets are assumed to be private, and may be loaded from csv files or as literal arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – Path to a csv file on the filesystem. It is assumed that the csv file is well-formed.</p></li>
+<li><p><strong>value</strong> – Alternatively, a literal value/array to pass via protobuf. It is preferred to pass a path to a csv, to keep the data out of the analysis object.</p></li>
+<li><p><strong>num_columns</strong> – The number of columns in the data resource.</p></li>
+<li><p><strong>column_names</strong> – Alternatively, the set of column names in the data resource.</p></li>
+<li><p><strong>value_format</strong> – If ambiguous, the data format of the value (either array, hashmap or jagged)</p></li>
+<li><p><strong>skip_row</strong> – Set to True if the first row is the csv header. The csv header is always ignored.</p></li>
+<li><p><strong>public</strong> – Whether to flag the data in the dataset as public. This is of course private by default.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="opendp.whitenoise.core.components.html" class="btn btn-neutral float-right" title="opendp.whitenoise.core.components module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="opendp.whitenoise.core.api.html" class="btn btn-neutral float-left" title="opendp.whitenoise.core.api module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Consequences of Data
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+opendp.whitenoise.core.api\_pb2 module
+======================================
+
+.. automodule:: opendp.whitenoise.core.api_pb2
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,2 +1,0 @@
-recursive-include whitenoise-core *
-prune whitenoise-core/target/

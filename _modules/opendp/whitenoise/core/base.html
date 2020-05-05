@@ -1,0 +1,976 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>opendp.whitenoise.core.base &mdash; opendp-whitenoise-core 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> opendp-whitenoise-core
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../opendp.whitenoise.core.api.html">opendp.whitenoise.core.api module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../opendp.whitenoise.core.base.html">opendp.whitenoise.core.base module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../opendp.whitenoise.core.components.html">opendp.whitenoise.core.components module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../opendp.whitenoise.core.value.html">opendp.whitenoise.core.value module</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">opendp-whitenoise-core</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>opendp.whitenoise.core.base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for opendp.whitenoise.core.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="n">LibraryWrapper</span><span class="p">,</span> <span class="n">format_error</span>
+<span class="kn">from</span> <span class="nn">.value</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">opendp.whitenoise.core</span> <span class="kn">import</span> <span class="n">api_pb2</span><span class="p">,</span> <span class="n">value_pb2</span><span class="p">,</span> <span class="n">base_pb2</span>
+
+<span class="n">core_wrapper</span> <span class="o">=</span> <span class="n">LibraryWrapper</span><span class="p">()</span>
+
+<span class="c1"># All available extensions for arguments (data_n, left_lower, etc)</span>
+<span class="n">ALL_CONSTRAINTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">,</span> <span class="s2">&quot;upper&quot;</span><span class="p">,</span> <span class="s2">&quot;categories&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Dataset"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Dataset">[docs]</a><span class="k">class</span> <span class="nc">Dataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Datasets represent a single tabular resource. Datasets are assumed to be private, and may be loaded from csv files or as literal arrays.</span>
+
+<span class="sd">    :param path: Path to a csv file on the filesystem. It is assumed that the csv file is well-formed.</span>
+<span class="sd">    :param value: Alternatively, a literal value/array to pass via protobuf. It is preferred to pass a path to a csv, to keep the data out of the analysis object.</span>
+<span class="sd">    :param num_columns: The number of columns in the data resource.</span>
+<span class="sd">    :param column_names: Alternatively, the set of column names in the data resource.</span>
+<span class="sd">    :param value_format: If ambiguous, the data format of the value (either array, hashmap or jagged)</span>
+<span class="sd">    :param skip_row: Set to True if the first row is the csv header. The csv header is always ignored.</span>
+<span class="sd">    :param public: Whether to flag the data in the dataset as public. This is of course private by default.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">num_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">skip_row</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">global</span> <span class="n">context</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;all whitenoise components must be created within the context of an analysis&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;either path or value must be set&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_columns</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">column_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;either num_columns or column_names must be set&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">dataset_count</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">dataset_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">data_source</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_source</span><span class="p">[</span><span class="s1">&#39;file_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_source</span><span class="p">[</span><span class="s1">&#39;literal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialize_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_format</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Materialize&#39;</span><span class="p">,</span>
+                                   <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+                                       <span class="s2">&quot;column_names&quot;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">column_names</span><span class="p">),</span>
+                                       <span class="s2">&quot;num_columns&quot;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">num_columns</span><span class="p">),</span>
+                                   <span class="p">},</span>
+                                   <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+                                       <span class="s2">&quot;data_source&quot;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">DataSource</span><span class="p">(</span><span class="o">**</span><span class="n">data_source</span><span class="p">),</span>
+                                       <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">public</span><span class="p">,</span>
+                                       <span class="s2">&quot;dataset_id&quot;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">I64Null</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataset_id</span><span class="p">),</span>
+                                       <span class="s2">&quot;skip_row&quot;</span><span class="p">:</span> <span class="n">skip_row</span>
+                                   <span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Index&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="Component"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Component">[docs]</a><span class="k">class</span> <span class="nc">Component</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representation for the most atomic computation. There are helpers to construct these in components.py.</span>
+
+<span class="sd">    The response from the helper functions are instances of this class.</span>
+<span class="sd">    This class facilitates accessing releases, extending the graph, and viewing static properties.</span>
+
+<span class="sd">    Many components are linked together to form an analysis graph.</span>
+
+<span class="sd">    :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html</span>
+<span class="sd">    :param arguments: Inputs to the component that come from prior nodes on the graph.</span>
+<span class="sd">    :param options: Inputs to the component that are passed directly via protobuf.</span>
+<span class="sd">    :param constraints: Additional modifiers on data inputs, like data_lower, or left_categories.</span>
+<span class="sd">    :param value: A value that is already known about the data, to be stored in the release.</span>
+<span class="sd">    :param value_format: The format of the value, one of `array`, `jagged`, `hashmap`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_public</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="n">accuracy</span> <span class="o">=</span> <span class="n">constraints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;accuracy&#39;</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">constraints</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">_expand_constraints</span><span class="p">(</span><span class="n">arguments</span> <span class="ow">or</span> <span class="p">{},</span> <span class="n">constraints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">options</span>
+
+        <span class="c1"># these are set when add_component is called</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">global</span> <span class="n">context</span>
+        <span class="k">if</span> <span class="n">context</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">add_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="n">value_format</span><span class="p">,</span> <span class="n">value_public</span><span class="o">=</span><span class="n">value_public</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;all whitenoise components must be created within the context of an analysis&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">accuracy</span><span class="p">:</span>
+            <span class="n">privacy_usages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_accuracy</span><span class="p">(</span><span class="n">accuracy</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">accuracy</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;privacy_usage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">serialize_privacy_usage</span><span class="p">(</span><span class="n">privacy_usages</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">batch</span>
+
+    <span class="c1"># pull the released values out from the analysis&#39; release protobuf</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the released values from the analysis&#39; release.</span>
+<span class="sd">        If this returns None, then either analysis.release() has not yet been called, or this node is not releasable.</span>
+
+<span class="sd">        :return: The value stored in the release corresponding to this node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">release_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">actual_privacy_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If a component is designed to potentially use less privacy usage than it was budgeted, this provides the reduced value</span>
+
+<span class="sd">        :return: A privacy usage</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">release_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;privacy_usages&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})[</span><span class="s2">&quot;privacy_usages&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Component.get_parents"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Component.get_parents">[docs]</a>    <span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all nodes that use this node as a dependency/argument.</span>
+<span class="sd">        :return: {[node_id]: [parent]}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">component</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                   <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">())]</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">parent</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                             <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Component.get_accuracy"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Component.get_accuracy">[docs]</a>    <span class="k">def</span> <span class="nf">get_accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the accuracy for the values released by the component.</span>
+<span class="sd">        The true value differs from the estimate by at most &quot;accuracy amount&quot; with (1 - alpha)100% confidence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">update_properties</span><span class="p">()</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">core_wrapper</span><span class="o">.</span><span class="n">privacy_usage_to_accuracy</span><span class="p">(</span>
+            <span class="n">privacy_definition</span><span class="o">=</span><span class="n">serialize_privacy_definition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="p">),</span>
+            <span class="n">component</span><span class="o">=</span><span class="n">serialize_component</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">component_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">arg</span><span class="p">},</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">accuracy</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">accuracy</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensionality</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Component.from_accuracy"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Component.from_accuracy">[docs]</a>    <span class="k">def</span> <span class="nf">from_accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the privacy usage necessary such that the true value differs from the estimate by at most &quot;value amount&quot; with (1 - alpha)100% confidence</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_columns</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">alpha</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="p">[</span><span class="n">alpha</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_columns</span><span class="p">)]</span>
+
+        <span class="n">privacy_usages</span> <span class="o">=</span> <span class="n">core_wrapper</span><span class="o">.</span><span class="n">accuracy_to_privacy_usage</span><span class="p">(</span>
+            <span class="n">privacy_definition</span><span class="o">=</span><span class="n">serialize_privacy_definition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="p">),</span>
+            <span class="n">component</span><span class="o">=</span><span class="n">serialize_component</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">component_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">arg</span><span class="p">},</span>
+            <span class="n">accuracies</span><span class="o">=</span><span class="n">base_pb2</span><span class="o">.</span><span class="n">Accuracies</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">base_pb2</span><span class="o">.</span><span class="n">Accuracy</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            <span class="p">]))</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_privacy_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span> <span class="k">for</span> <span class="n">usage</span> <span class="ow">in</span> <span class="n">privacy_usages</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensionality</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view protobuf representing all known properties of the component&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">update_properties</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component_id</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dimensionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived dimensionality (number of axes)&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">dimensionality</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nullity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived nullity property on the data&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">nullity</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived lower bound on the data&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">parse_array1d_null</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">continuous</span><span class="o">.</span><span class="n">minimum</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensionality</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">upper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived upper bound on the data&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">update_properties</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">parse_array1d_null</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">continuous</span><span class="o">.</span><span class="n">maximum</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensionality</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_records</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived number of records&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">num_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">num_records</span>
+            <span class="k">return</span> <span class="n">num_records</span><span class="o">.</span><span class="n">option</span> <span class="k">if</span> <span class="n">num_records</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived number of columns&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">num_columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">num_columns</span>
+            <span class="k">return</span> <span class="n">num_columns</span><span class="o">.</span><span class="n">option</span> <span class="k">if</span> <span class="n">num_columns</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived data type&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="n">value_pb2</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
+                <span class="n">value_pb2</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">I64</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+                <span class="n">value_pb2</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">F64</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
+                <span class="n">value_pb2</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+            <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">data_type</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">releasable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;check if the data from this component is releasable/public&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">releasable</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">categories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;view the statically derived category set&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">categories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">categorical</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">data</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_array1d_option</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensionality</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Component.set"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Component.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span><span class="o">.</span><span class="n">release_values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">component_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+            <span class="s1">&#39;public&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">releasable</span>
+        <span class="p">}</span></div>
+
+    <span class="k">def</span> <span class="fm">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Negative&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Add&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Add&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Subtract&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Subtract&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Multiply&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Multiply&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__floordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Divide&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__rfloordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Divide&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Divide&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Cast&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">},</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">}),</span>
+            <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Cast&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)},</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">})})</span>
+
+    <span class="k">def</span> <span class="fm">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Divide&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Cast&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)},</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">}),</span>
+            <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Cast&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">},</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">})})</span>
+
+    <span class="k">def</span> <span class="fm">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Modulo&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Modulo&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power</span><span class="p">,</span> <span class="n">modulo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;radical&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">power</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Or&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__ror__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Or&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;And&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__rand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;And&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Negate&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">|</span> <span class="n">other</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="bp">self</span> <span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;GreaterThan&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;GreaterThan&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span> \
+               <span class="ow">or</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Equal&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;LessThan&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;LessThan&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span> \
+               <span class="ow">or</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Equal&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Equal&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">~</span><span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__abs__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Abs&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Index&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">depth</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">inner</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">:</span>
+            <span class="n">inner</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="p">(</span><span class="s2">&quot;  &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="n">inner</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="p">(</span><span class="s2">&quot;  &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Literal&quot;</span><span class="p">:</span>
+            <span class="n">inner</span> <span class="o">=</span> <span class="s2">&quot;released value: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">inner</span><span class="p">:</span>
+            <span class="n">inner</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inner</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="p">(</span><span class="s2">&quot;  &quot;</span> <span class="o">*</span> <span class="n">depth</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">inner</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">component_id</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> Component&gt;&#39;</span>
+
+<div class="viewcode-block" id="Component.of"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Component.of">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given an array, list of lists, or dictionary, attempt to wrap it in a component and place the value in the release.</span>
+<span class="sd">        Loose literals are by default public.</span>
+<span class="sd">        This is an alternative constructor for a Literal, that potentially doesn&#39;t wrap the value in a Literal component if it is None or already a Component</span>
+
+<span class="sd">        :param value: The value to be wrapped.</span>
+<span class="sd">        :param value_format: must be one of `array`, `hashmap`, `jagged`</span>
+<span class="sd">        :param public: Loose literals are by default public.</span>
+<span class="sd">        :return: A Literal component with the value attached to the parent analysis&#39; release.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># count can take the entire dataset as an argument</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">Dataset</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">component</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">Component</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Literal&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="n">value_format</span><span class="p">,</span> <span class="n">value_public</span><span class="o">=</span><span class="n">public</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_expand_constraints</span><span class="p">(</span><span class="n">arguments</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to insert additional nodes when _lower, _n, etc constraints are passed through to the component constructor utilities&#39; kwargs.</span>
+<span class="sd">        :param arguments: {[argument name]: [component]}</span>
+<span class="sd">        :param constraints: restrictions on the data that will be translated into additional nodes components</span>
+<span class="sd">        :return: a modified argument set for the current component</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">arguments</span>
+
+        <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">filtered</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">argument</span><span class="p">)]</span>
+            <span class="n">filtered</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">filtered</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ALL_CONSTRAINTS</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="s1">&#39;upper&#39;</span> <span class="ow">in</span> <span class="n">filtered</span> <span class="ow">and</span> <span class="s1">&#39;lower&#39;</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                <span class="n">min_component</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">constraints</span><span class="p">[</span><span class="n">argument</span> <span class="o">+</span> <span class="s1">&#39;_lower&#39;</span><span class="p">])</span>
+                <span class="n">max_component</span> <span class="o">=</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">constraints</span><span class="p">[</span><span class="n">argument</span> <span class="o">+</span> <span class="s1">&#39;_upper&#39;</span><span class="p">])</span>
+
+                <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Clamp&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">],</span>
+                    <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">min_component</span><span class="p">,</span>
+                    <span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="n">max_component</span>
+                <span class="p">})</span>
+
+                <span class="c1"># TODO: imputation on ints is unnecessary</span>
+                <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Impute&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span>
+                <span class="p">})</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;upper&#39;</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;both &#39;lower&#39; and &#39;upper&#39; must be specified&quot;</span><span class="p">)</span>
+                    <span class="c1"># arguments[argument] = Component(&#39;RowMax&#39;, arguments={</span>
+                    <span class="c1">#     &quot;left&quot;: arguments[argument],</span>
+                    <span class="c1">#     &quot;right&quot;: Component.of(constraints[argument + &#39;_upper&#39;])</span>
+                    <span class="c1"># })</span>
+
+                <span class="k">if</span> <span class="s1">&#39;lower&#39;</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;both &#39;lower&#39; and &#39;upper&#39; must be specified&quot;</span><span class="p">)</span>
+                    <span class="c1"># arguments[argument] = Component(&#39;RowMin&#39;, arguments={</span>
+                    <span class="c1">#     &quot;left&quot;: arguments[argument],</span>
+                    <span class="c1">#     &quot;right&quot;: Component.of(constraints[argument + &#39;_lower&#39;])</span>
+                    <span class="c1"># })</span>
+
+            <span class="k">if</span> <span class="s1">&#39;categories&#39;</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Clamp&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">],</span>
+                    <span class="s2">&quot;categories&quot;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">constraints</span><span class="p">[</span><span class="n">argument</span> <span class="o">+</span> <span class="s1">&#39;_categories&#39;</span><span class="p">])</span>
+                <span class="p">})</span>
+
+            <span class="k">if</span> <span class="s1">&#39;n&#39;</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">]</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s1">&#39;Resize&#39;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">arguments</span><span class="p">[</span><span class="n">argument</span><span class="p">],</span>
+                    <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">Component</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">constraints</span><span class="p">[</span><span class="n">argument</span> <span class="o">+</span> <span class="s1">&#39;_n&#39;</span><span class="p">])</span>
+                <span class="p">})</span>
+
+            <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">filtered</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">constraints</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">argument</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">constraint</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unrecognized constraints: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">constraints</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">arguments</span></div>
+
+
+<div class="viewcode-block" id="Analysis"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis">[docs]</a><span class="k">class</span> <span class="nc">Analysis</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Top-level class that contains a definition of privacy and collection of statistics.</span>
+<span class="sd">    This class tracks cumulative privacy usage for all components within.</span>
+
+<span class="sd">    The dynamic flag makes the library easier to use, because multiple batches may be strung together before calling release().</span>
+<span class="sd">    However, it opens the execution up to potential side channel attacks. Disable this if side channels are a concern.</span>
+
+<span class="sd">    The eager flag makes the library easier to debug, because stack traces pass through malformed components.</span>
+<span class="sd">    As a library user, it may be useful to enable eager and find a small, similar public dataset to help shape your analysis.</span>
+<span class="sd">    Building an analysis with a large dataset and eager enabled is not recommended, because every additional node causes an additional release.</span>
+
+<span class="sd">    Stack traces on the runtime may be disabled to help reduce the amount of leaked private information when an error is encountered.</span>
+<span class="sd">    The library does not take into account epsilon consumed from errors.</span>
+
+<span class="sd">    The filter level determines what data is included in the release.</span>
+
+<span class="sd">    - `public` only newly released public data is included in the release</span>
+<span class="sd">    - `public_and_prior` will also retain private values previously included in the release</span>
+<span class="sd">    - `all` for including all evaluations from all nodes, which is useful for system debugging</span>
+
+<span class="sd">    :param dynamic: flag for enabling dynamic validation</span>
+<span class="sd">    :param eager: release every time a component is added</span>
+<span class="sd">    :param distance: currently may be `pure` or `approximate`</span>
+<span class="sd">    :param neighboring: may be `substitute` or `add_remove`</span>
+<span class="sd">    :param stack_traces: set to False to suppress potentially sensitive stack traces</span>
+<span class="sd">    :param filter_level: may be `public`, `public_and_prior` or `all`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">dynamic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eager</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;approximate&#39;</span><span class="p">,</span> <span class="n">neighboring</span><span class="o">=</span><span class="s1">&#39;substitute&#39;</span><span class="p">,</span>
+                 <span class="n">stack_traces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">filter_level</span><span class="o">=</span><span class="s1">&#39;public&#39;</span><span class="p">):</span>
+
+        <span class="c1"># if false, validate the analysis before running it (enforces static validation)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span> <span class="o">=</span> <span class="n">dynamic</span>
+
+        <span class="c1"># if true, run the analysis every time a new component is added</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eager</span> <span class="o">=</span> <span class="n">eager</span>
+
+        <span class="c1"># set to false to suppress potentially private stack traces from releases</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stack_traces</span> <span class="o">=</span> <span class="n">stack_traces</span>
+
+        <span class="c1"># configure to keep additional values in the release</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_level</span> <span class="o">=</span> <span class="n">filter_level</span>
+
+        <span class="k">if</span> <span class="n">eager</span><span class="p">:</span>
+            <span class="c1"># when eager is set, the analysis is released every time a new node is added</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;eager graph execution is inefficient, and should only be enabled for debugging&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># privacy definition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighboring</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">neighboring</span>
+
+        <span class="c1"># core data structures</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">release_values</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># track node ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># track the number of datasets in use</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># nested analyses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context_cache</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># helper to track if properties are current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties_id</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_count</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="p">}</span>
+
+        <span class="c1"># stack traces for individual nodes that failed to execute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Analysis.add_component"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.add_component">[docs]</a>    <span class="k">def</span> <span class="nf">add_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_public</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Every component must be contained in an analysis.</span>
+
+<span class="sd">        :param component: The description of computation</span>
+<span class="sd">        :param value: Optionally, the result of the computation.</span>
+<span class="sd">        :param value_format: Optionally, the format of the result of the computation- `array` `hashmap` `jagged`</span>
+<span class="sd">        :param value_public: set to true if the value is considered public</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">component</span><span class="o">.</span><span class="n">analysis</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;this component is already a part of another analysis&quot;</span><span class="p">)</span>
+
+        <span class="c1"># component should be able to reference back to the analysis to get released values/ownership</span>
+        <span class="n">component</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">component</span><span class="o">.</span><span class="n">component_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_count</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">release_values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">component_count</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                <span class="s1">&#39;value_format&#39;</span><span class="p">:</span> <span class="n">value_format</span><span class="p">,</span>
+                <span class="s1">&#39;public&#39;</span><span class="p">:</span> <span class="n">value_public</span>
+            <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">component_count</span><span class="p">]</span> <span class="o">=</span> <span class="n">component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eager</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Analysis.update_properties"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.update_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If new nodes have been added or there has been a release, recompute the properties for all of the components.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties_id</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_count</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties_id</span><span class="p">[</span><span class="s1">&#39;batch&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="p">):</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">core_wrapper</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span>
+                <span class="n">serialize_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                <span class="n">serialize_release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_values</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">properties</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warnings</span> <span class="o">=</span> <span class="p">[</span><span class="n">format_error</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span> <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">warnings</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warnings</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Some nodes were not allowed to execute.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">print_warnings</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">properties_id</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_count</span><span class="p">,</span> <span class="s1">&#39;batch&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Analysis.validate"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if an analysis is differentially private, given a set of released values.</span>
+<span class="sd">        This function is data agnostic. It calls the validator rust FFI with protobuf objects.</span>
+
+<span class="sd">        :return: A success or failure response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">core_wrapper</span><span class="o">.</span><span class="n">validate_analysis</span><span class="p">(</span>
+            <span class="n">serialize_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">serialize_release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_values</span><span class="p">))</span><span class="o">.</span><span class="n">value</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">privacy_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the overall privacy usage of an analysis.</span>
+<span class="sd">        This function is data agnostic. It calls the validator rust FFI with protobuf objects.</span>
+
+<span class="sd">        :return: A privacy usage response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">core_wrapper</span><span class="o">.</span><span class="n">compute_privacy_usage</span><span class="p">(</span>
+            <span class="n">serialize_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">serialize_release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_values</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Analysis.release"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.release">[docs]</a>    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate an analysis and release the differentially private results.</span>
+<span class="sd">        This function touches private data. It calls the runtime rust FFI with protobuf objects.</span>
+
+<span class="sd">        The response is stored internally in the analysis instance and the all further components are computed in the next batch.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(),</span> <span class="s2">&quot;cannot release, analysis is not valid&quot;</span>
+
+        <span class="n">response_proto</span><span class="p">:</span> <span class="n">api_pb2</span><span class="o">.</span><span class="n">ResponseRelease</span><span class="o">.</span><span class="n">Success</span> <span class="o">=</span> <span class="n">core_wrapper</span><span class="o">.</span><span class="n">compute_release</span><span class="p">(</span>
+            <span class="n">serialize_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">serialize_release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_values</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stack_traces</span><span class="p">,</span>
+            <span class="n">serialize_filter_level</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_level</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">release_values</span> <span class="o">=</span> <span class="n">parse_release</span><span class="p">(</span><span class="n">response_proto</span><span class="o">.</span><span class="n">release</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warnings</span> <span class="o">=</span> <span class="p">[</span><span class="n">format_error</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span> <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">response_proto</span><span class="o">.</span><span class="n">warnings</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warnings</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Some nodes were not allowed to execute.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_warnings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Analysis.report"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        FFI Helper. Generate a json string with a summary/report of the Analysis and Release</span>
+<span class="sd">        This function is data agnostic. It calls the validator rust FFI with protobuf objects.</span>
+
+<span class="sd">        :return: parsed JSON array of summaries of releases</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">core_wrapper</span><span class="o">.</span><span class="n">generate_report</span><span class="p">(</span>
+            <span class="n">serialize_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="n">serialize_release</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_values</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="Analysis.clean"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.clean">[docs]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove all nodes from the analysis that do not have public descendants with released values.</span>
+
+<span class="sd">        This can be helpful to clear away components that fail property checks.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">component_id</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">parents</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">component_id</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">argument</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">parents</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">argument</span><span class="o">.</span><span class="n">component_id</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">component_id</span><span class="p">)</span>
+        <span class="n">traversal</span> <span class="o">=</span> <span class="p">[</span><span class="n">ident</span> <span class="k">for</span> <span class="n">ident</span><span class="p">,</span> <span class="n">pars</span> <span class="ow">in</span> <span class="n">parents</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">pars</span><span class="p">]</span>
+
+        <span class="k">while</span> <span class="n">traversal</span><span class="p">:</span>
+            <span class="n">component_id</span> <span class="o">=</span> <span class="n">traversal</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">component_id</span><span class="p">]</span>
+
+            <span class="c1"># remove if properties fail to propagate to this node</span>
+            <span class="k">if</span> <span class="n">component</span><span class="o">.</span><span class="n">releasable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="c1"># invalidate the component</span>
+                <span class="n">component</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">component_id</span><span class="p">]</span>
+
+                <span class="c1"># remove this node from all children, and add children to traversal</span>
+                <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">argument</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">parents</span><span class="p">[</span><span class="n">argument</span><span class="o">.</span><span class="n">component_id</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">component_id</span><span class="p">)</span>
+                    <span class="n">traversal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argument</span><span class="o">.</span><span class="n">component_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Analysis.enter"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.enter">[docs]</a>    <span class="k">def</span> <span class="nf">enter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the current analysis as active.</span>
+<span class="sd">        This allows building analyses outside of context managers, in a REPL environment.</span>
+<span class="sd">        All new Components will be attributed to the entered analysis.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enter</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Analysis.exit"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.exit">[docs]</a>    <span class="k">def</span> <span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the current analysis as inactive.</span>
+
+<span class="sd">        Components constructed after exit() will not longer be attributed to the previously active analysis.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">context</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context</span></div>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Analysis.print_warnings"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.print_warnings">[docs]</a>    <span class="k">def</span> <span class="nf">print_warnings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        print internal warnings about failed nodes after running the graph dynamically</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">warnings</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_make_networkx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+        <span class="n">analysis</span> <span class="o">=</span> <span class="n">serialize_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="n">node_id</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">node_id</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">analysis</span><span class="o">.</span><span class="n">computation_graph</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">node_id</span><span class="p">]</span><span class="o">.</span><span class="n">WhichOneof</span><span class="p">(</span><span class="s2">&quot;variant&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">for</span> <span class="n">nodeId</span><span class="p">,</span> <span class="n">component</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">computation_graph</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">source_node_id</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">label</span><span class="p">(</span><span class="n">source_node_id</span><span class="p">),</span> <span class="n">label</span><span class="p">(</span><span class="n">nodeId</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">graph</span>
+
+<div class="viewcode-block" id="Analysis.plot"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.base.html#opendp.whitenoise.core.base.Analysis.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Visual utility for graphing the analysis. Each component is a node, and arguments are edges.</span>
+<span class="sd">        networkx and matplotlib are necessary, but must be installed separately</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">warnings</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s2">&quot;matplotlib&quot;</span><span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_networkx</span><span class="p">()</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="o">.</span><span class="mi">001</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># sugary syntax for managing analysis contexts</span>
+<span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Consequences of Data
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
