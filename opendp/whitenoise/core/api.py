@@ -22,8 +22,7 @@ class LibraryWrapper(object):
             raise Exception(f"whitenoise-core does not support {sys.platform}")
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        root_dir = os.path.join(script_dir, "..", "..", "..")
-        lib_dir = os.path.join(root_dir, "lib")
+        lib_dir = os.path.join(script_dir, "lib")
         lib_validator_path = os.path.join(lib_dir, "libwhitenoise_validator" + extension)
         lib_runtime_path = os.path.join(lib_dir, "libwhitenoise_runtime" + extension)
 

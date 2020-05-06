@@ -8,7 +8,7 @@ build/
 docs/
 docs_temp/
 wheelhouse/
-lib/
+opendp/whitenoise/core/lib/
 
 opendp/_native*
 opendp_whitenoise_core.egg-info

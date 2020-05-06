@@ -20,7 +20,7 @@ root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 package_dir = os.path.join(root_dir, 'opendp', 'whitenoise', 'core')
 rust_dir = os.path.join(root_dir, 'whitenoise-core')
 prototypes_dir = os.path.join(rust_dir, "validator-rust", "prototypes")
-lib_dir = os.path.join(root_dir, "lib")
+lib_dir = os.path.join(package_dir, "lib")
 
 if not os.path.exists(rust_dir):
     # when the repository is cloned, the --recurse-submodules inits and updates the core submodule

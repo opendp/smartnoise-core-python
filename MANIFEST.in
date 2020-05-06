@@ -1,4 +1,0 @@
-recursive-include whitenoise-core *
-prune whitenoise-core/target/
-recursive-include scripts *
-recursive-include lib *

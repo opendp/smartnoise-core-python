@@ -12,10 +12,9 @@ setup(
             "pytest>=4.4.2"
         ]
     },
-    # include_package_data=True,
     package_data={
         "opendp.whitenoise.core": [
-            os.path.join("lib", filename) for filename in [
+            os.path.join("opendp", "whitenoise", "core", "lib", filename) for filename in [
                 "libwhitenoise_validator.dll",
                 "libwhitenoise_validator.so",
                 "libwhitenoise_validator.dylib",
