@@ -13,8 +13,8 @@ setup(
         ]
     },
     package_data={
-        "opendp.whitenoise.core": [
-            os.path.join("opendp", "whitenoise", "core", "lib", filename) for filename in [
+        "opendp.whitenoise": [
+            os.path.join("core", "lib", filename) for filename in [
                 "libwhitenoise_validator.dll",
                 "libwhitenoise_validator.so",
                 "libwhitenoise_validator.dylib",
