@@ -1,13 +1,8 @@
-import json
-import os
-import pkgutil
-
 import numpy as np
 
 from .variant_message_map import variant_message_map
 
 from opendp.whitenoise.core import base_pb2, components_pb2, value_pb2
-
 
 
 def serialize_privacy_usage(usage):
@@ -54,7 +49,6 @@ def serialize_privacy_usage(usage):
             ))
 
     return serialized
-
 
 
 def serialize_privacy_definition(analysis):
@@ -260,6 +254,7 @@ def parse_release(release):
         if release_node.privacy_usages:
             parsed['privacy_usages'] = release_node.privacy_usages
         return parsed
+
     return {
         node_id: parse_release_node(release_node) for node_id, release_node in release.values.items()
     }

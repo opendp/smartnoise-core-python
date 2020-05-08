@@ -7,7 +7,7 @@ then
   python3 setup.py develop
 fi
 
-sphinx-apidoc --implicit-namespaces -fFe -H opendp-whitenoise-core -A "Consequences of Data" -V 0.1.0 -o docs_temp/source/ opendp opendp/whitenoise.core/*_pb2.py --templatedir templates/
+sphinx-apidoc --implicit-namespaces -fFe -H opendp-whitenoise-core -A "Consequences of Data" -V 0.1.0 -o docs_temp/source/ opendp opendp/whitenoise/core/*_pb2.py --templatedir templates/
 
 # destroy prior generated documentation and completely rebuild
 rm -r docs

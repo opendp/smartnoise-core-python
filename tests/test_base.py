@@ -22,7 +22,7 @@ def test_multilayer_analysis(run=True):
         age_resized = wn.resize(age_clamped, n=1000)
 
         mean_age = wn.dp_mean(
-            data=wn.cast(PUMS['race'], type="FLOAT"),
+            data=wn.to_float(PUMS['race']),
             privacy_usage={'epsilon': .65},
             data_lower=0.,
             data_upper=100.,
@@ -31,7 +31,7 @@ def test_multilayer_analysis(run=True):
         analysis.release()
 
         sex_plus_22 = wn.add(
-            wn.cast(sex, type="FLOAT"),
+            wn.to_float(sex),
             22.,
             left_n=1000, left_lower=0., left_upper=1.)
 
@@ -43,7 +43,7 @@ def test_multilayer_analysis(run=True):
             data_n=500) + 5.
 
         wn.dp_variance(
-            data=wn.cast(PUMS['educ'], type="FLOAT"),
+            data=wn.to_float(PUMS['educ']),
             privacy_usage={'epsilon': .15},
             data_n=1000,
             data_lower=0.,
@@ -51,7 +51,7 @@ def test_multilayer_analysis(run=True):
         )
 
         # wn.dp_moment_raw(
-        #     wn.cast(PUMS['married'], type="FLOAT"),
+        #     wn.to_float(PUMS['married']),
         #     privacy_usage={'epsilon': .15},
         #     data_n=1000000,
         #     data_lower=0.,
@@ -60,8 +60,8 @@ def test_multilayer_analysis(run=True):
         # )
         #
         # wn.dp_covariance(
-        #     left=wn.cast(PUMS['age'], type="FLOAT"),
-        #     right=wn.cast(PUMS['married'], type="FLOAT"),
+        #     left=wn.to_float(PUMS['age']),
+        #     right=wn.to_float(PUMS['married']),
         #     privacy_usage={'epsilon': .15},
         #     left_n=1000,
         #     right_n=1000,
@@ -94,7 +94,7 @@ def test_dp_linear_stats(run=True):
 
         print("number of records:", num_records.value)
 
-        vars = wn.cast(dataset_pums[["age", "income"]], type="float")
+        vars = wn.to_float(dataset_pums[["age", "income"]])
 
         covariance = wn.dp_covariance(
             data=vars,
@@ -115,7 +115,7 @@ def test_dp_linear_stats(run=True):
         print("covariance:\n", covariance.value)
         print("means:\n", num_means.value)
 
-        age = wn.cast(age, type="FLOAT")
+        age = wn.to_float(age)
 
         age_variance = wn.dp_variance(
             age,
@@ -174,10 +174,10 @@ def test_dp_linear_stats(run=True):
             privacy_usage={'epsilon': .5})
 
         custom_quantile = wn.laplace_mechanism(
-            wn.quantile(preprocessed_age, quantile=.5),
+            wn.quantile(preprocessed_age, alpha=.5),
             privacy_usage={'epsilon': 500})
 
-        income = wn.cast(dataset_pums['income'], type="FLOAT")
+        income = wn.to_float(dataset_pums['income'])
         income_max = wn.laplace_mechanism(
             wn.maximum(income, data_lower=0., data_upper=1000000.),
             privacy_usage={'epsilon': 10})
@@ -189,14 +189,14 @@ def test_dp_linear_stats(run=True):
         print("laplace quantile:", custom_quantile.value)
 
         age_histogram = wn.dp_histogram(
-            wn.cast(age, type='int', lower=0, upper=100),
+            wn.to_int(age, lower=0, upper=100),
             edges=list(range(0, 100, 25)),
             null_value=150,
             privacy_usage={'epsilon': 2.}
         )
 
         sex_histogram = wn.dp_histogram(
-            wn.cast(dataset_pums['sex'], type='bool', true_label="1"),
+            wn.to_bool(dataset_pums['sex'], true_label="1"),
             privacy_usage={'epsilon': 2.}
         )
 

@@ -1,3 +1,4 @@
+import json
 import warnings
 
 from .api import LibraryWrapper, format_error
@@ -106,6 +107,7 @@ class Component(object):
 
         if accuracy:
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])
+            print("privacy_usages", privacy_usages)
             options['privacy_usage'] = serialize_privacy_usage(privacy_usages)
 
         self.batch = self.analysis.batch
@@ -163,6 +165,9 @@ class Component(object):
         """
         Retrieve the privacy usage necessary such that the true value differs from the estimate by at most "value amount" with (1 - alpha)100% confidence
         """
+
+        self.analysis.update_properties()
+
         if not issubclass(type(value), list):
             value = [value for _ in range(self.num_columns)]
 
@@ -239,11 +244,11 @@ class Component(object):
     @property
     def num_columns(self):
         """view the statically derived number of columns"""
-        try:
-            num_columns = self.properties.array.num_columns
-            return num_columns.option if num_columns.HasField("option") else None
-        except AttributeError:
-            return None
+        # try:
+        num_columns = self.properties.array.num_columns
+        return num_columns.option if num_columns.HasField("option") else None
+        # except AttributeError:
+        #     return None
 
     @property
     def data_type(self):
@@ -318,13 +323,13 @@ class Component(object):
 
     def __truediv__(self, other):
         return Component('Divide', arguments={
-            'left': Component('Cast', arguments={'data': self}, options={"type": "float"}),
-            'right': Component('Cast', arguments={'data': Component.of(other)}, options={"type": "float"})})
+            'left': Component('Cast', arguments={'data': self}, options={"atomic_type": "float"}),
+            'right': Component('Cast', arguments={'data': Component.of(other)}, options={"atomic_type": "float"})})
 
     def __rtruediv__(self, other):
         return Component('Divide', arguments={
-            'left': Component('Cast', arguments={'data': Component.of(other)}, options={"type": "float"}),
-            'right': Component('Cast', arguments={'data': self}, options={"type": "float"})})
+            'left': Component('Cast', arguments={'data': Component.of(other)}, options={"atomic_type": "float"}),
+            'right': Component('Cast', arguments={'data': self}, options={"atomic_type": "float"})})
 
     def __mod__(self, other):
         return Component('Modulo', arguments={'left': self, 'right': Component.of(other)})

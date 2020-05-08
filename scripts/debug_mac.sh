@@ -7,8 +7,11 @@ export RUST_BACKTRACE=1
 # reset all the files
 bash scripts/clean.sh
 
-# rebuilds the validator, runtime, protobuf, components.py and python package
-python3 -m pip install -e . -v | tee scripts/debug_build.log
+# regenerate the sources for the package
+python3 scripts/code_generation.py | tee scripts/debug_build.log
+
+# (re)installs the python package
+python3 -m pip install -e . -v
 
 # run tests
 #python3 -m pytest -x -v | tee debug_tests.log

@@ -56,7 +56,11 @@ The actual execution of the components in the analysis is handled by a native Ru
 2. Install Whitenoise-core dependencies   
    https://github.com/opendifferentialprivacy/whitenoise-core#installation
     
-3. Install the python bindings
+3. Generate code  
+
+        python3 scripts/code_generation.py
+
+4. Install the python bindings  
 
         pip install -e ".[test,plotting]"
 
