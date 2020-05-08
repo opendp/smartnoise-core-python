@@ -328,13 +328,14 @@ def dp_mean(data, implementation="resized", mechanism="Laplace", privacy_usage=N
         constraints=kwargs)
 
 
-def dp_median(data, mechanism='Laplace', privacy_usage=None, interpolation="midpoint", **kwargs):
+def dp_median(data, candidates=None, mechanism='Exponential', privacy_usage=None, interpolation="midpoint", **kwargs):
     """
     DPMedian Component
     
     Returns differentially private estimates of the median of each column of the data.
     
     :param data: 
+    :param candidates: Set from which the Exponential mechanism will return an element.
     :param mechanism: Privatizing mechanism to use.
     :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
     :param interpolation: Interpolation strategy. One of [`lower`, `upper`, `midpoint`, `nearest`, `linear`]
@@ -344,7 +345,8 @@ def dp_median(data, mechanism='Laplace', privacy_usage=None, interpolation="midp
     return Component(
         "DPMedian",
         arguments={
-            'data': Component.of(data)
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
         },
         options={
             'mechanism': mechanism,
@@ -400,6 +402,36 @@ def dp_moment_raw(data, order, mechanism="Laplace", privacy_usage=None, **kwargs
             'order': order,
             'mechanism': mechanism,
             'privacy_usage': serialize_privacy_usage(privacy_usage)
+        },
+        constraints=kwargs)
+
+
+def dp_quantile(data, alpha, candidates=None, mechanism='Laplace', privacy_usage=None, interpolation="midpoint", **kwargs):
+    """
+    DPQuantile Component
+    
+    Returns differentially private estimates of the median of each column of the data.
+    
+    :param data: 
+    :param candidates: Set from which the Exponential mechanism will return an element.
+    :param alpha: Desired quantiles, defined on `[0,1]`.
+    :param mechanism: Privatizing mechanism to use.
+    :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
+    :param interpolation: Interpolation strategy. One of [`lower`, `upper`, `midpoint`, `nearest`, `linear`]
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: Differentially private estimates of the median of each column of the data.
+    """
+    return Component(
+        "DPQuantile",
+        arguments={
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
+        },
+        options={
+            'alpha': alpha,
+            'mechanism': mechanism,
+            'privacy_usage': serialize_privacy_usage(privacy_usage),
+            'interpolation': interpolation
         },
         constraints=kwargs)
 
@@ -525,6 +557,30 @@ def equal(left, right, **kwargs):
         },
         options={
             
+        },
+        constraints=kwargs)
+
+
+def exponential_mechanism(utilities, candidates, privacy_usage=None, **kwargs):
+    """
+    ExponentialMechanism Component
+    
+    Returns an element from a finite set with probability relative to its utility.
+    
+    :param utilities: Respective scores for each candidate.
+    :param candidates: Set from which the Exponential mechanism will return an element.
+    :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: Element from the candidate set selected via the Exponential mechanism.
+    """
+    return Component(
+        "ExponentialMechanism",
+        arguments={
+            'utilities': Component.of(utilities, value_format="jagged"),
+            'candidates': Component.of(candidates, value_format="jagged")
+        },
+        options={
+            'privacy_usage': serialize_privacy_usage(privacy_usage)
         },
         constraints=kwargs)
 
@@ -788,17 +844,16 @@ def log(data, base=2.71828, **kwargs):
         constraints=kwargs)
 
 
-def materialize(column_names, data_source, public=False, dataset_id=None, skip_row=True, **kwargs):
+def materialize(column_names, file_path, public=False, skip_row=True, **kwargs):
     """
     Materialize Component
     
     Load a tabular frame from a data source
     
     :param column_names: 
-    :param data_source: 
     :param public: 
-    :param dataset_id: when set, data with unknown number of records may still conform to data with the same dataset_id
     :param skip_row: when set, skip the first line (header) in a csv
+    :param file_path: Path to the file on the system.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
     :return: 
     """
@@ -808,10 +863,9 @@ def materialize(column_names, data_source, public=False, dataset_id=None, skip_r
             'column_names': Component.of(column_names)
         },
         options={
-            'data_source': data_source,
             'public': public,
-            'dataset_id': dataset_id,
-            'skip_row': skip_row
+            'skip_row': skip_row,
+            'file_path': file_path
         },
         constraints=kwargs)
 
@@ -1026,13 +1080,14 @@ def power(data, radical, **kwargs):
         constraints=kwargs)
 
 
-def quantile(data, alpha, interpolation="midpoint", **kwargs):
+def quantile(data, alpha, candidates=None, interpolation="midpoint", **kwargs):
     """
     Quantile Component
     
     Get values corresponding to specified quantiles for each column of the data.
     
     :param data: 
+    :param candidates: Set from which the Exponential mechanism will return an element.
     :param alpha: Desired quantiles, defined on `[0,1]`.
     :param interpolation: Interpolation strategy. One of [`lower`, `upper`, `midpoint`, `nearest`, `linear`]
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
@@ -1041,11 +1096,35 @@ def quantile(data, alpha, interpolation="midpoint", **kwargs):
     return Component(
         "Quantile",
         arguments={
-            'data': Component.of(data)
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
         },
         options={
             'alpha': alpha,
             'interpolation': interpolation
+        },
+        constraints=kwargs)
+
+
+def rename(data, column_names, **kwargs):
+    """
+    Rename Component
+    
+    Name columns of an array or indexmap to produce an indexmap (representing a Dataframe) with the specified names
+    
+    :param data: 
+    :param column_names: 
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: 
+    """
+    return Component(
+        "Rename",
+        arguments={
+            'data': Component.of(data),
+            'column_names': Component.of(column_names)
+        },
+        options={
+            
         },
         constraints=kwargs)
 
@@ -1056,7 +1135,7 @@ def reshape(data, shape, symmetric=False, layout='row', **kwargs):
     
     Reshapes a row vector into a matrix.
     
-    :param data: Vector of data to stack into a matrix. A Hashmap of matrices will be emitted if multiple rows are provided.
+    :param data: Vector of data to stack into a matrix. A Indexmap of matrices will be emitted if multiple rows are provided.
     :param symmetric: Set if data are elements from the upper triangle of a symmetric matrix.
     :param layout: Consecutive elements of either the `row` or `column` reside next to each other.
     :param shape: The shape of the output matrix.
@@ -1076,7 +1155,7 @@ def reshape(data, shape, symmetric=False, layout='row', **kwargs):
         constraints=kwargs)
 
 
-def resize(data, n, lower=None, upper=None, categories=None, weights=None, distribution=None, shift=None, scale=None, **kwargs):
+def resize(data, number_rows=None, number_columns=None, lower=None, upper=None, categories=None, weights=None, distribution=None, shift=None, scale=None, **kwargs):
     """
     Resize Component
     
@@ -1087,7 +1166,8 @@ def resize(data, n, lower=None, upper=None, categories=None, weights=None, distr
     To address this problem, the library asks the user to provide `n`, an estimate of the true sample size based on their own beliefs about the data or a previous differentially private count of the number of rows in the data. This component then either subsamples or appends to the data in order to make it consistent with the provided `n`.
     
     :param data: The data to be resized.
-    :param n: An estimate of the number of rows in the data. This could be the guess of the user, or the result of a DP release.
+    :param number_rows: An estimate of the number of rows in the data. This could be the guess of the user, or the result of a DP release.
+    :param number_columns: An estimate of the number of columns in the data. This must be the guess of the user, if not previously known (optional).
     :param lower: A lower bound on data elements for each column.
     :param upper: An upper bound on data elements for each column.
     :param categories: The set of categories you want to be represented for each column of the data, if the data is categorical.
@@ -1102,7 +1182,8 @@ def resize(data, n, lower=None, upper=None, categories=None, weights=None, distr
         "Resize",
         arguments={
             'data': Component.of(data),
-            'n': Component.of(n),
+            'number_rows': Component.of(number_rows),
+            'number_columns': Component.of(number_columns),
             'lower': Component.of(lower),
             'upper': Component.of(upper),
             'categories': Component.of(categories, value_format="jagged"),

@@ -16,7 +16,7 @@ def test_insertion_simple():
 
         # describe the preprocessing you actually perform on the data
         col_a_clamped = wn.impute(wn.clamp(col_a, lower=0., upper=10.))
-        col_a_resized = wn.resize(col_a_clamped, n=1000000)
+        col_a_resized = wn.resize(col_a_clamped, number_rows=1000000)
 
         # run a fake aggregation
         actual_mean = wn.mean(col_a_resized)
@@ -71,7 +71,7 @@ def test_insertion_simple():
         col_rest = wn.to_float(data[['C', 'D']])
 
         # describe the preprocessing you actually perform on the data
-        col_rest_resized = wn.resize(wn.impute(wn.clamp(col_rest, lower=[0., 5.], upper=1000.)), n=10000)
+        col_rest_resized = wn.resize(wn.impute(wn.clamp(col_rest, lower=[0., 5.], upper=1000.)), number_rows=10000)
 
         # run a fake aggregation
         actual_mean = wn.mean(col_rest_resized)

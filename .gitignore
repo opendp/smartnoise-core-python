@@ -22,3 +22,5 @@ scripts/debug_app.log
 scripts/debug_tests.log
 opendp_whitenoise_core_demo.egg-info/
 opendp_whitenoise_core_python.egg-info/
+
+.idea/

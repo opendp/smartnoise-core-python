@@ -3,14 +3,16 @@ import random
 import string
 import numpy as np
 
-dataset_bools = {
-    'value': [[True, True], [True, False], [False, True], [False, False]],
-    'num_columns': 2
-}
+
+def generate_bools():
+    private_data = [[True, True], [True, False], [False, True], [False, False]]
+
+    dataset = wn.literal(value=private_data, value_public=False)
+    typed = wn.to_bool(dataset, true_label=True)
+    return wn.resize(typed, number_columns=2, categories=[True, False])
 
 
 def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, cats_num=None, variants=None):
-
     cats_str = ['A', 'B', 'C', 'D'] if cats_str is None else cats_str
     cats_num = [0, 1, 2, 3] if cats_num is None else cats_num
     variants = ['Index', 'Random', 'Constant', 'Categories'] if variants is None else variants
@@ -53,12 +55,19 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
                              }[variant]))
             names.append('S_' + variant)
 
-    return {'value': list(zip(*data)), 'column_names': names}
+    data = list(zip(*data))
+
+    dataset = wn.literal(value=data, value_public=False)
+    typed = wn.cast(dataset, atomic_type={
+        bool: 'bool', float: 'float', int: 'int', str: 'str'
+    }[var_type], true_label=True, lower=0, upper=10)
+    resized = wn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
+    return wn.rename(resized, column_names=names)
 
 
 def test_divide():
     with wn.Analysis():
-        data_A = wn.Dataset(**generate_synthetic(float, variants=['Random']))
+        data_A = generate_synthetic(float, variants=['Random'])
 
         f_random = data_A['F_Random']
         imputed = wn.impute(f_random, lower=0., upper=10.)
@@ -77,9 +86,9 @@ def test_divide():
         # assert not (imputed / 2.).nullity
 
 
-def  test_dp_mean():
+def test_dp_mean():
     with wn.Analysis():
-        data = wn.Dataset(**generate_synthetic(float, variants=['Random']))
+        data = generate_synthetic(float, variants=['Random'])
         mean = wn.dp_mean(
             data['F_Random'],
             # privacy_usage={'epsilon': 0.1},
@@ -92,9 +101,25 @@ def  test_dp_mean():
         print(mean.from_accuracy(2.3, .05))
 
 
+def test_dp_median():
+    with wn.Analysis(eager=True, dynamic=False) as analysis:
+        data = generate_synthetic(float, variants=['Random'])
+
+        dp_median = wn.dp_median(
+            data['F_Random'],
+            privacy_usage={"epsilon": .1},
+            candidates=[-10., -2., 2., 3., 4., 7., 10., 12.],
+            data_lower=0.,
+            data_upper=10.)
+
+        analysis.release()
+
+        print(dp_median.value)
+
+
 def test_equal():
     with wn.Analysis(filter_level='all') as analysis:
-        data = wn.Dataset(**dataset_bools)
+        data = generate_bools()
 
         equality = data[0] == data[1]
 
@@ -104,7 +129,7 @@ def test_equal():
 
 def test_partition():
     with wn.Analysis(filter_level='all') as analysis:
-        data = wn.Dataset(**dataset_bools)[[0, 1]]
+        data = generate_bools()
 
         partitioned = wn.partition(data, num_partitions=3)
         analysis.release()
@@ -117,7 +142,7 @@ def test_partition():
 
 def test_index():
     with wn.Analysis(filter_level='all') as analysis:
-        data = wn.Dataset(**dataset_bools)
+        data = generate_bools()
 
         index_0 = data[0]
 

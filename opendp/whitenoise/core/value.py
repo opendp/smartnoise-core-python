@@ -118,20 +118,20 @@ def serialize_array1d(array):
     })
 
 
-def serialize_hashmap(value):
+def serialize_indexmap(value):
     data = {k: serialize_value(v) for k, v in value.items()}
-    return value_pb2.Hashmap(**{
-        str: lambda: {'string': value_pb2.HashmapStr(data=data)},
-        bool: lambda: {'bool': value_pb2.HashmapBool(data=data)},
-        int: lambda: {'i64': value_pb2.HashmapI64(data=data)}
+    return value_pb2.Indexmap(**{
+        str: lambda: {'string': value_pb2.IndexmapStr(data=data)},
+        bool: lambda: {'bool': value_pb2.IndexmapBool(data=data)},
+        int: lambda: {'i64': value_pb2.IndexmapI64(data=data)}
     }[type(next(iter(value.keys())))]())
 
 
 def serialize_value(value, value_format=None):
 
-    if value_format == 'hashmap' or issubclass(type(value), dict):
+    if value_format == 'indexmap' or issubclass(type(value), dict):
         return value_pb2.Value(
-            hashmap=serialize_hashmap(value)
+            indexmap=serialize_indexmap(value)
         )
 
     if value_format == 'jagged':
@@ -141,9 +141,8 @@ def serialize_value(value, value_format=None):
             value = [value]
         value = [elem if issubclass(type(elem), list) else [elem] for elem in value]
 
-        return value_pb2.Value(jagged=value_pb2.Array2dJagged(
-            data=[value_pb2.Array1dOption(option=None if column is None else serialize_array1d(np.array(column))) for
-                  column in value],
+        return base_pb2.Value(jagged=value_pb2.Jagged(
+            data=[serialize_array1d(np.array(column)) for column in value],
             data_type=value_pb2.DataType
                 .Value({
                            np.bool: "BOOL",
@@ -156,14 +155,13 @@ def serialize_value(value, value_format=None):
         ))
 
     if value_format is not None and value_format != 'array':
-        raise ValueError('format must be either "array", "jagged", "hashmap" or None')
+        raise ValueError('format must be either "array", "jagged", "indexmap" or None')
 
     array = np.array(value)
 
-    return value_pb2.Value(
-        array=value_pb2.ArrayNd(
+    return base_pb2.Value(
+        array=value_pb2.Array(
             shape=list(array.shape),
-            order=list(range(array.ndim)),
             flattened=serialize_array1d(array.flatten())
         ))
 
@@ -206,15 +204,8 @@ def parse_array1d(array):
         return list(getattr(array, data_type).data)
 
 
-def parse_array1d_option(array):
-    if array.HasField("option"):
-        return parse_array1d(array.option)
-
-
 def parse_jagged(value):
-    return [
-        parse_array1d_option(column) for column in value.jagged.data
-    ]
+    return [parse_array1d(column) for column in value.jagged.data]
 
 
 def parse_array(value):
@@ -225,19 +216,19 @@ def parse_array(value):
         return data[0]
 
 
-def parse_hashmap(value):
-    data_type = value.hashmap.WhichOneof("variant")
+def parse_indexmap(value):
+    data_type = value.indexmap.WhichOneof("variant")
     if not data_type:
         return
-    return {k: parse_value(v) for k, v in getattr(value.hashmap, data_type).data.items()}
+    return {k: parse_value(v) for k, v in getattr(value.indexmap, data_type).data.items()}
 
 
 def parse_value(value):
     if value.HasField("array"):
         return parse_array(value)
 
-    if value.HasField("hashmap"):
-        return parse_hashmap(value)
+    if value.HasField("indexmap"):
+        return parse_indexmap(value)
 
     if value.HasField("jagged"):
         return parse_jagged(value)

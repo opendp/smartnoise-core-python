@@ -26,33 +26,33 @@ def test_multilayer_analysis(run=True):
         sex = wn.to_bool(PUMS['sex'], true_label="TRUE")
 
         age_clamped = wn.clamp(age, lower=0., upper=150.)
-        age_resized = wn.resize(age_clamped, n=1000)
+        age_resized = wn.resize(age_clamped, number_rows=1000)
 
         mean_age = wn.dp_mean(
             data=wn.to_float(PUMS['race']),
             privacy_usage={'epsilon': .65},
             data_lower=0.,
             data_upper=100.,
-            data_n=500
+            data_rows=500
         )
         analysis.release()
 
         sex_plus_22 = wn.add(
             wn.to_float(sex),
             22.,
-            left_n=1000, left_lower=0., left_upper=1.)
+            left_rows=1000, left_lower=0., left_upper=1.)
 
         wn.dp_mean(
             age_resized / 2. + sex_plus_22,
             privacy_usage={'epsilon': .1},
             data_lower=mean_age - 5.2,
             data_upper=102.,
-            data_n=500) + 5.
+            data_rows=500) + 5.
 
         wn.dp_variance(
             data=wn.to_float(PUMS['educ']),
             privacy_usage={'epsilon': .15},
-            data_n=1000,
+            data_rows=1000,
             data_lower=0.,
             data_upper=12.
         )
@@ -60,7 +60,7 @@ def test_multilayer_analysis(run=True):
         # wn.dp_moment_raw(
         #     wn.to_float(PUMS['married']),
         #     privacy_usage={'epsilon': .15},
-        #     data_n=1000000,
+        #     data_rows=1000000,
         #     data_lower=0.,
         #     data_upper=12.,
         #     order=3
@@ -70,8 +70,8 @@ def test_multilayer_analysis(run=True):
         #     left=wn.to_float(PUMS['age']),
         #     right=wn.to_float(PUMS['married']),
         #     privacy_usage={'epsilon': .15},
-        #     left_n=1000,
-        #     right_n=1000,
+        #     left_rows=1000,
+        #     right_rows=1000,
         #     left_lower=0.,
         #     left_upper=1.,
         #     right_lower=0.,
@@ -108,7 +108,7 @@ def test_dp_linear_stats(run=True):
             privacy_usage={'epsilon': .5},
             data_lower=[0., 0.],
             data_upper=[150., 150000.],
-            data_n=num_records)
+            data_rows=num_records)
         print("covariance released")
 
         num_means = wn.dp_mean(
@@ -116,7 +116,7 @@ def test_dp_linear_stats(run=True):
             privacy_usage={'epsilon': .5},
             data_lower=[0., 0.],
             data_upper=[150., 150000.],
-            data_n=num_records)
+            data_rows=num_records)
 
         analysis.release()
         print("covariance:\n", covariance.value)
@@ -129,7 +129,7 @@ def test_dp_linear_stats(run=True):
             privacy_usage={'epsilon': .5},
             data_lower=0.,
             data_upper=150.,
-            data_n=num_records)
+            data_rows=num_records)
 
         analysis.release()
 
@@ -138,7 +138,7 @@ def test_dp_linear_stats(run=True):
         # If I clamp, impute, resize, then I can reuse their properties for multiple statistics
         clamped_age = wn.clamp(age, lower=0., upper=100.)
         imputed_age = wn.impute(clamped_age)
-        preprocessed_age = wn.resize(imputed_age, n=num_records)
+        preprocessed_age = wn.resize(imputed_age, number_rows=num_records)
 
         # properties necessary for mean are statically known
         mean = wn.dp_mean(
@@ -247,13 +247,15 @@ def test_dp_count(run=True):
 
 def test_raw_dataset(run=True):
     with wn.Analysis() as analysis:
+        data = wn.to_float(wn.Dataset(value=[1., 2., 3., 4., 5.]))
+
         wn.dp_mean(
-            data=wn.Dataset(value=[1., 2., 3., 4., 5.], num_columns=1),
+            data=data,
             privacy_usage={'epsilon': 1},
             data_lower=0.,
             data_upper=10.,
-            data_n=10,
-        )
+            data_rows=10,
+            data_columns=1)
 
     if run:
         analysis.release()
@@ -311,7 +313,7 @@ def test_everything(run=True):
         wn.dp_minimum(age, privacy_usage={"epsilon": 0.5})
         wn.dp_median(age, privacy_usage={"epsilon": 0.5})
 
-        age_n = wn.resize(age, n=800)
+        age_n = wn.resize(age, number_rows=800)
         wn.dp_mean(age_n, privacy_usage={"epsilon": 0.5})
         wn.dp_moment_raw(age_n, order=3, privacy_usage={"epsilon": 0.5})
 
@@ -339,8 +341,8 @@ def test_everything(run=True):
 
         wn.quantile(educ, .32)
 
-        wn.resize(educ, 1200, 0., 50.)
-        wn.resize(race, 1200, categories=["1", "2"], weights=[1, 2])
+        wn.resize(educ, number_rows=1200, lower=0., upper=50.)
+        wn.resize(race, number_rows=1200, categories=["1", "2"], weights=[1, 2])
         wn.resize(data[["age", "sex"]], 1200, categories=[["1", "2"], ["a", "b"]], weights=[1, 2])
         wn.resize(
             data[["age", "sex"]], 1200,
@@ -398,7 +400,7 @@ def test_covariance():
                                privacy_usage={'epsilon': 10},
                                data_lower=[0., 0., 1., 0., 0.],
                                data_upper=[100., 1., 16., 500_000., 1.],
-                               data_n=1000)
+                               data_rows=1000)
     analysis.release()
 
     # store DP covariance and correlation matrix

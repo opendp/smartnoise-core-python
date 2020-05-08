@@ -8,8 +8,8 @@ from opendp.whitenoise.core import api_pb2, value_pb2, base_pb2
 
 core_wrapper = LibraryWrapper()
 
-# All available extensions for arguments (data_n, left_lower, etc)
-ALL_CONSTRAINTS = ["n", "lower", "upper", "categories"]
+# All available extensions for arguments (data_rows, left_lower, etc)
+ALL_CONSTRAINTS = ["n", "rows", "columns", "lower", "upper", "categories"]
 
 
 class Dataset(object):
@@ -17,51 +17,42 @@ class Dataset(object):
     Datasets represent a single tabular resource. Datasets are assumed to be private, and may be loaded from csv files or as literal arrays.
 
     :param path: Path to a csv file on the filesystem. It is assumed that the csv file is well-formed.
-    :param value: Alternatively, a literal value/array to pass via protobuf. It is preferred to pass a path to a csv, to keep the data out of the analysis object.
-    :param num_columns: The number of columns in the data resource.
-    :param column_names: Alternatively, the set of column names in the data resource.
-    :param value_format: If ambiguous, the data format of the value (either array, hashmap or jagged)
     :param skip_row: Set to True if the first row is the csv header. The csv header is always ignored.
+    :param column_names: Alternatively, the set of column names in the data resource.
+    :param value: Alternatively, a literal value/array to pass via protobuf
+    :param value_format: If ambiguous, the data format of the value (either array, indexmap or jagged)
     :param public: Whether to flag the data in the dataset as public. This is of course private by default.
     """
 
-    def __init__(self, *, path=None, value=None,
-                 num_columns=None, column_names=None,
-                 value_format=None, skip_row=True, public=False):
-
-        global context
-        if not context:
-            raise ValueError("all whitenoise components must be created within the context of an analysis")
+    def __init__(
+            self, *,
+            # arguments for materialize
+            path=None, skip_row=True, column_names=None,
+            # arguments for literal
+            value=None, value_format=None, value_type=None, value_columns=None,
+            # shared arguments
+            public=False):
 
         if sum(int(i is not None) for i in [path, value]) != 1:
             raise ValueError("either path or value must be set")
 
-        if num_columns is None and column_names is None:
-            raise ValueError("either num_columns or column_names must be set")
-
-        self.dataset_id = context.dataset_count
-        context.dataset_count += 1
-
-        data_source = {}
         if path is not None:
-            data_source['file_path'] = path
-        if value is not None:
-            data_source['literal'] = serialize_value(value, value_format)
+            from .components import materialize
+            self.component = materialize(
+                column_names=column_names,
+                file_path=path,
+                public=public,
+                skip_row=skip_row)
 
-        self.component = Component('Materialize',
-                                   arguments={
-                                       "column_names": Component.of(column_names),
-                                       "num_columns": Component.of(num_columns),
-                                   },
-                                   options={
-                                       "data_source": value_pb2.DataSource(**data_source),
-                                       "public": public,
-                                       "dataset_id": value_pb2.I64Null(option=self.dataset_id),
-                                       "skip_row": skip_row
-                                   })
+        if value is not None:
+            from .components import literal
+            self.component = literal(
+                value=value,
+                value_format=value_format,
+                value_public=public)
 
     def __getitem__(self, identifier):
-        return Component('Index', arguments={'columns': Component.of(identifier), 'data': self.component})
+        return self.component[identifier]
 
 
 class Component(object):
@@ -78,7 +69,7 @@ class Component(object):
     :param options: Inputs to the component that are passed directly via protobuf.
     :param constraints: Additional modifiers on data inputs, like data_lower, or left_categories.
     :param value: A value that is already known about the data, to be stored in the release.
-    :param value_format: The format of the value, one of `array`, `jagged`, `hashmap`
+    :param value_format: The format of the value, one of `array`, `jagged`, `indexmap`
     """
     def __init__(self, name: str,
                  arguments: dict = None, options: dict = None,
@@ -90,6 +81,18 @@ class Component(object):
             accuracy = constraints.get('accuracy')
             if 'accuracy' in constraints:
                 del constraints['accuracy']
+
+            value = constraints.get('value')
+            if 'value' in constraints:
+                del constraints['value']
+
+            value_format = constraints.get('value_format')
+            if 'value_format' in constraints:
+                del constraints['value_format']
+
+            value_public = constraints.get('value_public')
+            if 'value_public' in constraints:
+                del constraints['value_public']
 
         self.name: str = name
         self.arguments: dict = Component._expand_constraints(arguments or {}, constraints)
@@ -103,11 +106,10 @@ class Component(object):
         if context:
             context.add_component(self, value=value, value_format=value_format, value_public=value_public)
         else:
-            raise ValueError("all whitenoise components must be created within the context of an analysis")
+            raise ValueError("all Whitenoise components must be created within the context of an analysis")
 
         if accuracy:
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])
-            print("privacy_usages", privacy_usages)
             options['privacy_usage'] = serialize_privacy_usage(privacy_usages)
 
         self.batch = self.analysis.batch
@@ -197,7 +199,7 @@ class Component(object):
     def dimensionality(self):
         """view the statically derived dimensionality (number of axes)"""
         try:
-            return self.properties.array.dimensionality
+            return self.properties.array.dimensionality.option
         except AttributeError:
             return None
 
@@ -244,11 +246,11 @@ class Component(object):
     @property
     def num_columns(self):
         """view the statically derived number of columns"""
-        # try:
-        num_columns = self.properties.array.num_columns
-        return num_columns.option if num_columns.HasField("option") else None
-        # except AttributeError:
-        #     return None
+        try:
+            num_columns = self.properties.array.num_columns
+            return num_columns.option if num_columns.HasField("option") else None
+        except AttributeError:
+            return None
 
     @property
     def data_type(self):
@@ -276,7 +278,7 @@ class Component(object):
         """view the statically derived category set"""
         try:
             categories = self.properties.array.categorical.categories.data
-            value = [parse_array1d_option(i) for i in categories]
+            value = [parse_array1d(i) for i in categories]
             if not value:
                 return None
             if self.dimensionality <= 1 and value:
@@ -420,14 +422,14 @@ class Component(object):
         This is an alternative constructor for a Literal, that potentially doesn't wrap the value in a Literal component if it is None or already a Component
 
         :param value: The value to be wrapped.
-        :param value_format: must be one of `array`, `hashmap`, `jagged`
+        :param value_format: must be one of `array`, `indexmap`, `jagged`
         :param public: Loose literals are by default public.
         :return: A Literal component with the value attached to the parent analysis' release.
         """
         if value is None:
             return
 
-        # count can take the entire dataset as an argument
+        # the dataset class
         if type(value) == Dataset:
             value = value.component
 
@@ -454,6 +456,30 @@ class Component(object):
             filtered = [i for i in filtered
                         if i in ALL_CONSTRAINTS]
 
+            if 'columns' in filtered:
+                if 'upper' in filtered and 'lower' in filtered:
+                    arguments[argument] = Component('Resize', arguments={
+                        "data": arguments[argument],
+                        "upper": Component.of(constraints[argument + '_upper']),
+                        "lower": Component.of(constraints[argument + '_lower']),
+                        "number_columns": Component.of(constraints.get(argument + '_columns'))
+                    })
+
+                elif 'categories' in filtered:
+                    arguments[argument] = Component('Resize', arguments={
+                        "data": arguments[argument],
+                        "categories": Component.of(constraints[argument + '_categories']),
+                        "number_columns": Component.of(constraints.get(argument + '_columns'))
+                    })
+
+                else:
+                    arguments[argument] = Component('Resize', arguments={
+                        "data": arguments[argument],
+                        "number_columns": Component.of(constraints.get(argument + '_columns'))
+                    })
+
+                del constraints[argument + '_columns']
+
             if 'upper' in filtered and 'lower' in filtered:
                 min_component = Component.of(constraints[argument + '_lower'])
                 max_component = Component.of(constraints[argument + '_upper'])
@@ -469,35 +495,45 @@ class Component(object):
                     "data": arguments[argument]
                 })
 
+                del constraints[argument + '_lower']
+                del constraints[argument + '_upper']
+
             else:
                 if 'upper' in filtered:
-                    raise ValueError("both 'lower' and 'upper' must be specified")
-                    # arguments[argument] = Component('RowMax', arguments={
-                    #     "left": arguments[argument],
-                    #     "right": Component.of(constraints[argument + '_upper'])
-                    # })
+                    arguments[argument] = Component('RowMax', arguments={
+                        "left": arguments[argument],
+                        "right": Component.of(constraints[argument + '_upper'])
+                    })
+                    del constraints[argument + '_upper']
 
                 if 'lower' in filtered:
-                    raise ValueError("both 'lower' and 'upper' must be specified")
-                    # arguments[argument] = Component('RowMin', arguments={
-                    #     "left": arguments[argument],
-                    #     "right": Component.of(constraints[argument + '_lower'])
-                    # })
+                    arguments[argument] = Component('RowMin', arguments={
+                        "left": arguments[argument],
+                        "right": Component.of(constraints[argument + '_lower'])
+                    })
+                    del constraints[argument + '_lower']
 
             if 'categories' in filtered:
                 arguments[argument] = Component('Clamp', arguments={
                     "data": arguments[argument],
                     "categories": Component.of(constraints[argument + '_categories'])
                 })
+                del constraints[argument + '_categories']
 
             if 'n' in filtered:
+                warnings.warn("The `_n` constraint is deprecated. Use `_rows` or `_columns` instead.")
                 arguments[argument] = Component('Resize', arguments={
                     "data": arguments[argument],
-                    "n": Component.of(constraints[argument + '_n'])
+                    "number_rows": Component.of(constraints[argument + '_n'])
                 })
+                del constraints[argument + '_n']
 
-            for constraint in filtered:
-                del constraints[f'{argument}_{constraint}']
+            if 'rows' in filtered:
+                arguments[argument] = Component('Resize', arguments={
+                    "data": arguments[argument],
+                    "number_rows": Component.of(constraints.get(argument + '_rows'))
+                })
+                del constraints[argument + '_rows']
 
         if constraints:
             raise ValueError(f"unrecognized constraints: {list(constraints.keys())}")
@@ -568,9 +604,6 @@ class Analysis(object):
         # track node ids
         self.component_count = 0
 
-        # track the number of datasets in use
-        self.dataset_count = 0
-
         # nested analyses
         self._context_cache = None
 
@@ -587,7 +620,7 @@ class Analysis(object):
 
         :param component: The description of computation
         :param value: Optionally, the result of the computation.
-        :param value_format: Optionally, the format of the result of the computation- `array` `hashmap` `jagged`
+        :param value_format: Optionally, the format of the result of the computation- `array` `indexmap` `jagged`
         :param value_public: set to true if the value is considered public
         :return:
         """
@@ -599,6 +632,10 @@ class Analysis(object):
         component.component_id = self.component_count
 
         if value is not None:
+            # don't filter this private value from the analysis
+            if value_public is False and self.filter_level == 'public':
+                self.filter_level = 'public_and_prior'
+
             self.release_values[self.component_count] = {
                 'value': value,
                 'value_format': value_format,
