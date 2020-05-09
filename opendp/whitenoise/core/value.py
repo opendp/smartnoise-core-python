@@ -181,9 +181,6 @@ def parse_privacy_usage(usage: value_pb2.PrivacyUsage):
     if issubclass(type(usage), dict):
         return usage
 
-    if usage.HasField("pure"):
-        return {"epsilon": usage.pure.epsilon}
-
     if usage.HasField("approximate"):
         return {"epsilon": usage.approximate.epsilon, "delta": usage.approximate.delta}
 

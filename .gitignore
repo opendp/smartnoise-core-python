@@ -14,6 +14,7 @@ opendp/whitenoise/core/lib/
 opendp/_native*
 opendp_whitenoise_core.egg-info
 .eggs/
+scripts/reformat_json.py
 #opendp/whitenoise/core/components.py
 #opendp/whitenoise/core/variant_message_map.py
 

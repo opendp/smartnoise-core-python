@@ -17,6 +17,8 @@ WN_DEBUG = os.environ.get("WN_DEBUG", "false") != "false"
 # set the environment variable to use precompiled external libraries
 WN_USE_SYSTEM_LIBS = os.environ.get("WN_USE_SYSTEM_LIBS", "false") != "false"
 
+WN_USE_VULNERABLE_NOISE = os.environ.get("WN_USE_VULNERABLE_NOISE", "false") != "false"
+
 # turn on backtraces in rust (for build.rs)
 os.environ['RUST_BACKTRACE'] = 'full'  # '1'
 os.environ['RUSTFLAGS'] = ""
@@ -44,7 +46,14 @@ def build_rust_binaries():
     validator_build_cmd = f"{rust_build_cmd} --manifest-path={validator_toml_path}"
 
     runtime_toml_path = os.path.join(rust_dir, "runtime-rust", "Cargo.toml")
-    runtime_build_cmd = f"{rust_build_cmd}{' --features use-system-libs' if WN_USE_SYSTEM_LIBS else ''} --manifest-path={runtime_toml_path}"
+
+    runtime_features = ''
+    if WN_USE_VULNERABLE_NOISE:
+        runtime_features = " --no-default-features"
+    elif WN_USE_SYSTEM_LIBS:
+        runtime_features = " --features use-system-libs"
+
+    runtime_build_cmd = f"{rust_build_cmd}{runtime_features} --manifest-path={runtime_toml_path}"
 
     # build shared libraries
     subprocess.call(validator_build_cmd, shell=True)

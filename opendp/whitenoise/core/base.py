@@ -564,7 +564,7 @@ class Analysis(object):
 
     :param dynamic: flag for enabling dynamic validation
     :param eager: release every time a component is added
-    :param distance: currently may be `pure` or `approximate`
+    :param distance: currently may only be `approximate`
     :param neighboring: may be `substitute` or `add_remove`
     :param stack_traces: set to False to suppress potentially sensitive stack traces
     :param filter_level: may be `public`, `public_and_prior` or `all`
