@@ -53,6 +53,7 @@ def serialize_privacy_usage(usage):
 
 def serialize_privacy_definition(analysis):
     return base_pb2.PrivacyDefinition(
+        group_size=analysis.group_size,
         distance=base_pb2.PrivacyDefinition.Distance.Value(analysis.distance.upper()),
         neighboring=base_pb2.PrivacyDefinition.Neighboring.Value(analysis.neighboring.upper())
     )
@@ -120,17 +121,17 @@ def serialize_array1d(array):
 
 def serialize_indexmap(value):
     data = {k: serialize_value(v) for k, v in value.items()}
-    return value_pb2.Indexmap(**{
-        str: lambda: {'string': value_pb2.IndexmapStr(data=data)},
-        bool: lambda: {'bool': value_pb2.IndexmapBool(data=data)},
-        int: lambda: {'i64': value_pb2.IndexmapI64(data=data)}
+    return base_pb2.Indexmap(**{
+        str: lambda: {'string': base_pb2.IndexmapStr(keys=list(data.keys()), values=list(data.values()))},
+        bool: lambda: {'bool': base_pb2.IndexmapBool(keys=list(data.keys()), values=list(data.values()))},
+        int: lambda: {'i64': base_pb2.IndexmapI64(keys=list(data.keys()), values=list(data.values()))}
     }[type(next(iter(value.keys())))]())
 
 
 def serialize_value(value, value_format=None):
 
     if value_format == 'indexmap' or issubclass(type(value), dict):
-        return value_pb2.Value(
+        return base_pb2.Value(
             indexmap=serialize_indexmap(value)
         )
 
@@ -143,15 +144,14 @@ def serialize_value(value, value_format=None):
 
         return base_pb2.Value(jagged=value_pb2.Jagged(
             data=[serialize_array1d(np.array(column)) for column in value],
-            data_type=value_pb2.DataType
-                .Value({
-                           np.bool: "BOOL",
-                           np.int64: "I64",
-                           np.float64: "F64",
-                           np.bool_: "BOOL",
-                           np.string_: "STRING",
-                           np.str_: "STRING"
-                       }[np.array(value[0]).dtype.type])
+            data_type=value_pb2.DataType.Value({
+                                                   np.bool: "BOOL",
+                                                   np.int64: "I64",
+                                                   np.float64: "F64",
+                                                   np.bool_: "BOOL",
+                                                   np.string_: "STRING",
+                                                   np.str_: "STRING"
+                                               }[np.array(value[0]).dtype.type])
         ))
 
     if value_format is not None and value_format != 'array':
@@ -217,7 +217,8 @@ def parse_indexmap(value):
     data_type = value.indexmap.WhichOneof("variant")
     if not data_type:
         return
-    return {k: parse_value(v) for k, v in getattr(value.indexmap, data_type).data.items()}
+    indexmap = getattr(value.indexmap, data_type)
+    return {k: parse_value(v) for k, v in zip(indexmap.keys, indexmap.values)}
 
 
 def parse_value(value):

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x10\x63omponents.proto\x12\nwhitenoise\x1a\x0bvalue.proto\"\xde\x14\n\tComponent\x12\x37\n\targuments\x18\x01 \x03(\x0b\x32$.whitenoise.Component.ArgumentsEntry\x12\x0c\n\x04omit\x18\x02 \x01(\x08\x12\r\n\x05\x62\x61tch\x18\x03 \x01(\r\x12\x1e\n\x03\x61\x62s\x18\x64 \x01(\x0b\x32\x0f.whitenoise.AbsH\x00\x12\x1e\n\x03\x61\x64\x64\x18\x65 \x01(\x0b\x32\x0f.whitenoise.AddH\x00\x12 \n\x04\x63\x61st\x18\x66 \x01(\x0b\x32\x10.whitenoise.CastH\x00\x12\"\n\x05\x63lamp\x18g \x01(\x0b\x32\x11.whitenoise.ClampH\x00\x12\"\n\x05\x63ount\x18h \x01(\x0b\x32\x11.whitenoise.CountH\x00\x12,\n\ncovariance\x18i \x01(\x0b\x32\x16.whitenoise.CovarianceH\x00\x12(\n\x08\x64igitize\x18j \x01(\x0b\x32\x14.whitenoise.DigitizeH\x00\x12$\n\x06\x64ivide\x18k \x01(\x0b\x32\x12.whitenoise.DivideH\x00\x12\'\n\x08\x64p_count\x18l \x01(\x0b\x32\x13.whitenoise.DPCountH\x00\x12\x31\n\rdp_covariance\x18m \x01(\x0b\x32\x18.whitenoise.DPCovarianceH\x00\x12/\n\x0c\x64p_histogram\x18n \x01(\x0b\x32\x17.whitenoise.DPHistogramH\x00\x12+\n\ndp_maximum\x18o \x01(\x0b\x32\x15.whitenoise.DPMaximumH\x00\x12%\n\x07\x64p_mean\x18p \x01(\x0b\x32\x12.whitenoise.DPMeanH\x00\x12)\n\tdp_median\x18q \x01(\x0b\x32\x14.whitenoise.DPMedianH\x00\x12+\n\ndp_minimum\x18r \x01(\x0b\x32\x15.whitenoise.DPMinimumH\x00\x12\x30\n\rdp_moment_raw\x18s \x01(\x0b\x32\x17.whitenoise.DPMomentRawH\x00\x12-\n\x0b\x64p_quantile\x18t \x01(\x0b\x32\x16.whitenoise.DPQuantileH\x00\x12#\n\x06\x64p_sum\x18u \x01(\x0b\x32\x11.whitenoise.DPSumH\x00\x12-\n\x0b\x64p_variance\x18v \x01(\x0b\x32\x16.whitenoise.DPVarianceH\x00\x12\"\n\x05\x65qual\x18w \x01(\x0b\x32\x11.whitenoise.EqualH\x00\x12\x41\n\x15\x65xponential_mechanism\x18x \x01(\x0b\x32 .whitenoise.ExponentialMechanismH\x00\x12$\n\x06\x66ilter\x18y \x01(\x0b\x32\x12.whitenoise.FilterH\x00\x12;\n\x12gaussian_mechanism\x18z \x01(\x0b\x32\x1d.whitenoise.GaussianMechanismH\x00\x12/\n\x0cgreater_than\x18{ \x01(\x0b\x32\x17.whitenoise.GreaterThanH\x00\x12*\n\thistogram\x18| \x01(\x0b\x32\x15.whitenoise.HistogramH\x00\x12$\n\x06impute\x18} \x01(\x0b\x32\x12.whitenoise.ImputeH\x00\x12\"\n\x05index\x18~ \x01(\x0b\x32\x11.whitenoise.IndexH\x00\x12?\n\x15kth_raw_sample_moment\x18\x7f \x01(\x0b\x32\x1e.whitenoise.KthRawSampleMomentH\x00\x12:\n\x11laplace_mechanism\x18\x80\x01 \x01(\x0b\x32\x1c.whitenoise.LaplaceMechanismH\x00\x12*\n\tless_than\x18\x81\x01 \x01(\x0b\x32\x14.whitenoise.LessThanH\x00\x12\'\n\x07literal\x18\x82\x01 \x01(\x0b\x32\x13.whitenoise.LiteralH\x00\x12\x1f\n\x03log\x18\x83\x01 \x01(\x0b\x32\x0f.whitenoise.LogH\x00\x12\'\n\x0blogical_and\x18\x84\x01 \x01(\x0b\x32\x0f.whitenoise.AndH\x00\x12%\n\nlogical_or\x18\x85\x01 \x01(\x0b\x32\x0e.whitenoise.OrH\x00\x12/\n\x0bmaterialize\x18\x86\x01 \x01(\x0b\x32\x17.whitenoise.MaterializeH\x00\x12\'\n\x07maximum\x18\x87\x01 \x01(\x0b\x32\x13.whitenoise.MaximumH\x00\x12!\n\x04mean\x18\x88\x01 \x01(\x0b\x32\x10.whitenoise.MeanH\x00\x12\'\n\x07minimum\x18\x89\x01 \x01(\x0b\x32\x13.whitenoise.MinimumH\x00\x12%\n\x06modulo\x18\x8a\x01 \x01(\x0b\x32\x12.whitenoise.ModuloH\x00\x12)\n\x08multiply\x18\x8b\x01 \x01(\x0b\x32\x14.whitenoise.MultiplyH\x00\x12%\n\x06negate\x18\x8c\x01 \x01(\x0b\x32\x12.whitenoise.NegateH\x00\x12)\n\x08negative\x18\x8d\x01 \x01(\x0b\x32\x14.whitenoise.NegativeH\x00\x12+\n\tpartition\x18\x8e\x01 \x01(\x0b\x32\x15.whitenoise.PartitionH\x00\x12#\n\x05power\x18\x8f\x01 \x01(\x0b\x32\x11.whitenoise.PowerH\x00\x12)\n\x08quantile\x18\x90\x01 \x01(\x0b\x32\x14.whitenoise.QuantileH\x00\x12%\n\x06rename\x18\x91\x01 \x01(\x0b\x32\x12.whitenoise.RenameH\x00\x12\'\n\x07reshape\x18\x92\x01 \x01(\x0b\x32\x13.whitenoise.ReshapeH\x00\x12%\n\x06resize\x18\x93\x01 \x01(\x0b\x32\x12.whitenoise.ResizeH\x00\x12&\n\x07row_max\x18\x94\x01 \x01(\x0b\x32\x12.whitenoise.RowMaxH\x00\x12&\n\x07row_min\x18\x95\x01 \x01(\x0b\x32\x12.whitenoise.RowMinH\x00\x12K\n\x1asimple_geometric_mechanism\x18\x96\x01 \x01(\x0b\x32$.whitenoise.SimpleGeometricMechanismH\x00\x12)\n\x08subtract\x18\x97\x01 \x01(\x0b\x32\x14.whitenoise.SubtractH\x00\x12\x1f\n\x03sum\x18\x98\x01 \x01(\x0b\x32\x0f.whitenoise.SumH\x00\x12&\n\x07to_bool\x18\x99\x01 \x01(\x0b\x32\x12.whitenoise.ToBoolH\x00\x12(\n\x08to_float\x18\x9a\x01 \x01(\x0b\x32\x13.whitenoise.ToFloatH\x00\x12$\n\x06to_int\x18\x9b\x01 \x01(\x0b\x32\x11.whitenoise.ToIntH\x00\x12*\n\tto_string\x18\x9c\x01 \x01(\x0b\x32\x14.whitenoise.ToStringH\x00\x12)\n\x08variance\x18\x9d\x01 \x01(\x0b\x32\x14.whitenoise.VarianceH\x00\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x42\t\n\x07variant\"\x05\n\x03\x41\x62s\"\x05\n\x03\x41\x64\x64\"\x1b\n\x04\x43\x61st\x12\x13\n\x0b\x61tomic_type\x18\x01 \x01(\t\"\x07\n\x05\x43lamp\"\x07\n\x05\x43ount\".\n\nCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\"\n\n\x08\x44igitize\"\x08\n\x06\x44ivide\"l\n\x07\x44PCount\x12\x1d\n\x15\x65nforce_constant_time\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"t\n\x0c\x44PCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"p\n\x0b\x44PHistogram\x12\x1d\n\x15\x65nforce_constant_time\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"O\n\tDPMaximum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"d\n\x06\x44PMean\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"e\n\x08\x44PMedian\x12\x15\n\rinterpolation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"O\n\tDPMinimum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"`\n\x0b\x44PMomentRaw\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12\r\n\x05order\x18\x02 \x01(\r\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"v\n\nDPQuantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\x12\x11\n\tmechanism\x18\x03 \x01(\t\x12/\n\rprivacy_usage\x18\x04 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"K\n\x05\x44PSum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"r\n\nDPVariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\x07\n\x05\x45qual\"G\n\x14\x45xponentialMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\x08\n\x06\x46ilter\"D\n\x11GaussianMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\r\n\x0bGreaterThan\"\x0b\n\tHistogram\"\x08\n\x06Impute\"\x07\n\x05Index\"\x1f\n\x12KthRawSampleMoment\x12\t\n\x01k\x18\x01 \x01(\r\"C\n\x10LaplaceMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\n\n\x08LessThan\"\t\n\x07Literal\"\x05\n\x03Log\"\x05\n\x03\x41nd\"\x04\n\x02Or\"B\n\x0bMaterialize\x12\x11\n\tfile_path\x18\x01 \x01(\t\x12\x0e\n\x06public\x18\x02 \x01(\x08\x12\x10\n\x08skip_row\x18\x03 \x01(\x08\"\t\n\x07Maximum\"\x06\n\x04Mean\"\t\n\x07Minimum\"\x08\n\x06Modulo\"\n\n\x08Multiply\"\x08\n\x06Negate\"\n\n\x08Negative\"\x0b\n\tPartition\"\x07\n\x05Power\"0\n\x08Quantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\"\x08\n\x06Rename\";\n\x07Reshape\x12\x0e\n\x06layout\x18\x01 \x01(\t\x12\r\n\x05shape\x18\x02 \x03(\r\x12\x11\n\tsymmetric\x18\x03 \x01(\x08\"\x08\n\x06Resize\"\x08\n\x06RowMax\"\x08\n\x06RowMin\"j\n\x18SimpleGeometricMechanism\x12\x1d\n\x15\x65nforce_constant_time\x18\x01 \x01(\x08\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\n\n\x08Subtract\"\x05\n\x03Sum\"\x08\n\x06ToBool\"\t\n\x07ToFloat\"\x07\n\x05ToInt\"\n\n\x08ToString\",\n\x08Variance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x62\x06proto3')
+  serialized_pb=_b('\n\x10\x63omponents.proto\x12\nwhitenoise\x1a\x0bvalue.proto\"\x91\x15\n\tComponent\x12\x37\n\targuments\x18\x01 \x03(\x0b\x32$.whitenoise.Component.ArgumentsEntry\x12\x0c\n\x04omit\x18\x02 \x01(\x08\x12\r\n\x05\x62\x61tch\x18\x03 \x01(\r\x12\x1e\n\x03\x61\x62s\x18\x64 \x01(\x0b\x32\x0f.whitenoise.AbsH\x00\x12\x1e\n\x03\x61\x64\x64\x18\x65 \x01(\x0b\x32\x0f.whitenoise.AddH\x00\x12 \n\x04\x63\x61st\x18h \x01(\x0b\x32\x10.whitenoise.CastH\x00\x12\"\n\x05\x63lamp\x18i \x01(\x0b\x32\x11.whitenoise.ClampH\x00\x12\"\n\x05\x63ount\x18j \x01(\x0b\x32\x11.whitenoise.CountH\x00\x12,\n\ncovariance\x18k \x01(\x0b\x32\x16.whitenoise.CovarianceH\x00\x12(\n\x08\x64igitize\x18w \x01(\x0b\x32\x14.whitenoise.DigitizeH\x00\x12$\n\x06\x64ivide\x18x \x01(\x0b\x32\x12.whitenoise.DivideH\x00\x12\'\n\x08\x64p_count\x18l \x01(\x0b\x32\x13.whitenoise.DPCountH\x00\x12\x31\n\rdp_covariance\x18m \x01(\x0b\x32\x18.whitenoise.DPCovarianceH\x00\x12/\n\x0c\x64p_histogram\x18n \x01(\x0b\x32\x17.whitenoise.DPHistogramH\x00\x12+\n\ndp_maximum\x18o \x01(\x0b\x32\x15.whitenoise.DPMaximumH\x00\x12%\n\x07\x64p_mean\x18p \x01(\x0b\x32\x12.whitenoise.DPMeanH\x00\x12)\n\tdp_median\x18q \x01(\x0b\x32\x14.whitenoise.DPMedianH\x00\x12+\n\ndp_minimum\x18r \x01(\x0b\x32\x15.whitenoise.DPMinimumH\x00\x12-\n\x0b\x64p_quantile\x18t \x01(\x0b\x32\x16.whitenoise.DPQuantileH\x00\x12\x30\n\rdp_raw_moment\x18s \x01(\x0b\x32\x17.whitenoise.DPRawMomentH\x00\x12#\n\x06\x64p_sum\x18u \x01(\x0b\x32\x11.whitenoise.DPSumH\x00\x12-\n\x0b\x64p_variance\x18v \x01(\x0b\x32\x16.whitenoise.DPVarianceH\x00\x12\"\n\x05\x65qual\x18y \x01(\x0b\x32\x11.whitenoise.EqualH\x00\x12\x41\n\x15\x65xponential_mechanism\x18z \x01(\x0b\x32 .whitenoise.ExponentialMechanismH\x00\x12$\n\x06\x66ilter\x18{ \x01(\x0b\x32\x12.whitenoise.FilterH\x00\x12;\n\x12gaussian_mechanism\x18| \x01(\x0b\x32\x1d.whitenoise.GaussianMechanismH\x00\x12/\n\x0cgreater_than\x18} \x01(\x0b\x32\x17.whitenoise.GreaterThanH\x00\x12*\n\thistogram\x18~ \x01(\x0b\x32\x15.whitenoise.HistogramH\x00\x12$\n\x06impute\x18\x7f \x01(\x0b\x32\x12.whitenoise.ImputeH\x00\x12#\n\x05index\x18\x80\x01 \x01(\x0b\x32\x11.whitenoise.IndexH\x00\x12:\n\x11laplace_mechanism\x18\x82\x01 \x01(\x0b\x32\x1c.whitenoise.LaplaceMechanismH\x00\x12*\n\tless_than\x18\x83\x01 \x01(\x0b\x32\x14.whitenoise.LessThanH\x00\x12\'\n\x07literal\x18\x84\x01 \x01(\x0b\x32\x13.whitenoise.LiteralH\x00\x12\x1f\n\x03log\x18\x85\x01 \x01(\x0b\x32\x0f.whitenoise.LogH\x00\x12&\n\x0blogical_and\x18\x66 \x01(\x0b\x32\x0f.whitenoise.AndH\x00\x12%\n\nlogical_or\x18\x90\x01 \x01(\x0b\x32\x0e.whitenoise.OrH\x00\x12\x1f\n\x03map\x18\x86\x01 \x01(\x0b\x32\x0f.whitenoise.MapH\x00\x12/\n\x0bmaterialize\x18\x87\x01 \x01(\x0b\x32\x17.whitenoise.MaterializeH\x00\x12\'\n\x07maximum\x18\x88\x01 \x01(\x0b\x32\x13.whitenoise.MaximumH\x00\x12!\n\x04mean\x18\x89\x01 \x01(\x0b\x32\x10.whitenoise.MeanH\x00\x12#\n\x05merge\x18\x8a\x01 \x01(\x0b\x32\x11.whitenoise.MergeH\x00\x12\'\n\x07minimum\x18\x8b\x01 \x01(\x0b\x32\x13.whitenoise.MinimumH\x00\x12%\n\x06modulo\x18\x8c\x01 \x01(\x0b\x32\x12.whitenoise.ModuloH\x00\x12)\n\x08multiply\x18\x8d\x01 \x01(\x0b\x32\x14.whitenoise.MultiplyH\x00\x12%\n\x06negate\x18\x8e\x01 \x01(\x0b\x32\x12.whitenoise.NegateH\x00\x12)\n\x08negative\x18\x8f\x01 \x01(\x0b\x32\x14.whitenoise.NegativeH\x00\x12+\n\tpartition\x18\x91\x01 \x01(\x0b\x32\x15.whitenoise.PartitionH\x00\x12#\n\x05power\x18\x92\x01 \x01(\x0b\x32\x11.whitenoise.PowerH\x00\x12)\n\x08quantile\x18\x93\x01 \x01(\x0b\x32\x14.whitenoise.QuantileH\x00\x12,\n\nraw_moment\x18\x81\x01 \x01(\x0b\x32\x15.whitenoise.RawMomentH\x00\x12%\n\x06rename\x18\x94\x01 \x01(\x0b\x32\x12.whitenoise.RenameH\x00\x12\'\n\x07reshape\x18\x95\x01 \x01(\x0b\x32\x13.whitenoise.ReshapeH\x00\x12%\n\x06resize\x18\x96\x01 \x01(\x0b\x32\x12.whitenoise.ResizeH\x00\x12&\n\x07row_max\x18\x97\x01 \x01(\x0b\x32\x12.whitenoise.RowMaxH\x00\x12&\n\x07row_min\x18\x98\x01 \x01(\x0b\x32\x12.whitenoise.RowMinH\x00\x12K\n\x1asimple_geometric_mechanism\x18\x99\x01 \x01(\x0b\x32$.whitenoise.SimpleGeometricMechanismH\x00\x12)\n\x08subtract\x18\x9b\x01 \x01(\x0b\x32\x14.whitenoise.SubtractH\x00\x12\x1f\n\x03sum\x18\x9c\x01 \x01(\x0b\x32\x0f.whitenoise.SumH\x00\x12&\n\x07to_bool\x18\x9d\x01 \x01(\x0b\x32\x12.whitenoise.ToBoolH\x00\x12(\n\x08to_float\x18\x9e\x01 \x01(\x0b\x32\x13.whitenoise.ToFloatH\x00\x12$\n\x06to_int\x18\x9f\x01 \x01(\x0b\x32\x11.whitenoise.ToIntH\x00\x12*\n\tto_string\x18\xa0\x01 \x01(\x0b\x32\x14.whitenoise.ToStringH\x00\x12)\n\x08variance\x18\xa1\x01 \x01(\x0b\x32\x14.whitenoise.VarianceH\x00\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x42\t\n\x07variant\"\x05\n\x03\x41\x62s\"\x05\n\x03\x41\x64\x64\"\x1b\n\x04\x43\x61st\x12\x13\n\x0b\x61tomic_type\x18\x01 \x01(\t\"\x07\n\x05\x43lamp\"\x19\n\x05\x43ount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\".\n\nCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\"\n\n\x08\x44igitize\"\x08\n\x06\x44ivide\"~\n\x07\x44PCount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\x12\x1d\n\x15\x65nforce_constant_time\x18\x02 \x01(\x08\x12\x11\n\tmechanism\x18\x03 \x01(\t\x12/\n\rprivacy_usage\x18\x04 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"t\n\x0c\x44PCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"p\n\x0b\x44PHistogram\x12\x1d\n\x15\x65nforce_constant_time\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"O\n\tDPMaximum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"d\n\x06\x44PMean\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"e\n\x08\x44PMedian\x12\x15\n\rinterpolation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"O\n\tDPMinimum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"v\n\nDPQuantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\x12\x11\n\tmechanism\x18\x03 \x01(\t\x12/\n\rprivacy_usage\x18\x04 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"`\n\x0b\x44PRawMoment\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12\r\n\x05order\x18\x02 \x01(\r\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"K\n\x05\x44PSum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"r\n\nDPVariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\x07\n\x05\x45qual\"G\n\x14\x45xponentialMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\x08\n\x06\x46ilter\"D\n\x11GaussianMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\r\n\x0bGreaterThan\"\x0b\n\tHistogram\"\x08\n\x06Impute\"\x07\n\x05Index\"C\n\x10LaplaceMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\n\n\x08LessThan\"\t\n\x07Literal\"\x05\n\x03Log\"\x05\n\x03\x41nd\"\x04\n\x02Or\"/\n\x03Map\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\"B\n\x0bMaterialize\x12\x11\n\tfile_path\x18\x01 \x01(\t\x12\x0e\n\x06public\x18\x02 \x01(\x08\x12\x10\n\x08skip_row\x18\x03 \x01(\x08\"\t\n\x07Maximum\"\x06\n\x04Mean\"\x07\n\x05Merge\"\t\n\x07Minimum\"\x08\n\x06Modulo\"\n\n\x08Multiply\"\x08\n\x06Negate\"\n\n\x08Negative\"\x0b\n\tPartition\"\x07\n\x05Power\"0\n\x08Quantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\"\x1a\n\tRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\"\x08\n\x06Rename\";\n\x07Reshape\x12\x0e\n\x06layout\x18\x01 \x01(\t\x12\r\n\x05shape\x18\x02 \x03(\r\x12\x11\n\tsymmetric\x18\x03 \x01(\x08\"\x08\n\x06Resize\"\x08\n\x06RowMax\"\x08\n\x06RowMin\"j\n\x18SimpleGeometricMechanism\x12\x1d\n\x15\x65nforce_constant_time\x18\x01 \x01(\x08\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"\n\n\x08Subtract\"\x05\n\x03Sum\"\x08\n\x06ToBool\"\t\n\x07ToFloat\"\x07\n\x05ToInt\"\n\n\x08ToString\",\n\x08Variance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x62\x06proto3')
   ,
   dependencies=[value__pb2.DESCRIPTOR,])
 
@@ -61,8 +61,8 @@ _COMPONENT_ARGUMENTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2641,
-  serialized_end=2689,
+  serialized_start=2692,
+  serialized_end=2740,
 )
 
 _COMPONENT = _descriptor.Descriptor(
@@ -109,42 +109,42 @@ _COMPONENT = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='cast', full_name='whitenoise.Component.cast', index=5,
-      number=102, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='clamp', full_name='whitenoise.Component.clamp', index=6,
-      number=103, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='count', full_name='whitenoise.Component.count', index=7,
       number=104, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='covariance', full_name='whitenoise.Component.covariance', index=8,
+      name='clamp', full_name='whitenoise.Component.clamp', index=6,
       number=105, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='digitize', full_name='whitenoise.Component.digitize', index=9,
+      name='count', full_name='whitenoise.Component.count', index=7,
       number=106, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='divide', full_name='whitenoise.Component.divide', index=10,
+      name='covariance', full_name='whitenoise.Component.covariance', index=8,
       number=107, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='digitize', full_name='whitenoise.Component.digitize', index=9,
+      number=119, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='divide', full_name='whitenoise.Component.divide', index=10,
+      number=120, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -199,15 +199,15 @@ _COMPONENT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dp_moment_raw', full_name='whitenoise.Component.dp_moment_raw', index=18,
-      number=115, type=11, cpp_type=10, label=1,
+      name='dp_quantile', full_name='whitenoise.Component.dp_quantile', index=18,
+      number=116, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dp_quantile', full_name='whitenoise.Component.dp_quantile', index=19,
-      number=116, type=11, cpp_type=10, label=1,
+      name='dp_raw_moment', full_name='whitenoise.Component.dp_raw_moment', index=19,
+      number=115, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -228,273 +228,287 @@ _COMPONENT = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='equal', full_name='whitenoise.Component.equal', index=22,
-      number=119, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='exponential_mechanism', full_name='whitenoise.Component.exponential_mechanism', index=23,
-      number=120, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='filter', full_name='whitenoise.Component.filter', index=24,
       number=121, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='gaussian_mechanism', full_name='whitenoise.Component.gaussian_mechanism', index=25,
+      name='exponential_mechanism', full_name='whitenoise.Component.exponential_mechanism', index=23,
       number=122, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='greater_than', full_name='whitenoise.Component.greater_than', index=26,
+      name='filter', full_name='whitenoise.Component.filter', index=24,
       number=123, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='histogram', full_name='whitenoise.Component.histogram', index=27,
+      name='gaussian_mechanism', full_name='whitenoise.Component.gaussian_mechanism', index=25,
       number=124, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='impute', full_name='whitenoise.Component.impute', index=28,
+      name='greater_than', full_name='whitenoise.Component.greater_than', index=26,
       number=125, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='index', full_name='whitenoise.Component.index', index=29,
+      name='histogram', full_name='whitenoise.Component.histogram', index=27,
       number=126, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='kth_raw_sample_moment', full_name='whitenoise.Component.kth_raw_sample_moment', index=30,
+      name='impute', full_name='whitenoise.Component.impute', index=28,
       number=127, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='laplace_mechanism', full_name='whitenoise.Component.laplace_mechanism', index=31,
+      name='index', full_name='whitenoise.Component.index', index=29,
       number=128, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='less_than', full_name='whitenoise.Component.less_than', index=32,
-      number=129, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='literal', full_name='whitenoise.Component.literal', index=33,
+      name='laplace_mechanism', full_name='whitenoise.Component.laplace_mechanism', index=30,
       number=130, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='log', full_name='whitenoise.Component.log', index=34,
+      name='less_than', full_name='whitenoise.Component.less_than', index=31,
       number=131, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='logical_and', full_name='whitenoise.Component.logical_and', index=35,
+      name='literal', full_name='whitenoise.Component.literal', index=32,
       number=132, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='logical_or', full_name='whitenoise.Component.logical_or', index=36,
+      name='log', full_name='whitenoise.Component.log', index=33,
       number=133, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='materialize', full_name='whitenoise.Component.materialize', index=37,
-      number=134, type=11, cpp_type=10, label=1,
+      name='logical_and', full_name='whitenoise.Component.logical_and', index=34,
+      number=102, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='maximum', full_name='whitenoise.Component.maximum', index=38,
-      number=135, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='mean', full_name='whitenoise.Component.mean', index=39,
-      number=136, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='minimum', full_name='whitenoise.Component.minimum', index=40,
-      number=137, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='modulo', full_name='whitenoise.Component.modulo', index=41,
-      number=138, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='multiply', full_name='whitenoise.Component.multiply', index=42,
-      number=139, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='negate', full_name='whitenoise.Component.negate', index=43,
-      number=140, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='negative', full_name='whitenoise.Component.negative', index=44,
-      number=141, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='partition', full_name='whitenoise.Component.partition', index=45,
-      number=142, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='power', full_name='whitenoise.Component.power', index=46,
-      number=143, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='quantile', full_name='whitenoise.Component.quantile', index=47,
+      name='logical_or', full_name='whitenoise.Component.logical_or', index=35,
       number=144, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='rename', full_name='whitenoise.Component.rename', index=48,
+      name='map', full_name='whitenoise.Component.map', index=36,
+      number=134, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='materialize', full_name='whitenoise.Component.materialize', index=37,
+      number=135, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='maximum', full_name='whitenoise.Component.maximum', index=38,
+      number=136, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='mean', full_name='whitenoise.Component.mean', index=39,
+      number=137, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='merge', full_name='whitenoise.Component.merge', index=40,
+      number=138, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='minimum', full_name='whitenoise.Component.minimum', index=41,
+      number=139, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='modulo', full_name='whitenoise.Component.modulo', index=42,
+      number=140, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='multiply', full_name='whitenoise.Component.multiply', index=43,
+      number=141, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='negate', full_name='whitenoise.Component.negate', index=44,
+      number=142, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='negative', full_name='whitenoise.Component.negative', index=45,
+      number=143, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='partition', full_name='whitenoise.Component.partition', index=46,
       number=145, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='reshape', full_name='whitenoise.Component.reshape', index=49,
+      name='power', full_name='whitenoise.Component.power', index=47,
       number=146, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='resize', full_name='whitenoise.Component.resize', index=50,
+      name='quantile', full_name='whitenoise.Component.quantile', index=48,
       number=147, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='row_max', full_name='whitenoise.Component.row_max', index=51,
+      name='raw_moment', full_name='whitenoise.Component.raw_moment', index=49,
+      number=129, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='rename', full_name='whitenoise.Component.rename', index=50,
       number=148, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='row_min', full_name='whitenoise.Component.row_min', index=52,
+      name='reshape', full_name='whitenoise.Component.reshape', index=51,
       number=149, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='simple_geometric_mechanism', full_name='whitenoise.Component.simple_geometric_mechanism', index=53,
+      name='resize', full_name='whitenoise.Component.resize', index=52,
       number=150, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='subtract', full_name='whitenoise.Component.subtract', index=54,
+      name='row_max', full_name='whitenoise.Component.row_max', index=53,
       number=151, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='sum', full_name='whitenoise.Component.sum', index=55,
+      name='row_min', full_name='whitenoise.Component.row_min', index=54,
       number=152, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_bool', full_name='whitenoise.Component.to_bool', index=56,
+      name='simple_geometric_mechanism', full_name='whitenoise.Component.simple_geometric_mechanism', index=55,
       number=153, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_float', full_name='whitenoise.Component.to_float', index=57,
-      number=154, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='to_int', full_name='whitenoise.Component.to_int', index=58,
+      name='subtract', full_name='whitenoise.Component.subtract', index=56,
       number=155, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_string', full_name='whitenoise.Component.to_string', index=59,
+      name='sum', full_name='whitenoise.Component.sum', index=57,
       number=156, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='variance', full_name='whitenoise.Component.variance', index=60,
+      name='to_bool', full_name='whitenoise.Component.to_bool', index=58,
       number=157, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='to_float', full_name='whitenoise.Component.to_float', index=59,
+      number=158, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='to_int', full_name='whitenoise.Component.to_int', index=60,
+      number=159, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='to_string', full_name='whitenoise.Component.to_string', index=61,
+      number=160, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='variance', full_name='whitenoise.Component.variance', index=62,
+      number=161, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -515,7 +529,7 @@ _COMPONENT = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=46,
-  serialized_end=2700,
+  serialized_end=2751,
 )
 
 
@@ -538,8 +552,8 @@ _ABS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2702,
-  serialized_end=2707,
+  serialized_start=2753,
+  serialized_end=2758,
 )
 
 
@@ -562,8 +576,8 @@ _ADD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2709,
-  serialized_end=2714,
+  serialized_start=2760,
+  serialized_end=2765,
 )
 
 
@@ -593,8 +607,8 @@ _CAST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2716,
-  serialized_end=2743,
+  serialized_start=2767,
+  serialized_end=2794,
 )
 
 
@@ -617,8 +631,8 @@ _CLAMP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2745,
-  serialized_end=2752,
+  serialized_start=2796,
+  serialized_end=2803,
 )
 
 
@@ -629,6 +643,13 @@ _COUNT = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='distinct', full_name='whitenoise.Count.distinct', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -641,8 +662,8 @@ _COUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2754,
-  serialized_end=2761,
+  serialized_start=2805,
+  serialized_end=2830,
 )
 
 
@@ -672,8 +693,8 @@ _COVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2763,
-  serialized_end=2809,
+  serialized_start=2832,
+  serialized_end=2878,
 )
 
 
@@ -696,8 +717,8 @@ _DIGITIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2811,
-  serialized_end=2821,
+  serialized_start=2880,
+  serialized_end=2890,
 )
 
 
@@ -720,8 +741,8 @@ _DIVIDE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2823,
-  serialized_end=2831,
+  serialized_start=2892,
+  serialized_end=2900,
 )
 
 
@@ -733,22 +754,29 @@ _DPCOUNT = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='enforce_constant_time', full_name='whitenoise.DPCount.enforce_constant_time', index=0,
+      name='distinct', full_name='whitenoise.DPCount.distinct', index=0,
       number=1, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='mechanism', full_name='whitenoise.DPCount.mechanism', index=1,
-      number=2, type=9, cpp_type=9, label=1,
+      name='enforce_constant_time', full_name='whitenoise.DPCount.enforce_constant_time', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='mechanism', full_name='whitenoise.DPCount.mechanism', index=2,
+      number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='privacy_usage', full_name='whitenoise.DPCount.privacy_usage', index=2,
-      number=3, type=11, cpp_type=10, label=3,
+      name='privacy_usage', full_name='whitenoise.DPCount.privacy_usage', index=3,
+      number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -765,8 +793,8 @@ _DPCOUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2833,
-  serialized_end=2941,
+  serialized_start=2902,
+  serialized_end=3028,
 )
 
 
@@ -810,8 +838,8 @@ _DPCOVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2943,
-  serialized_end=3059,
+  serialized_start=3030,
+  serialized_end=3146,
 )
 
 
@@ -855,8 +883,8 @@ _DPHISTOGRAM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3061,
-  serialized_end=3173,
+  serialized_start=3148,
+  serialized_end=3260,
 )
 
 
@@ -893,8 +921,8 @@ _DPMAXIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3175,
-  serialized_end=3254,
+  serialized_start=3262,
+  serialized_end=3341,
 )
 
 
@@ -938,8 +966,8 @@ _DPMEAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3256,
-  serialized_end=3356,
+  serialized_start=3343,
+  serialized_end=3443,
 )
 
 
@@ -983,8 +1011,8 @@ _DPMEDIAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3358,
-  serialized_end=3459,
+  serialized_start=3445,
+  serialized_end=3546,
 )
 
 
@@ -1021,53 +1049,8 @@ _DPMINIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3461,
-  serialized_end=3540,
-)
-
-
-_DPMOMENTRAW = _descriptor.Descriptor(
-  name='DPMomentRaw',
-  full_name='whitenoise.DPMomentRaw',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='mechanism', full_name='whitenoise.DPMomentRaw.mechanism', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='order', full_name='whitenoise.DPMomentRaw.order', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='privacy_usage', full_name='whitenoise.DPMomentRaw.privacy_usage', index=2,
-      number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3542,
-  serialized_end=3638,
+  serialized_start=3548,
+  serialized_end=3627,
 )
 
 
@@ -1118,8 +1101,53 @@ _DPQUANTILE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3640,
-  serialized_end=3758,
+  serialized_start=3629,
+  serialized_end=3747,
+)
+
+
+_DPRAWMOMENT = _descriptor.Descriptor(
+  name='DPRawMoment',
+  full_name='whitenoise.DPRawMoment',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='mechanism', full_name='whitenoise.DPRawMoment.mechanism', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='order', full_name='whitenoise.DPRawMoment.order', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='privacy_usage', full_name='whitenoise.DPRawMoment.privacy_usage', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3749,
+  serialized_end=3845,
 )
 
 
@@ -1156,8 +1184,8 @@ _DPSUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3760,
-  serialized_end=3835,
+  serialized_start=3847,
+  serialized_end=3922,
 )
 
 
@@ -1201,8 +1229,8 @@ _DPVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3837,
-  serialized_end=3951,
+  serialized_start=3924,
+  serialized_end=4038,
 )
 
 
@@ -1225,8 +1253,8 @@ _EQUAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3953,
-  serialized_end=3960,
+  serialized_start=4040,
+  serialized_end=4047,
 )
 
 
@@ -1256,8 +1284,8 @@ _EXPONENTIALMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3962,
-  serialized_end=4033,
+  serialized_start=4049,
+  serialized_end=4120,
 )
 
 
@@ -1280,8 +1308,8 @@ _FILTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4035,
-  serialized_end=4043,
+  serialized_start=4122,
+  serialized_end=4130,
 )
 
 
@@ -1311,8 +1339,8 @@ _GAUSSIANMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4045,
-  serialized_end=4113,
+  serialized_start=4132,
+  serialized_end=4200,
 )
 
 
@@ -1335,8 +1363,8 @@ _GREATERTHAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4115,
-  serialized_end=4128,
+  serialized_start=4202,
+  serialized_end=4215,
 )
 
 
@@ -1359,8 +1387,8 @@ _HISTOGRAM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4130,
-  serialized_end=4141,
+  serialized_start=4217,
+  serialized_end=4228,
 )
 
 
@@ -1383,8 +1411,8 @@ _IMPUTE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4143,
-  serialized_end=4151,
+  serialized_start=4230,
+  serialized_end=4238,
 )
 
 
@@ -1407,39 +1435,8 @@ _INDEX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4153,
-  serialized_end=4160,
-)
-
-
-_KTHRAWSAMPLEMOMENT = _descriptor.Descriptor(
-  name='KthRawSampleMoment',
-  full_name='whitenoise.KthRawSampleMoment',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='k', full_name='whitenoise.KthRawSampleMoment.k', index=0,
-      number=1, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4162,
-  serialized_end=4193,
+  serialized_start=4240,
+  serialized_end=4247,
 )
 
 
@@ -1469,8 +1466,8 @@ _LAPLACEMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4195,
-  serialized_end=4262,
+  serialized_start=4249,
+  serialized_end=4316,
 )
 
 
@@ -1493,8 +1490,8 @@ _LESSTHAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4264,
-  serialized_end=4274,
+  serialized_start=4318,
+  serialized_end=4328,
 )
 
 
@@ -1517,8 +1514,8 @@ _LITERAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4276,
-  serialized_end=4285,
+  serialized_start=4330,
+  serialized_end=4339,
 )
 
 
@@ -1541,8 +1538,8 @@ _LOG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4287,
-  serialized_end=4292,
+  serialized_start=4341,
+  serialized_end=4346,
 )
 
 
@@ -1565,8 +1562,8 @@ _AND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4294,
-  serialized_end=4299,
+  serialized_start=4348,
+  serialized_end=4353,
 )
 
 
@@ -1589,8 +1586,39 @@ _OR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4301,
-  serialized_end=4305,
+  serialized_start=4355,
+  serialized_end=4359,
+)
+
+
+_MAP = _descriptor.Descriptor(
+  name='Map',
+  full_name='whitenoise.Map',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='component', full_name='whitenoise.Map.component', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4361,
+  serialized_end=4408,
 )
 
 
@@ -1634,8 +1662,8 @@ _MATERIALIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4307,
-  serialized_end=4373,
+  serialized_start=4410,
+  serialized_end=4476,
 )
 
 
@@ -1658,8 +1686,8 @@ _MAXIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4375,
-  serialized_end=4384,
+  serialized_start=4478,
+  serialized_end=4487,
 )
 
 
@@ -1682,8 +1710,32 @@ _MEAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4386,
-  serialized_end=4392,
+  serialized_start=4489,
+  serialized_end=4495,
+)
+
+
+_MERGE = _descriptor.Descriptor(
+  name='Merge',
+  full_name='whitenoise.Merge',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4497,
+  serialized_end=4504,
 )
 
 
@@ -1706,8 +1758,8 @@ _MINIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4394,
-  serialized_end=4403,
+  serialized_start=4506,
+  serialized_end=4515,
 )
 
 
@@ -1730,8 +1782,8 @@ _MODULO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4405,
-  serialized_end=4413,
+  serialized_start=4517,
+  serialized_end=4525,
 )
 
 
@@ -1754,8 +1806,8 @@ _MULTIPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4415,
-  serialized_end=4425,
+  serialized_start=4527,
+  serialized_end=4537,
 )
 
 
@@ -1778,8 +1830,8 @@ _NEGATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4427,
-  serialized_end=4435,
+  serialized_start=4539,
+  serialized_end=4547,
 )
 
 
@@ -1802,8 +1854,8 @@ _NEGATIVE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4437,
-  serialized_end=4447,
+  serialized_start=4549,
+  serialized_end=4559,
 )
 
 
@@ -1826,8 +1878,8 @@ _PARTITION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4449,
-  serialized_end=4460,
+  serialized_start=4561,
+  serialized_end=4572,
 )
 
 
@@ -1850,8 +1902,8 @@ _POWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4462,
-  serialized_end=4469,
+  serialized_start=4574,
+  serialized_end=4581,
 )
 
 
@@ -1888,8 +1940,39 @@ _QUANTILE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4471,
-  serialized_end=4519,
+  serialized_start=4583,
+  serialized_end=4631,
+)
+
+
+_RAWMOMENT = _descriptor.Descriptor(
+  name='RawMoment',
+  full_name='whitenoise.RawMoment',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='order', full_name='whitenoise.RawMoment.order', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4633,
+  serialized_end=4659,
 )
 
 
@@ -1912,8 +1995,8 @@ _RENAME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4521,
-  serialized_end=4529,
+  serialized_start=4661,
+  serialized_end=4669,
 )
 
 
@@ -1957,8 +2040,8 @@ _RESHAPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4531,
-  serialized_end=4590,
+  serialized_start=4671,
+  serialized_end=4730,
 )
 
 
@@ -1981,8 +2064,8 @@ _RESIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4592,
-  serialized_end=4600,
+  serialized_start=4732,
+  serialized_end=4740,
 )
 
 
@@ -2005,8 +2088,8 @@ _ROWMAX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4602,
-  serialized_end=4610,
+  serialized_start=4742,
+  serialized_end=4750,
 )
 
 
@@ -2029,8 +2112,8 @@ _ROWMIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4612,
-  serialized_end=4620,
+  serialized_start=4752,
+  serialized_end=4760,
 )
 
 
@@ -2067,8 +2150,8 @@ _SIMPLEGEOMETRICMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4622,
-  serialized_end=4728,
+  serialized_start=4762,
+  serialized_end=4868,
 )
 
 
@@ -2091,8 +2174,8 @@ _SUBTRACT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4730,
-  serialized_end=4740,
+  serialized_start=4870,
+  serialized_end=4880,
 )
 
 
@@ -2115,8 +2198,8 @@ _SUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4742,
-  serialized_end=4747,
+  serialized_start=4882,
+  serialized_end=4887,
 )
 
 
@@ -2139,8 +2222,8 @@ _TOBOOL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4749,
-  serialized_end=4757,
+  serialized_start=4889,
+  serialized_end=4897,
 )
 
 
@@ -2163,8 +2246,8 @@ _TOFLOAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4759,
-  serialized_end=4768,
+  serialized_start=4899,
+  serialized_end=4908,
 )
 
 
@@ -2187,8 +2270,8 @@ _TOINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4770,
-  serialized_end=4777,
+  serialized_start=4910,
+  serialized_end=4917,
 )
 
 
@@ -2211,8 +2294,8 @@ _TOSTRING = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4779,
-  serialized_end=4789,
+  serialized_start=4919,
+  serialized_end=4929,
 )
 
 
@@ -2242,8 +2325,8 @@ _VARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4791,
-  serialized_end=4835,
+  serialized_start=4931,
+  serialized_end=4975,
 )
 
 _COMPONENT_ARGUMENTSENTRY.containing_type = _COMPONENT
@@ -2263,8 +2346,8 @@ _COMPONENT.fields_by_name['dp_maximum'].message_type = _DPMAXIMUM
 _COMPONENT.fields_by_name['dp_mean'].message_type = _DPMEAN
 _COMPONENT.fields_by_name['dp_median'].message_type = _DPMEDIAN
 _COMPONENT.fields_by_name['dp_minimum'].message_type = _DPMINIMUM
-_COMPONENT.fields_by_name['dp_moment_raw'].message_type = _DPMOMENTRAW
 _COMPONENT.fields_by_name['dp_quantile'].message_type = _DPQUANTILE
+_COMPONENT.fields_by_name['dp_raw_moment'].message_type = _DPRAWMOMENT
 _COMPONENT.fields_by_name['dp_sum'].message_type = _DPSUM
 _COMPONENT.fields_by_name['dp_variance'].message_type = _DPVARIANCE
 _COMPONENT.fields_by_name['equal'].message_type = _EQUAL
@@ -2275,16 +2358,17 @@ _COMPONENT.fields_by_name['greater_than'].message_type = _GREATERTHAN
 _COMPONENT.fields_by_name['histogram'].message_type = _HISTOGRAM
 _COMPONENT.fields_by_name['impute'].message_type = _IMPUTE
 _COMPONENT.fields_by_name['index'].message_type = _INDEX
-_COMPONENT.fields_by_name['kth_raw_sample_moment'].message_type = _KTHRAWSAMPLEMOMENT
 _COMPONENT.fields_by_name['laplace_mechanism'].message_type = _LAPLACEMECHANISM
 _COMPONENT.fields_by_name['less_than'].message_type = _LESSTHAN
 _COMPONENT.fields_by_name['literal'].message_type = _LITERAL
 _COMPONENT.fields_by_name['log'].message_type = _LOG
 _COMPONENT.fields_by_name['logical_and'].message_type = _AND
 _COMPONENT.fields_by_name['logical_or'].message_type = _OR
+_COMPONENT.fields_by_name['map'].message_type = _MAP
 _COMPONENT.fields_by_name['materialize'].message_type = _MATERIALIZE
 _COMPONENT.fields_by_name['maximum'].message_type = _MAXIMUM
 _COMPONENT.fields_by_name['mean'].message_type = _MEAN
+_COMPONENT.fields_by_name['merge'].message_type = _MERGE
 _COMPONENT.fields_by_name['minimum'].message_type = _MINIMUM
 _COMPONENT.fields_by_name['modulo'].message_type = _MODULO
 _COMPONENT.fields_by_name['multiply'].message_type = _MULTIPLY
@@ -2293,6 +2377,7 @@ _COMPONENT.fields_by_name['negative'].message_type = _NEGATIVE
 _COMPONENT.fields_by_name['partition'].message_type = _PARTITION
 _COMPONENT.fields_by_name['power'].message_type = _POWER
 _COMPONENT.fields_by_name['quantile'].message_type = _QUANTILE
+_COMPONENT.fields_by_name['raw_moment'].message_type = _RAWMOMENT
 _COMPONENT.fields_by_name['rename'].message_type = _RENAME
 _COMPONENT.fields_by_name['reshape'].message_type = _RESHAPE
 _COMPONENT.fields_by_name['resize'].message_type = _RESIZE
@@ -2352,11 +2437,11 @@ _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['dp_minimum'])
 _COMPONENT.fields_by_name['dp_minimum'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
-  _COMPONENT.fields_by_name['dp_moment_raw'])
-_COMPONENT.fields_by_name['dp_moment_raw'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
-_COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['dp_quantile'])
 _COMPONENT.fields_by_name['dp_quantile'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
+_COMPONENT.oneofs_by_name['variant'].fields.append(
+  _COMPONENT.fields_by_name['dp_raw_moment'])
+_COMPONENT.fields_by_name['dp_raw_moment'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['dp_sum'])
 _COMPONENT.fields_by_name['dp_sum'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
@@ -2388,9 +2473,6 @@ _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['index'])
 _COMPONENT.fields_by_name['index'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
-  _COMPONENT.fields_by_name['kth_raw_sample_moment'])
-_COMPONENT.fields_by_name['kth_raw_sample_moment'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
-_COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['laplace_mechanism'])
 _COMPONENT.fields_by_name['laplace_mechanism'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
@@ -2409,6 +2491,9 @@ _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['logical_or'])
 _COMPONENT.fields_by_name['logical_or'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
+  _COMPONENT.fields_by_name['map'])
+_COMPONENT.fields_by_name['map'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
+_COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['materialize'])
 _COMPONENT.fields_by_name['materialize'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
@@ -2417,6 +2502,9 @@ _COMPONENT.fields_by_name['maximum'].containing_oneof = _COMPONENT.oneofs_by_nam
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['mean'])
 _COMPONENT.fields_by_name['mean'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
+_COMPONENT.oneofs_by_name['variant'].fields.append(
+  _COMPONENT.fields_by_name['merge'])
+_COMPONENT.fields_by_name['merge'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['minimum'])
 _COMPONENT.fields_by_name['minimum'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
@@ -2441,6 +2529,9 @@ _COMPONENT.fields_by_name['power'].containing_oneof = _COMPONENT.oneofs_by_name[
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['quantile'])
 _COMPONENT.fields_by_name['quantile'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
+_COMPONENT.oneofs_by_name['variant'].fields.append(
+  _COMPONENT.fields_by_name['raw_moment'])
+_COMPONENT.fields_by_name['raw_moment'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['rename'])
 _COMPONENT.fields_by_name['rename'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
@@ -2487,13 +2578,14 @@ _DPMAXIMUM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSA
 _DPMEAN.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _DPMEDIAN.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _DPMINIMUM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
-_DPMOMENTRAW.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _DPQUANTILE.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
+_DPRAWMOMENT.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _DPSUM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _DPVARIANCE.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _EXPONENTIALMECHANISM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _GAUSSIANMECHANISM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 _LAPLACEMECHANISM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
+_MAP.fields_by_name['component'].message_type = _COMPONENT
 _SIMPLEGEOMETRICMECHANISM.fields_by_name['privacy_usage'].message_type = value__pb2._PRIVACYUSAGE
 DESCRIPTOR.message_types_by_name['Component'] = _COMPONENT
 DESCRIPTOR.message_types_by_name['Abs'] = _ABS
@@ -2511,8 +2603,8 @@ DESCRIPTOR.message_types_by_name['DPMaximum'] = _DPMAXIMUM
 DESCRIPTOR.message_types_by_name['DPMean'] = _DPMEAN
 DESCRIPTOR.message_types_by_name['DPMedian'] = _DPMEDIAN
 DESCRIPTOR.message_types_by_name['DPMinimum'] = _DPMINIMUM
-DESCRIPTOR.message_types_by_name['DPMomentRaw'] = _DPMOMENTRAW
 DESCRIPTOR.message_types_by_name['DPQuantile'] = _DPQUANTILE
+DESCRIPTOR.message_types_by_name['DPRawMoment'] = _DPRAWMOMENT
 DESCRIPTOR.message_types_by_name['DPSum'] = _DPSUM
 DESCRIPTOR.message_types_by_name['DPVariance'] = _DPVARIANCE
 DESCRIPTOR.message_types_by_name['Equal'] = _EQUAL
@@ -2523,16 +2615,17 @@ DESCRIPTOR.message_types_by_name['GreaterThan'] = _GREATERTHAN
 DESCRIPTOR.message_types_by_name['Histogram'] = _HISTOGRAM
 DESCRIPTOR.message_types_by_name['Impute'] = _IMPUTE
 DESCRIPTOR.message_types_by_name['Index'] = _INDEX
-DESCRIPTOR.message_types_by_name['KthRawSampleMoment'] = _KTHRAWSAMPLEMOMENT
 DESCRIPTOR.message_types_by_name['LaplaceMechanism'] = _LAPLACEMECHANISM
 DESCRIPTOR.message_types_by_name['LessThan'] = _LESSTHAN
 DESCRIPTOR.message_types_by_name['Literal'] = _LITERAL
 DESCRIPTOR.message_types_by_name['Log'] = _LOG
 DESCRIPTOR.message_types_by_name['And'] = _AND
 DESCRIPTOR.message_types_by_name['Or'] = _OR
+DESCRIPTOR.message_types_by_name['Map'] = _MAP
 DESCRIPTOR.message_types_by_name['Materialize'] = _MATERIALIZE
 DESCRIPTOR.message_types_by_name['Maximum'] = _MAXIMUM
 DESCRIPTOR.message_types_by_name['Mean'] = _MEAN
+DESCRIPTOR.message_types_by_name['Merge'] = _MERGE
 DESCRIPTOR.message_types_by_name['Minimum'] = _MINIMUM
 DESCRIPTOR.message_types_by_name['Modulo'] = _MODULO
 DESCRIPTOR.message_types_by_name['Multiply'] = _MULTIPLY
@@ -2541,6 +2634,7 @@ DESCRIPTOR.message_types_by_name['Negative'] = _NEGATIVE
 DESCRIPTOR.message_types_by_name['Partition'] = _PARTITION
 DESCRIPTOR.message_types_by_name['Power'] = _POWER
 DESCRIPTOR.message_types_by_name['Quantile'] = _QUANTILE
+DESCRIPTOR.message_types_by_name['RawMoment'] = _RAWMOMENT
 DESCRIPTOR.message_types_by_name['Rename'] = _RENAME
 DESCRIPTOR.message_types_by_name['Reshape'] = _RESHAPE
 DESCRIPTOR.message_types_by_name['Resize'] = _RESIZE
@@ -2676,19 +2770,19 @@ DPMinimum = _reflection.GeneratedProtocolMessageType('DPMinimum', (_message.Mess
   })
 _sym_db.RegisterMessage(DPMinimum)
 
-DPMomentRaw = _reflection.GeneratedProtocolMessageType('DPMomentRaw', (_message.Message,), {
-  'DESCRIPTOR' : _DPMOMENTRAW,
-  '__module__' : 'components_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.DPMomentRaw)
-  })
-_sym_db.RegisterMessage(DPMomentRaw)
-
 DPQuantile = _reflection.GeneratedProtocolMessageType('DPQuantile', (_message.Message,), {
   'DESCRIPTOR' : _DPQUANTILE,
   '__module__' : 'components_pb2'
   # @@protoc_insertion_point(class_scope:whitenoise.DPQuantile)
   })
 _sym_db.RegisterMessage(DPQuantile)
+
+DPRawMoment = _reflection.GeneratedProtocolMessageType('DPRawMoment', (_message.Message,), {
+  'DESCRIPTOR' : _DPRAWMOMENT,
+  '__module__' : 'components_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.DPRawMoment)
+  })
+_sym_db.RegisterMessage(DPRawMoment)
 
 DPSum = _reflection.GeneratedProtocolMessageType('DPSum', (_message.Message,), {
   'DESCRIPTOR' : _DPSUM,
@@ -2760,13 +2854,6 @@ Index = _reflection.GeneratedProtocolMessageType('Index', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Index)
 
-KthRawSampleMoment = _reflection.GeneratedProtocolMessageType('KthRawSampleMoment', (_message.Message,), {
-  'DESCRIPTOR' : _KTHRAWSAMPLEMOMENT,
-  '__module__' : 'components_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.KthRawSampleMoment)
-  })
-_sym_db.RegisterMessage(KthRawSampleMoment)
-
 LaplaceMechanism = _reflection.GeneratedProtocolMessageType('LaplaceMechanism', (_message.Message,), {
   'DESCRIPTOR' : _LAPLACEMECHANISM,
   '__module__' : 'components_pb2'
@@ -2809,6 +2896,13 @@ Or = _reflection.GeneratedProtocolMessageType('Or', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Or)
 
+Map = _reflection.GeneratedProtocolMessageType('Map', (_message.Message,), {
+  'DESCRIPTOR' : _MAP,
+  '__module__' : 'components_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.Map)
+  })
+_sym_db.RegisterMessage(Map)
+
 Materialize = _reflection.GeneratedProtocolMessageType('Materialize', (_message.Message,), {
   'DESCRIPTOR' : _MATERIALIZE,
   '__module__' : 'components_pb2'
@@ -2829,6 +2923,13 @@ Mean = _reflection.GeneratedProtocolMessageType('Mean', (_message.Message,), {
   # @@protoc_insertion_point(class_scope:whitenoise.Mean)
   })
 _sym_db.RegisterMessage(Mean)
+
+Merge = _reflection.GeneratedProtocolMessageType('Merge', (_message.Message,), {
+  'DESCRIPTOR' : _MERGE,
+  '__module__' : 'components_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.Merge)
+  })
+_sym_db.RegisterMessage(Merge)
 
 Minimum = _reflection.GeneratedProtocolMessageType('Minimum', (_message.Message,), {
   'DESCRIPTOR' : _MINIMUM,
@@ -2885,6 +2986,13 @@ Quantile = _reflection.GeneratedProtocolMessageType('Quantile', (_message.Messag
   # @@protoc_insertion_point(class_scope:whitenoise.Quantile)
   })
 _sym_db.RegisterMessage(Quantile)
+
+RawMoment = _reflection.GeneratedProtocolMessageType('RawMoment', (_message.Message,), {
+  'DESCRIPTOR' : _RAWMOMENT,
+  '__module__' : 'components_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.RawMoment)
+  })
+_sym_db.RegisterMessage(RawMoment)
 
 Rename = _reflection.GeneratedProtocolMessageType('Rename', (_message.Message,), {
   'DESCRIPTOR' : _RENAME,

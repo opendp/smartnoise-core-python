@@ -28,8 +28,9 @@ def test_multilayer_analysis(run=True):
         age_clamped = wn.clamp(age, lower=0., upper=150.)
         age_resized = wn.resize(age_clamped, number_rows=1000)
 
+        race = wn.to_float(PUMS['race'])
         mean_age = wn.dp_mean(
-            data=wn.to_float(PUMS['race']),
+            data=race,
             privacy_usage={'epsilon': .65},
             data_lower=0.,
             data_upper=100.,
@@ -57,7 +58,7 @@ def test_multilayer_analysis(run=True):
             data_upper=12.
         )
 
-        # wn.dp_moment_raw(
+        # wn.dp_raw_moment(
         #     wn.to_float(PUMS['married']),
         #     privacy_usage={'epsilon': .15},
         #     data_rows=1000000,
@@ -315,7 +316,7 @@ def test_everything(run=True):
 
         age_n = wn.resize(age, number_rows=800)
         wn.dp_mean(age_n, privacy_usage={"epsilon": 0.5})
-        wn.dp_moment_raw(age_n, order=3, privacy_usage={"epsilon": 0.5})
+        wn.dp_raw_moment(age_n, order=3, privacy_usage={"epsilon": 0.5})
 
         wn.dp_sum(age, privacy_usage={"epsilon": 0.5})
         wn.dp_variance(age_n, privacy_usage={"epsilon": 0.5})
@@ -329,7 +330,7 @@ def test_everything(run=True):
         wn.gaussian_mechanism(race_histogram, privacy_usage={"epsilon": 0.5, "delta": .000001})
         wn.laplace_mechanism(race_histogram, privacy_usage={"epsilon": 0.5, "delta": .000001})
 
-        wn.kth_raw_sample_moment(educ, k=3)
+        wn.raw_moment(educ, order=3)
 
         wn.log(wn.clamp(educ, 0.001, 50.))
         wn.maximum(educ)

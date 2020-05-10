@@ -566,12 +566,13 @@ class Analysis(object):
     :param eager: release every time a component is added
     :param distance: currently may only be `approximate`
     :param neighboring: may be `substitute` or `add_remove`
+    :param group_size: number of individuals to protect simultaneously
     :param stack_traces: set to False to suppress potentially sensitive stack traces
     :param filter_level: may be `public`, `public_and_prior` or `all`
     """
     def __init__(self,
                  dynamic=True, eager=False,
-                 distance='approximate', neighboring='substitute',
+                 distance='approximate', neighboring='substitute', group_size=1,
                  stack_traces=True, filter_level='public'):
 
         # if false, validate the analysis before running it (enforces static validation)
@@ -595,6 +596,7 @@ class Analysis(object):
         # privacy definition
         self.distance: str = distance
         self.neighboring: str = neighboring
+        self.group_size: int = group_size
 
         # core data structures
         self.components: dict = {}

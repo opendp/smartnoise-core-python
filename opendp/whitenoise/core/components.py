@@ -129,13 +129,14 @@ def clamp(data, lower=None, upper=None, categories=None, null_value=None, **kwar
         constraints=kwargs)
 
 
-def count(data, **kwargs):
+def count(data, distinct=False, **kwargs):
     """
     Count Component
     
     Returns the number of rows in the data.
     
     :param data: 
+    :param distinct: Set to true for the number of unique members in the data.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
     :return: 
     """
@@ -145,7 +146,7 @@ def count(data, **kwargs):
             'data': Component.of(data)
         },
         options={
-            
+            'distinct': distinct
         },
         constraints=kwargs)
 
@@ -178,7 +179,7 @@ def covariance(data=None, left=None, right=None, finite_sample_correction=True, 
         constraints=kwargs)
 
 
-def dp_count(data, lower=0, upper=None, mechanism="SimpleGeometric", privacy_usage=None, enforce_constant_time=False, **kwargs):
+def dp_count(data, lower=0, upper=None, distinct=False, mechanism="SimpleGeometric", privacy_usage=None, enforce_constant_time=False, **kwargs):
     """
     DPCount Component
     
@@ -187,6 +188,7 @@ def dp_count(data, lower=0, upper=None, mechanism="SimpleGeometric", privacy_usa
     :param data: 
     :param lower: Estimated minimum possible size of the data.
     :param upper: Estimated maximum possible size of the data.
+    :param distinct: Set to true for the number of unique members in the data.
     :param mechanism: Privatizing mechanism to use. One of [`SimpleGeometric`, `Laplace`, `Gaussian`]
     :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
     :param enforce_constant_time: Whether or not to require Geometric mechanism to run in constant time.
@@ -201,6 +203,7 @@ def dp_count(data, lower=0, upper=None, mechanism="SimpleGeometric", privacy_usa
             'upper': Component.of(upper)
         },
         options={
+            'distinct': distinct,
             'mechanism': mechanism,
             'privacy_usage': serialize_privacy_usage(privacy_usage),
             'enforce_constant_time': enforce_constant_time
@@ -278,13 +281,14 @@ def dp_histogram(data, edges=None, categories=None, null_value=None, lower=0, up
         constraints=kwargs)
 
 
-def dp_maximum(data, mechanism="Laplace", privacy_usage=None, **kwargs):
+def dp_maximum(data, candidates=None, mechanism="Laplace", privacy_usage=None, **kwargs):
     """
     DPMaximum Component
     
     Returns differentially private estimates of the maximum elements of each column of the data.
     
     :param data: 
+    :param candidates: Set from which the Exponential mechanism will return an element.
     :param mechanism: Privatizing mechanism to use. One of [`Laplace`, `Gaussian`]
     :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
@@ -293,7 +297,8 @@ def dp_maximum(data, mechanism="Laplace", privacy_usage=None, **kwargs):
     return Component(
         "DPMaximum",
         arguments={
-            'data': Component.of(data)
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
         },
         options={
             'mechanism': mechanism,
@@ -302,14 +307,14 @@ def dp_maximum(data, mechanism="Laplace", privacy_usage=None, **kwargs):
         constraints=kwargs)
 
 
-def dp_mean(data, implementation="resized", mechanism="Laplace", privacy_usage=None, **kwargs):
+def dp_mean(data, implementation="resize", mechanism="Laplace", privacy_usage=None, **kwargs):
     """
     DPMean Component
     
     Returns differentially private estimates of the means of each column of the data.
     
     :param data: 
-    :param implementation: Privatizing algorithm to use. One of [`resized`, `plug-in`]
+    :param implementation: Privatizing algorithm to use. One of [`resize`, `plug-in`]
     :param mechanism: Privatizing mechanism to use. One of [`Laplace`, `Gaussian`]
     :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
@@ -356,13 +361,14 @@ def dp_median(data, candidates=None, mechanism='Exponential', privacy_usage=None
         constraints=kwargs)
 
 
-def dp_minimum(data, mechanism="Laplace", privacy_usage=None, **kwargs):
+def dp_minimum(data, candidates=None, mechanism="Laplace", privacy_usage=None, **kwargs):
     """
     DPMinimum Component
     
     Returns differentially private estimates of the minimum elements of each column of the data.
     
     :param data: 
+    :param candidates: Set from which the Exponential mechanism will return an element.
     :param mechanism: Privatizing mechanism to use. One of [`Laplace`, `Gaussian`]
     :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
@@ -371,35 +377,10 @@ def dp_minimum(data, mechanism="Laplace", privacy_usage=None, **kwargs):
     return Component(
         "DPMinimum",
         arguments={
-            'data': Component.of(data)
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
         },
         options={
-            'mechanism': mechanism,
-            'privacy_usage': serialize_privacy_usage(privacy_usage)
-        },
-        constraints=kwargs)
-
-
-def dp_moment_raw(data, order, mechanism="Laplace", privacy_usage=None, **kwargs):
-    """
-    DPMomentRaw Component
-    
-    Returns sample estimate of a raw moment for each column of the data.
-    
-    :param data: 
-    :param order: Integer statistical moment indicator.
-    :param mechanism: Privatizing mechanism to use. One of [`Laplace`, `Gaussian`]
-    :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
-    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
-    :return: Sample estimate of raw moment for each column of the data.
-    """
-    return Component(
-        "DPMomentRaw",
-        arguments={
-            'data': Component.of(data)
-        },
-        options={
-            'order': order,
             'mechanism': mechanism,
             'privacy_usage': serialize_privacy_usage(privacy_usage)
         },
@@ -432,6 +413,32 @@ def dp_quantile(data, alpha, candidates=None, mechanism='Laplace', privacy_usage
             'mechanism': mechanism,
             'privacy_usage': serialize_privacy_usage(privacy_usage),
             'interpolation': interpolation
+        },
+        constraints=kwargs)
+
+
+def dp_raw_moment(data, order, mechanism="Laplace", privacy_usage=None, **kwargs):
+    """
+    DPRawMoment Component
+    
+    Returns sample estimate of a raw moment for each column of the data.
+    
+    :param data: 
+    :param order: Integer statistical moment indicator.
+    :param mechanism: Privatizing mechanism to use. One of [`Laplace`, `Gaussian`]
+    :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: Sample estimate of raw moment for each column of the data.
+    """
+    return Component(
+        "DPRawMoment",
+        arguments={
+            'data': Component.of(data)
+        },
+        options={
+            'order': order,
+            'mechanism': mechanism,
+            'privacy_usage': serialize_privacy_usage(privacy_usage)
         },
         constraints=kwargs)
 
@@ -740,28 +747,6 @@ def index(data, columns, **kwargs):
         constraints=kwargs)
 
 
-def kth_raw_sample_moment(data, k, **kwargs):
-    """
-    KthRawSampleMoment Component
-    
-    Returns sample estimate of kth raw moment for each column of the data.
-    
-    :param data: Data for which you would like the kth raw moments.
-    :param k: Integer statistical moment indicator.
-    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
-    :return: kth raw sample moment for each column.
-    """
-    return Component(
-        "KthRawSampleMoment",
-        arguments={
-            'data': Component.of(data)
-        },
-        options={
-            'k': k
-        },
-        constraints=kwargs)
-
-
 def laplace_mechanism(data, privacy_usage=None, **kwargs):
     """
     LaplaceMechanism Component
@@ -844,6 +829,28 @@ def log(data, base=2.71828, **kwargs):
         constraints=kwargs)
 
 
+def map(component, **kwargs):
+    """
+    Map Component
+    
+    Apply Component to each data partition.
+    
+    :param **kwargs: All arguments are passed through to the component. Partitioned Indexmap arguments are mapped, and other arguments are broadcast.
+    :param component: 
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: 
+    """
+    return Component(
+        "Map",
+        arguments={**kwargs, **{
+            
+        }},
+        options={
+            'component': component
+        },
+        constraints=None)
+
+
 def materialize(column_names, file_path, public=False, skip_row=True, **kwargs):
     """
     Materialize Component
@@ -870,20 +877,22 @@ def materialize(column_names, file_path, public=False, skip_row=True, **kwargs):
         constraints=kwargs)
 
 
-def maximum(data, **kwargs):
+def maximum(data, candidates=None, **kwargs):
     """
     Maximum Component
     
     Find the maximum value of each column in the data.
     
     :param data: Data for which you want the maximum value in each column.
+    :param candidates: Set from which the Exponential mechanism will return an element.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
     :return: Maximum of each column in the data.
     """
     return Component(
         "Maximum",
         arguments={
-            'data': Component.of(data)
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
         },
         options={
             
@@ -912,20 +921,43 @@ def mean(data, **kwargs):
         constraints=kwargs)
 
 
-def minimum(data, **kwargs):
+def merge(data, **kwargs):
+    """
+    Merge Component
+    
+    merge partitions into a single array
+    
+    :param data: partitioned data to merge
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: 
+    """
+    return Component(
+        "Merge",
+        arguments={
+            'data': Component.of(data)
+        },
+        options={
+            
+        },
+        constraints=kwargs)
+
+
+def minimum(data, candidates=None, **kwargs):
     """
     Minimum Component
     
     Find the minimum value of each column in the data.
     
     :param data: Data for which you want the maximum value in each column.
+    :param candidates: Set from which the Exponential mechanism will return an element.
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
     :return: Maximum of each column in the data.
     """
     return Component(
         "Minimum",
         arguments={
-            'data': Component.of(data)
+            'data': Component.of(data),
+            'candidates': Component.of(candidates, value_format="jagged")
         },
         options={
             
@@ -1106,6 +1138,28 @@ def quantile(data, alpha, candidates=None, interpolation="midpoint", **kwargs):
         constraints=kwargs)
 
 
+def raw_moment(data, order, **kwargs):
+    """
+    RawMoment Component
+    
+    Returns sample estimate of kth raw moment for each column of the data.
+    
+    :param data: Data for which you would like the kth raw moments.
+    :param order: Indicate the kth integer statistical moment.
+    :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
+    :return: kth raw sample moment for each column.
+    """
+    return Component(
+        "RawMoment",
+        arguments={
+            'data': Component.of(data)
+        },
+        options={
+            'order': order
+        },
+        constraints=kwargs)
+
+
 def rename(data, column_names, **kwargs):
     """
     Rename Component
@@ -1155,7 +1209,7 @@ def reshape(data, shape, symmetric=False, layout='row', **kwargs):
         constraints=kwargs)
 
 
-def resize(data, number_rows=None, number_columns=None, lower=None, upper=None, categories=None, weights=None, distribution=None, shift=None, scale=None, **kwargs):
+def resize(data, number_rows=None, number_columns=None, lower=None, upper=None, categories=None, weights=None, distribution=None, shift=None, scale=None, minimum_rows=None, **kwargs):
     """
     Resize Component
     
@@ -1175,6 +1229,7 @@ def resize(data, number_rows=None, number_columns=None, lower=None, upper=None, 
     :param distribution: The distribution to be used when imputing records.
     :param shift: The expectation of the Gaussian distribution used for imputation (used only if `distribution = Gaussian`).
     :param scale: The standard deviation of the Gaussian distribution used for imputation (used only if `distribution = Gaussian`).
+    :param minimum_rows: Only add synthetic data if the actual row count is less than this number. No sampling is performed. Cannot be set with `number_rows`
     :param kwargs: clamp by lower, upper, categories, etc by passing parameters of the form [argument]_[bound]=...
     :return: A resized version of data consistent with the provided `n`
     """
@@ -1190,7 +1245,8 @@ def resize(data, number_rows=None, number_columns=None, lower=None, upper=None, 
             'weights': Component.of(weights, value_format="jagged"),
             'distribution': Component.of(distribution),
             'shift': Component.of(shift),
-            'scale': Component.of(scale)
+            'scale': Component.of(scale),
+            'minimum_rows': Component.of(minimum_rows)
         },
         options={
             

@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0bvalue.proto\x12\nwhitenoise\"$\n\x08\x42oolNull\x12\x10\n\x06option\x18\x01 \x01(\x08H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07I64Null\x12\x10\n\x06option\x18\x01 \x01(\x03H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07\x46\x36\x34Null\x12\x10\n\x06option\x18\x01 \x01(\x01H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07StrNull\x12\x10\n\x06option\x18\x01 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"5\n\x0f\x41rray1dBoolNull\x12\"\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x14.whitenoise.BoolNull\"3\n\x0e\x41rray1dI64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.I64Null\"3\n\x0e\x41rray1dF64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.F64Null\"3\n\x0e\x41rray1dStrNull\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.StrNull\"\xc6\x01\n\x0b\x41rray1dNull\x12+\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x1b.whitenoise.Array1dBoolNullH\x00\x12)\n\x03i64\x18\x02 \x01(\x0b\x32\x1a.whitenoise.Array1dI64NullH\x00\x12)\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x1a.whitenoise.Array1dF64NullH\x00\x12,\n\x06string\x18\x04 \x01(\x0b\x32\x1a.whitenoise.Array1dStrNullH\x00\x42\x06\n\x04\x64\x61ta\"\x1b\n\x0b\x41rray1dBool\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x08\"\x1a\n\nArray1dI64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x03\"\x1a\n\nArray1dF64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x01\"\x1a\n\nArray1dStr\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\t\"\xb2\x01\n\x07\x41rray1d\x12\'\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dBoolH\x00\x12%\n\x03i64\x18\x02 \x01(\x0b\x32\x16.whitenoise.Array1dI64H\x00\x12%\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64H\x00\x12(\n\x06string\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dStrH\x00\x42\x06\n\x04\x64\x61ta\">\n\x05\x41rray\x12&\n\tflattened\x18\x01 \x01(\x0b\x32\x13.whitenoise.Array1d\x12\r\n\x05shape\x18\x02 \x03(\x04\"T\n\x06Jagged\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.Array1d\x12\'\n\tdata_type\x18\x02 \x01(\x0e\x32\x14.whitenoise.DataType\"\xee\x01\n\x0cPrivacyUsage\x12\x35\n\x04pure\x18\x01 \x01(\x0b\x32%.whitenoise.PrivacyUsage.DistancePureH\x00\x12\x43\n\x0b\x61pproximate\x18\x02 \x01(\x0b\x32,.whitenoise.PrivacyUsage.DistanceApproximateH\x00\x1a\x1f\n\x0c\x44istancePure\x12\x0f\n\x07\x65psilon\x18\x01 \x01(\x01\x1a\x35\n\x13\x44istanceApproximate\x12\x0f\n\x07\x65psilon\x18\x01 \x01(\x01\x12\r\n\x05\x64\x65lta\x18\x02 \x01(\x01\x42\n\n\x08\x64istance\"9\n\rPrivacyUsages\x12(\n\x06values\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage*?\n\x08\x44\x61taType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04\x42OOL\x10\x01\x12\x07\n\x03I64\x10\x02\x12\x07\n\x03\x46\x36\x34\x10\x03\x12\n\n\x06STRING\x10\x04\x62\x06proto3')
+  serialized_pb=_b('\n\x0bvalue.proto\x12\nwhitenoise\"$\n\x08\x42oolNull\x12\x10\n\x06option\x18\x01 \x01(\x08H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07I64Null\x12\x10\n\x06option\x18\x01 \x01(\x03H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07\x46\x36\x34Null\x12\x10\n\x06option\x18\x01 \x01(\x01H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07StrNull\x12\x10\n\x06option\x18\x01 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"5\n\x0f\x41rray1dBoolNull\x12\"\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x14.whitenoise.BoolNull\"3\n\x0e\x41rray1dI64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.I64Null\"3\n\x0e\x41rray1dF64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.F64Null\"3\n\x0e\x41rray1dStrNull\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.StrNull\"\xc6\x01\n\x0b\x41rray1dNull\x12+\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x1b.whitenoise.Array1dBoolNullH\x00\x12)\n\x03i64\x18\x02 \x01(\x0b\x32\x1a.whitenoise.Array1dI64NullH\x00\x12)\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x1a.whitenoise.Array1dF64NullH\x00\x12,\n\x06string\x18\x04 \x01(\x0b\x32\x1a.whitenoise.Array1dStrNullH\x00\x42\x06\n\x04\x64\x61ta\"\x1b\n\x0b\x41rray1dBool\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x08\"\x1a\n\nArray1dI64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x03\"\x1a\n\nArray1dF64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x01\"\x1a\n\nArray1dStr\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\t\"\xb2\x01\n\x07\x41rray1d\x12\'\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dBoolH\x00\x12%\n\x03i64\x18\x02 \x01(\x0b\x32\x16.whitenoise.Array1dI64H\x00\x12%\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64H\x00\x12(\n\x06string\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dStrH\x00\x42\x06\n\x04\x64\x61ta\">\n\x05\x41rray\x12&\n\tflattened\x18\x01 \x01(\x0b\x32\x13.whitenoise.Array1d\x12\r\n\x05shape\x18\x02 \x03(\x04\"T\n\x06Jagged\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.Array1d\x12\'\n\tdata_type\x18\x02 \x01(\x0e\x32\x14.whitenoise.DataType\"\x96\x01\n\x0cPrivacyUsage\x12\x43\n\x0b\x61pproximate\x18\x01 \x01(\x0b\x32,.whitenoise.PrivacyUsage.DistanceApproximateH\x00\x1a\x35\n\x13\x44istanceApproximate\x12\x0f\n\x07\x65psilon\x18\x01 \x01(\x01\x12\r\n\x05\x64\x65lta\x18\x02 \x01(\x01\x42\n\n\x08\x64istance\"9\n\rPrivacyUsages\x12(\n\x06values\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage*?\n\x08\x44\x61taType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04\x42OOL\x10\x01\x12\x07\n\x03I64\x10\x02\x12\x07\n\x03\x46\x36\x34\x10\x03\x12\n\n\x06STRING\x10\x04\x62\x06proto3')
 )
 
 _DATATYPE = _descriptor.EnumDescriptor(
@@ -53,8 +53,8 @@ _DATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1335,
-  serialized_end=1398,
+  serialized_start=1247,
+  serialized_end=1310,
 )
 _sym_db.RegisterEnumDescriptor(_DATATYPE)
 
@@ -637,36 +637,6 @@ _JAGGED = _descriptor.Descriptor(
 )
 
 
-_PRIVACYUSAGE_DISTANCEPURE = _descriptor.Descriptor(
-  name='DistancePure',
-  full_name='whitenoise.PrivacyUsage.DistancePure',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='epsilon', full_name='whitenoise.PrivacyUsage.DistancePure.epsilon', index=0,
-      number=1, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1176,
-  serialized_end=1207,
-)
-
 _PRIVACYUSAGE_DISTANCEAPPROXIMATE = _descriptor.Descriptor(
   name='DistanceApproximate',
   full_name='whitenoise.PrivacyUsage.DistanceApproximate',
@@ -700,8 +670,8 @@ _PRIVACYUSAGE_DISTANCEAPPROXIMATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1209,
-  serialized_end=1262,
+  serialized_start=1121,
+  serialized_end=1174,
 )
 
 _PRIVACYUSAGE = _descriptor.Descriptor(
@@ -712,15 +682,8 @@ _PRIVACYUSAGE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='pure', full_name='whitenoise.PrivacyUsage.pure', index=0,
+      name='approximate', full_name='whitenoise.PrivacyUsage.approximate', index=0,
       number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='approximate', full_name='whitenoise.PrivacyUsage.approximate', index=1,
-      number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -728,7 +691,7 @@ _PRIVACYUSAGE = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[_PRIVACYUSAGE_DISTANCEPURE, _PRIVACYUSAGE_DISTANCEAPPROXIMATE, ],
+  nested_types=[_PRIVACYUSAGE_DISTANCEAPPROXIMATE, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -741,7 +704,7 @@ _PRIVACYUSAGE = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=1036,
-  serialized_end=1274,
+  serialized_end=1186,
 )
 
 
@@ -771,8 +734,8 @@ _PRIVACYUSAGES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1276,
-  serialized_end=1333,
+  serialized_start=1188,
+  serialized_end=1245,
 )
 
 _BOOLNULL.oneofs_by_name['data'].fields.append(
@@ -826,13 +789,8 @@ _ARRAY1D.fields_by_name['string'].containing_oneof = _ARRAY1D.oneofs_by_name['da
 _ARRAY.fields_by_name['flattened'].message_type = _ARRAY1D
 _JAGGED.fields_by_name['data'].message_type = _ARRAY1D
 _JAGGED.fields_by_name['data_type'].enum_type = _DATATYPE
-_PRIVACYUSAGE_DISTANCEPURE.containing_type = _PRIVACYUSAGE
 _PRIVACYUSAGE_DISTANCEAPPROXIMATE.containing_type = _PRIVACYUSAGE
-_PRIVACYUSAGE.fields_by_name['pure'].message_type = _PRIVACYUSAGE_DISTANCEPURE
 _PRIVACYUSAGE.fields_by_name['approximate'].message_type = _PRIVACYUSAGE_DISTANCEAPPROXIMATE
-_PRIVACYUSAGE.oneofs_by_name['distance'].fields.append(
-  _PRIVACYUSAGE.fields_by_name['pure'])
-_PRIVACYUSAGE.fields_by_name['pure'].containing_oneof = _PRIVACYUSAGE.oneofs_by_name['distance']
 _PRIVACYUSAGE.oneofs_by_name['distance'].fields.append(
   _PRIVACYUSAGE.fields_by_name['approximate'])
 _PRIVACYUSAGE.fields_by_name['approximate'].containing_oneof = _PRIVACYUSAGE.oneofs_by_name['distance']
@@ -972,13 +930,6 @@ _sym_db.RegisterMessage(Jagged)
 
 PrivacyUsage = _reflection.GeneratedProtocolMessageType('PrivacyUsage', (_message.Message,), {
 
-  'DistancePure' : _reflection.GeneratedProtocolMessageType('DistancePure', (_message.Message,), {
-    'DESCRIPTOR' : _PRIVACYUSAGE_DISTANCEPURE,
-    '__module__' : 'value_pb2'
-    # @@protoc_insertion_point(class_scope:whitenoise.PrivacyUsage.DistancePure)
-    })
-  ,
-
   'DistanceApproximate' : _reflection.GeneratedProtocolMessageType('DistanceApproximate', (_message.Message,), {
     'DESCRIPTOR' : _PRIVACYUSAGE_DISTANCEAPPROXIMATE,
     '__module__' : 'value_pb2'
@@ -990,7 +941,6 @@ PrivacyUsage = _reflection.GeneratedProtocolMessageType('PrivacyUsage', (_messag
   # @@protoc_insertion_point(class_scope:whitenoise.PrivacyUsage)
   })
 _sym_db.RegisterMessage(PrivacyUsage)
-_sym_db.RegisterMessage(PrivacyUsage.DistancePure)
 _sym_db.RegisterMessage(PrivacyUsage.DistanceApproximate)
 
 PrivacyUsages = _reflection.GeneratedProtocolMessageType('PrivacyUsages', (_message.Message,), {
