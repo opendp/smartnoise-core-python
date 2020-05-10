@@ -42,28 +42,24 @@ def build_rust_binaries():
     rust_build_path = os.path.join(rust_dir, 'target', 'debug' if WN_DEBUG else 'release')
     rust_build_cmd = 'cargo build' + ('' if WN_DEBUG else ' --release')
 
-    validator_toml_path = os.path.join(rust_dir, "validator-rust", "Cargo.toml")
-    validator_build_cmd = f"{rust_build_cmd} --manifest-path={validator_toml_path}"
+    toml_path = os.path.join(rust_dir, "ffi-rust", "Cargo.toml")
 
-    runtime_toml_path = os.path.join(rust_dir, "runtime-rust", "Cargo.toml")
-
-    runtime_features = ''
+    cargo_features = ''
     if WN_USE_VULNERABLE_NOISE:
-        runtime_features = " --no-default-features"
+        cargo_features = " --no-default-features --features use-runtime"
     elif WN_USE_SYSTEM_LIBS:
-        runtime_features = " --features use-system-libs"
+        cargo_features = " --features use-system-libs"
 
-    runtime_build_cmd = f"{rust_build_cmd}{runtime_features} --manifest-path={runtime_toml_path}"
+    rust_build_cmd = f"{rust_build_cmd}{cargo_features} --manifest-path={toml_path}"
 
-    # build shared libraries
-    subprocess.call(validator_build_cmd, shell=True)
-    subprocess.call(runtime_build_cmd, shell=True)
+    # build shared library
+    subprocess.call(rust_build_cmd, shell=True)
 
     shutil.rmtree(lib_dir, ignore_errors=True)
     os.makedirs(lib_dir, exist_ok=True)
 
     for filename in os.listdir(rust_build_path):
-        if filename.startswith("libwhitenoise_"):
+        if filename.startswith("libwhitenoise_ffi"):
             shutil.copy(os.path.join(rust_build_path, filename), lib_dir)
 
 
