@@ -45,7 +45,7 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 ### Binaries
 
-- (forthcoming PyPi binaries via milksnake)
+- (forthcoming PyPi binaries)
 
 ### From Source
 
