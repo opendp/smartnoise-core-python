@@ -24,8 +24,8 @@ jobs:
   # Build OS X Packages
   # - adapted from: https://github.com/cclauss/Travis-CI-Python-on-three-OSes/blob/master/.travis.yml
   # -------------------------------------------------------
-  - name: Github Pages and Deploy OS X
-    if: branch = master
+  - name: Test Python package; For Master, Deploy Github Pages/Pypi
+    #if: branch = master
     os: osx
     osx_image: xcode11 # python3.7 comes installed with xcode11 image
     language: rust
