@@ -5,7 +5,8 @@ __pycache__/
 dist/
 *.DS_Store
 build/
-docs/
+docs/**
+!docs/.nojekyll
 docs_temp/
 wheelhouse/
 opendp/whitenoise/core/lib/

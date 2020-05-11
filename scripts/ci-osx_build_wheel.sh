@@ -11,7 +11,7 @@ cd ..;
 
 # Build the source distribution (.tar.gz as specified in the setup.cfg)
 #
-echo "(2) Build the source distribution";
+echo "(2) Build the source distribution (may skip sdist in future builds)";
 python3 setup.py sdist -d ./wheelhouse
 
 # Generate python classes from protobuf definitions as well as

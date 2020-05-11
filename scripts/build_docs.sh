@@ -13,5 +13,6 @@ sphinx-apidoc --implicit-namespaces -fFe -H opendp-whitenoise-core-python -A "Co
 rm -r docs || true
 mkdir -p docs
 sphinx-build -b html docs_temp/source/ docs
+touch docs/.nojekyll
 
 rm -r docs_temp || true
