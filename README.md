@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/opendifferentialprivacy/whitenoise-core.svg?branch=develop)](https://travis-ci.org/opendifferentialprivacy/whitenoise-core)
+[![Build Status](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python)
 
 ## WhiteNoise Core <br/> Differential Privacy Library Python Bindings <br/>
 
