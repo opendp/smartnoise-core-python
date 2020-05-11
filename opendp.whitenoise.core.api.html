@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>opendp.whitenoise.core.api module &mdash; opendp-whitenoise-core 0.1.0 documentation</title>
+  <title>opendp.whitenoise.core.api module &mdash; opendp-whitenoise-core-python 0.1.0 documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> opendp-whitenoise-core
+            <a href="index.html" class="icon icon-home"> opendp-whitenoise-core-python
           
 
           
@@ -100,7 +100,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">opendp-whitenoise-core</a>
+          <a href="index.html">opendp-whitenoise-core-python</a>
         
       </nav>
 
@@ -158,7 +158,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.accuracy_to_privacy_usage">
-<em class="property">static </em><code class="sig-name descname">accuracy_to_privacy_usage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">privacy_definition</span></em>, <em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">properties</span></em>, <em class="sig-param"><span class="n">accuracies</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.accuracy_to_privacy_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.accuracy_to_privacy_usage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">accuracy_to_privacy_usage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">privacy_definition</span></em>, <em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">properties</span></em>, <em class="sig-param"><span class="n">accuracies</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.accuracy_to_privacy_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.accuracy_to_privacy_usage" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Estimate the privacy usage necessary to bound accuracy to a given value.
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -178,7 +178,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.compute_privacy_usage">
-<em class="property">static </em><code class="sig-name descname">compute_privacy_usage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.compute_privacy_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.compute_privacy_usage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_privacy_usage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.compute_privacy_usage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.compute_privacy_usage" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Compute the overall privacy usage of an analysis.
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -196,7 +196,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.compute_release">
-<em class="property">static </em><code class="sig-name descname">compute_release</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em>, <em class="sig-param"><span class="n">stack_trace</span></em>, <em class="sig-param"><span class="n">filter_level</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.compute_release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.compute_release" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_release</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em>, <em class="sig-param"><span class="n">stack_trace</span></em>, <em class="sig-param"><span class="n">filter_level</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.compute_release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.compute_release" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Evaluate an analysis and release the differentially private results.
 This function touches private data. It calls the runtime rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -216,7 +216,7 @@ This function touches private data. It calls the runtime rust FFI with protobuf 
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.generate_report">
-<em class="property">static </em><code class="sig-name descname">generate_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.generate_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.generate_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.generate_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.generate_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Generate a json string with a summary/report of the Analysis and Release
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -234,7 +234,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.get_properties">
-<em class="property">static </em><code class="sig-name descname">get_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.get_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.get_properties" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.get_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.get_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Derive static properties for all components in the graph.
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -252,7 +252,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.privacy_usage_to_accuracy">
-<em class="property">static </em><code class="sig-name descname">privacy_usage_to_accuracy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">privacy_definition</span></em>, <em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">properties</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.privacy_usage_to_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.privacy_usage_to_accuracy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">privacy_usage_to_accuracy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">privacy_definition</span></em>, <em class="sig-param"><span class="n">component</span></em>, <em class="sig-param"><span class="n">properties</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.privacy_usage_to_accuracy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.privacy_usage_to_accuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Estimate the accuracy of the release of a component, based on a privacy usage.
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -272,7 +272,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.validate_analysis">
-<em class="property">static </em><code class="sig-name descname">validate_analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.validate_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.validate_analysis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate_analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.validate_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.validate_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Check if an analysis is differentially private, given a set of released values.
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">

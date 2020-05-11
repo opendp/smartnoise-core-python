@@ -8,13 +8,9 @@ Submodules
    :maxdepth: 4
 
    opendp.whitenoise.core.api
-   opendp.whitenoise.core.api_pb2
    opendp.whitenoise.core.base
-   opendp.whitenoise.core.base_pb2
    opendp.whitenoise.core.components
-   opendp.whitenoise.core.components_pb2
    opendp.whitenoise.core.value
-   opendp.whitenoise.core.value_pb2
    opendp.whitenoise.core.variant_message_map
 
 Module contents

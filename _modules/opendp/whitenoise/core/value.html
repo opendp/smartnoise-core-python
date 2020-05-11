@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>opendp.whitenoise.core.value &mdash; opendp-whitenoise-core 0.1.0 documentation</title>
+  <title>opendp.whitenoise.core.value &mdash; opendp-whitenoise-core-python 0.1.0 documentation</title>
   
 
   
@@ -48,7 +48,7 @@
           
 
           
-            <a href="../../../../index.html" class="icon icon-home"> opendp-whitenoise-core
+            <a href="../../../../index.html" class="icon icon-home"> opendp-whitenoise-core-python
           
 
           
@@ -98,7 +98,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../index.html">opendp-whitenoise-core</a>
+          <a href="../../../../index.html">opendp-whitenoise-core-python</a>
         
       </nav>
 
@@ -147,16 +147,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for opendp.whitenoise.core.value</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pkgutil</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.variant_message_map</span> <span class="kn">import</span> <span class="n">variant_message_map</span>
 
 <span class="kn">from</span> <span class="nn">opendp.whitenoise.core</span> <span class="kn">import</span> <span class="n">base_pb2</span><span class="p">,</span> <span class="n">components_pb2</span><span class="p">,</span> <span class="n">value_pb2</span>
-
 
 
 <div class="viewcode-block" id="serialize_privacy_usage"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_privacy_usage">[docs]</a><span class="k">def</span> <span class="nf">serialize_privacy_usage</span><span class="p">(</span><span class="n">usage</span><span class="p">):</span>
@@ -203,7 +198,6 @@
             <span class="p">))</span>
 
     <span class="k">return</span> <span class="n">serialized</span></div>
-
 
 
 <div class="viewcode-block" id="serialize_privacy_definition"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_privacy_definition">[docs]</a><span class="k">def</span> <span class="nf">serialize_privacy_definition</span><span class="p">(</span><span class="n">analysis</span><span class="p">):</span>
@@ -409,6 +403,7 @@
         <span class="k">if</span> <span class="n">release_node</span><span class="o">.</span><span class="n">privacy_usages</span><span class="p">:</span>
             <span class="n">parsed</span><span class="p">[</span><span class="s1">&#39;privacy_usages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">release_node</span><span class="o">.</span><span class="n">privacy_usages</span>
         <span class="k">return</span> <span class="n">parsed</span>
+
     <span class="k">return</span> <span class="p">{</span>
         <span class="n">node_id</span><span class="p">:</span> <span class="n">parse_release_node</span><span class="p">(</span><span class="n">release_node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">release_node</span> <span class="ow">in</span> <span class="n">release</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span></div>
