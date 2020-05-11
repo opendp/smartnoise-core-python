@@ -24,7 +24,7 @@ jobs:
   # All branches: Build & Run python tests
   # On the master branch:
   # - Update python docs on Github Pages
-  # - Build pypi OS wheel
+  # - Build pypi OS X wheel
   # -------------------------------------------------------
   - name: Build/Test Python package
     #if: branch = master
@@ -37,9 +37,13 @@ jobs:
     - pip3 install -U setuptools
     - pip3 install -r requirements/ci-osx_build.txt
     script:
+    # Build Rust libraries + python binaries + OS X wheel
     - bash scripts/ci-osx_build_wheel.sh;
+    # Run python tests (build stops if these fail)
     - python3 -m pytest -x -v;
+    # Clean up the wheel
     - bash scripts/ci-osx_link_wheel.sh;
+    # Build the python docs
     - bash scripts/build_docs.sh;
     deploy:
       # -------------------------------------------------------
