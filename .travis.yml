@@ -11,6 +11,7 @@ env:
   global:
   - WHITENOISE_RELEASE=True
   - PROTO_VERSION=3.11.4
+  # Note: Without the IS_CI_BUILD set to True, the python tests will stall 
   - IS_CI_BUILD=True
   - TWINE_USERNAME=__token__
 

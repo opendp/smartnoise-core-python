@@ -10,6 +10,6 @@ for awheel in ./wheelhouse/*.whl; do  # loop through the .whl files
   delocate-wheel -v $awheel     # run delocate
 done
 
-# Remove .zip files 
+# Remove .zip files
 #
-rm ./wheelhouse/*.zip
+rm ./wheelhouse/*.zip || true
