@@ -5,7 +5,8 @@ __pycache__/
 dist/
 *.DS_Store
 build/
-docs/
+docs/**
+!docs/.nojekyll
 docs_temp/
 wheelhouse/
 opendp/whitenoise/core/lib/
@@ -19,3 +20,5 @@ opendp_whitenoise_core.egg-info
 scripts/debug_build.log
 scripts/debug_app.log
 scripts/debug_tests.log
+opendp_whitenoise_core_demo.egg-info/
+opendp_whitenoise_core_python.egg-info/

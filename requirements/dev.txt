@@ -1,0 +1,7 @@
+-r base.txt
+-r sphinx-only.txt
+
+pytest>=4.4.2
+networkx==2.4
+matplotlib==3.2.1
+pandas==1.0.3

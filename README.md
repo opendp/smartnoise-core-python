@@ -5,13 +5,13 @@
 The python bindings are a sub-project of [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core).
 See also the accompanying [WhiteNoise-System](https://github.com/opendifferentialprivacy/whitenoise-system) and [WhiteNoise-Samples](https://github.com/opendifferentialprivacy/whitenoise-samples) repositories for this system.
 
-##
+---
 
-Differential privacy is the gold standard definition of privacy protection. The WhiteNoise project aims to connect theoretical solutions from the academic community with the practical lessons learned from real-world deployments, to make differential privacy broadly accessible to future deployments. Specifically, we provide several basic building blocks that can be used by people involved with sensitive data, with implementations based on vetted and mature differential privacy research. In WhiteNoise Core, we provide a pluggable open source library of differentially private algorithms and mechanisms for releasing privacy preserving queries and statistics, as well as APIs for defining an analysis and a validator for evaluating these analyses and composing the total privacy loss on a dataset. 
+Differential privacy is the gold standard definition of privacy protection. The WhiteNoise project aims to connect theoretical solutions from the academic community with the practical lessons learned from real-world deployments, to make differential privacy broadly accessible to future deployments. Specifically, we provide several basic building blocks that can be used by people involved with sensitive data, with implementations based on vetted and mature differential privacy research. In WhiteNoise Core, we provide a pluggable open source library of differentially private algorithms and mechanisms for releasing privacy preserving queries and statistics, as well as APIs for defining an analysis and a validator for evaluating these analyses and composing the total privacy loss on a dataset.
 
-This library provides an easy-to-use interface for building analyses.  
+This library provides an easy-to-use interface for building analyses.
 
-Differentially private computations are specified as a protobuf analysis graph that can be validated and executed to produce differentially private releases of data.  
+Differentially private computations are specified as a protobuf analysis graph that can be validated and executed to produce differentially private releases of data.
 
 
 - [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-runtime)
@@ -45,7 +45,7 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 ### Binaries
 
-- (forthcoming PyPi binaries via milksnake)
+- (forthcoming PyPi binaries)
 
 ### From Source
 
@@ -53,14 +53,14 @@ The actual execution of the components in the analysis is handled by a native Ru
 
         git clone $REPOSITORY_URI --recurse-submodules
 
-2. Install Whitenoise-core dependencies   
+2. Install Whitenoise-core dependencies
    https://github.com/opendifferentialprivacy/whitenoise-core#installation
-    
-3. Generate code  
+
+3. Generate code
 
         python3 scripts/code_generation.py
 
-4. Install the python bindings  
+4. Install the python bindings
 
         pip install -e ".[test,plotting]"
 
@@ -70,17 +70,20 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 ### Documentation
 
-[ReadTheDocs documentation](https://opendifferentialprivacy.github.io/whitenoise-core/bindings-python/index.html).
+[Documentation](https://opendifferentialprivacy.github.io/whitenoise-core/bindings-python/index.html).
 
-### Communication
+## Communication
 
-(In process.)
+- Please use [GitHub issues](https://github.com/opendifferentialprivacy/whitenoise-core-python/issues) for bug reports, feature requests, install issues, and ideas.
+- [Gitter](https://gitter.im/opendifferentialprivacy/WhiteNoise) is available for general chat and online discussions.
+- For other requests, please contact us at [whitenoise@opendp.io](mailto:whitenoise@opendp.io).
+  - _Note: We encourage you to use [GitHub issues](https://github.com/opendifferentialprivacy/whitenoise-core-python/issues), especially for bugs._
 
-### Releases and Contributing
+## Releases and Contributing
 
-Please let us know if you encounter a bug by [creating an issue](https://github.com/opendifferentialprivacy/whitenoise-core/issues).
+Please let us know if you encounter a bug by [creating an issue](https://github.com/opendifferentialprivacy/whitenoise-core-python/issues).
 
 We appreciate all contributions. We welcome pull requests with bug-fixes without prior discussion.
 
 If you plan to contribute new features, utility functions or extensions to the core, please first open an issue and discuss the feature with us.
-  - Sending a PR without discussion might end up resulting in a rejected PR, because we might be taking the core in a different direction than you might be aware of.
+  - Sending a pull request (PR) without discussion might end up resulting in a rejected PR, because we may be taking the core in a different direction than you might be aware of.

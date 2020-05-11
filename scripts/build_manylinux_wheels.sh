@@ -31,7 +31,7 @@ fi
 # export makes the updated path available in subprocesses
 export PATH="/opt/python/cp38-cp38/bin:$PATH"
 
-pip install -r /io/requirements.txt
+pip install -r /io/requirements/base.txt
 
 #python ../setup.py sdist -d /io/wheelhouse
 python /io/scripts/code_generation.py

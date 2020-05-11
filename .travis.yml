@@ -11,6 +11,8 @@ env:
   global:
   - WHITENOISE_RELEASE=True
   - PROTO_VERSION=3.11.4
+  # Note: Without the IS_CI_BUILD set to True, the python tests will stall
+  - IS_CI_BUILD=True
   - TWINE_USERNAME=__token__
 
 notifications:
@@ -18,7 +20,58 @@ notifications:
 
 jobs:
   include:
+  # -------------------------------------------------------
+  # All branches: Build & Run python tests
+  # On the master branch:
+  # - Update python docs on Github Pages
+  # - Build pypi OS X wheel
+  # -------------------------------------------------------
+  - name: Build/Test Python package
+    #if: branch = master
+    os: osx
+    osx_image: xcode11 # python3.7 comes installed with xcode11 image
+    language: rust
+    rust: stable
+    install:
+    - python3 -V; pip3 -V   # for debugging
+    - pip3 install -U setuptools
+    - pip3 install -r requirements/ci-osx_build.txt
+    script:
+    # Build Rust libraries + python binaries + OS X wheel
+    - bash scripts/ci-osx_build_wheel.sh;
+    # Run python tests (build stops if these fail)
+    - python3 -m pytest -x -v;
+    # Clean up the wheel
+    - bash scripts/ci-osx_link_wheel.sh;
+    # Build the python docs
+    - bash scripts/build_docs.sh;
+    deploy:
+      # -------------------------------------------------------
+      # Deploy docs to github pages
+      # -------------------------------------------------------
+      - provider: pages
+        skip_cleanup: true
+        local_dir: docs
+        github_token: $GITHUB_TOKEN
+        keep_history: true
+        target_branch: gh-pages
+        on:
+          branch: master
+          #branch: test-branch
+      # -------------------------------------------------------
+      # Deploy to pypi; credentials are in env variables
+      #     - TWINE_USERNAME, TWINE_PASSWORD (using token)
+      # -------------------------------------------------------
+      - provider: script
+        skip_cleanup: true
+        script:
+          python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --non-interactive --verbose --skip-existing wheelhouse/*
+        on:
+          branch: master
+          #branch: test-branch
+
   - name: Test Python
+    if: branch = xskip-job
     os: linux
     language: rust
     rust: stable
@@ -28,8 +81,8 @@ jobs:
       - python3 -V
       # Install dependencies
       - pip3 -V;
-      - pip3 install -r requirements-sphinx-only.txt;
-      - pip3 install -r requirements.txt;
+      - pip3 install -r requirements/sphinx-only.txt;
+      - pip3 install -r requirements/base.txt;
     script:
     # Build python bindings and run tests
     - export RUST_BACKTRACE=1; python3 -m pip install -e . -v;
@@ -63,6 +116,7 @@ jobs:
         branch: develop # switch to master after initial version
 
   - name: Deploy manylinux2010_i686 32-bit
+    if: branch = xskip-job
     services:
     - docker
     addons:
@@ -89,6 +143,7 @@ jobs:
        branch: develop
 
   - name: Deploy manylinux2010_x86_64 64-bit
+    if: branch = xskip-job
     services:
     - docker
     addons:
@@ -135,29 +190,6 @@ jobs:
   #     script: pip3 install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
   #     on:
   #       branch: master
-
-
-
-  - name: Deploy osx
-    # adapted from: https://github.com/cclauss/Travis-CI-Python-on-three-OSes/blob/master/.travis.yml
-    os: osx
-    osx_image: xcode11 # python3.7 comes installed with xcode11 image
-    language: rust
-    rust: stable
-    install:
-    - python3 -m pip install delocate
-    script:
-    - bash scripts/build_wheel.sh;
-    - for whl in /wheelhouse/*.whl; do
-       delocate-wheel -v whl
-     done
-    deploy:
-     skip_cleanup: true
-     provider: script
-     script:
-       python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
-     on:
-       branch: develop
 
 
   # - name: Deploy windows

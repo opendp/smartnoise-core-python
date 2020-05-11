@@ -1,4 +1,7 @@
+import os
 from os.path import abspath, dirname, isfile, join
+from distutils.util import strtobool
+
 import pytest
 import opendp.whitenoise.core as wn
 
@@ -9,6 +12,10 @@ TEST_CSV_PATH = join(dirname(abspath(__file__)), '..', 'data',
 assert isfile(TEST_CSV_PATH), f'Error: file not found: {TEST_CSV_PATH}'
 
 test_csv_names = ["age", "sex", "educ", "race", "income", "married"]
+
+# Used to skip showing plots, etc.
+#
+IS_CI_BUILD = strtobool(os.environ.get('IS_CI_BUILD', 'False'))
 
 
 def test_multilayer_analysis(run=True):
@@ -411,6 +418,11 @@ def test_covariance():
     print('Non-DP Covariance Matrix:\n{0}\n\n'.format(pd.DataFrame(non_dp_cov)))
     print('Non-DP Correlation Matrix:\n{0}\n\n'.format(pd.DataFrame(non_dp_corr)))
     print('DP Correlation Matrix:\n{0}'.format(pd.DataFrame(dp_corr)))
+
+    # skip plot step
+    if IS_CI_BUILD:
+        return
+
     plt.imshow(non_dp_corr - dp_corr, interpolation='nearest')
     plt.colorbar()
     plt.show()
