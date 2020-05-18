@@ -1,3 +1,4 @@
 -r dev.txt
 
-delocate==0.8.0
+# removed
+# delocate==0.8.0

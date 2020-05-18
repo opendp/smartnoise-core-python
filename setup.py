@@ -9,7 +9,8 @@ setup(
             "matplotlib"
         ],
         "test": [
-            "pytest>=4.4.2"
+            "pytest>=4.4.2",
+            "pandas>=1.0.3"
         ]
     },
     package_data={
