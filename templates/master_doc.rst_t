@@ -7,6 +7,9 @@ The mechanisms library provides a fast, memory-safe native runtime for validatin
 
 Differentially private computations are specified as an analysis graph that can be validated and executed to produce differentially private releases of data. Releases include metadata about accuracy of outputs and the complete privacy cost of the analysis.
 
+`Top-level documentation <https://opendifferentialprivacy.github.io/whitenoise-core/>`_
+
+
 ==========={{ project_underline }}=================
 
 .. toctree::
