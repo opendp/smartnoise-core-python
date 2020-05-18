@@ -27,7 +27,7 @@ jobs:
   # - XBuild pypi OS X wheel
   # -------------------------------------------------------
   - name: Build/Test Python package
-    #if: branch = master
+    if: branch = skipit
     os: osx
     osx_image: xcode11 # python3.7 comes installed with xcode11 image
     language: rust
