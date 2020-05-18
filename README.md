@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python)
 
-images/WhiteNoise Logo/SVG/Full_color.svg
-
 <a href="https://opendifferentialprivacy.github.io"><img src="https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/images/WhiteNoise%20Logo/SVG/Full_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
 ## WhiteNoise Core <br/> Differential Privacy Library Python Bindings <br/>
 
