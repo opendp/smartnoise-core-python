@@ -2,8 +2,10 @@
 
 ## WhiteNoise Core <br/> Differential Privacy Library Python Bindings <br/>
 
-The python bindings are a sub-project of [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core).
-See also the accompanying [WhiteNoise-System](https://github.com/opendifferentialprivacy/whitenoise-system) and [WhiteNoise-Samples](https://github.com/opendifferentialprivacy/whitenoise-samples) repositories for this system.
+This repository contains python bindings to the [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core) library and its underlying Rust binaries.
+
+- For examples of this library in action, please see the Python notebooks in [WhiteNoise-Samples](https://github.com/opendifferentialprivacy/whitenoise-samples).
+- In addition, see the accompanying [WhiteNoise-System](https://github.com/opendifferentialprivacy/whitenoise-system) repository which includes WhiteNoise tools for differential privacy.
 
 ---
 
@@ -20,7 +22,7 @@ Differentially private computations are specified as a protobuf analysis graph t
 - [Installation](#installation)
   - [Binaries](#binaries)
   - [From Source](#from-source)
-- [WhiteNoise Rust Documentation](#whitenoise-rust-documentation)
+- [WhiteNoise Documentation](#whitenoise-documentation)
 - [Communication](#communication)
 - [Releases and Contributing](#releases-and-contributing)
 
@@ -45,7 +47,11 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 ### Binaries
 
-- (forthcoming PyPi binaries)
+Initial Linux binaries are available on [pypi](https://pypi.org/project/opendp-whitenoise-core/) for Python 3.6+:
+  - https://pypi.org/project/opendp-whitenoise-core/
+  - ```pip install opendp-whitenoise-core```
+
+The binaries have been used on OS X and Ubuntu and are in the process of additional testing.  Please use our [communication](#communication) channels below for any questions.
 
 ### From Source
 
@@ -68,9 +74,10 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 ---
 
-### Documentation
+### WhiteNoise Documentation
 
-[Documentation](https://opendifferentialprivacy.github.io/whitenoise-core/bindings-python/index.html).
+- Python documentation: https://opendifferentialprivacy.github.io/whitenoise-core-python
+
 
 ## Communication
 
