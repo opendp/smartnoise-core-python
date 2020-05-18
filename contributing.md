@@ -29,8 +29,7 @@ To install the library locally without any addons:
 This will create a developer install of the package. A developer installation of a package updates itself automatically as you edit the code.
 
 A significant portion of the python library is auto-generated based on resources in the core library. 
-This includes the protobuf files, components.py, and native binaries. [More information here.](#non-editable-files)
-To update the non-editable code:
+This includes the protobuf files, components.py, and native binaries. [More information on these files may be found below.](#non-editable-files) To update the non-editable code:
 
     python3 scripts/code_generation.py
 
