@@ -16,7 +16,7 @@ This library provides an easy-to-use interface for building analyses.
 Differentially private computations are specified as a protobuf analysis graph that can be validated and executed to produce differentially private releases of data.
 
 
-- [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-runtime)
+- [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-python-bindings)
   - [Component List](#components)
   - [Architecture](#architecture)
 - [Installation](#installation)
@@ -68,7 +68,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 4. Install the python bindings
 
-        pip install -e ".[test,plotting]"
+        pip3 install -e ".[test,plotting]"
 
     I recommend using `scripts/debug_*.sh` if you are developing the package.
 
