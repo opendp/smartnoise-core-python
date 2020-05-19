@@ -51,10 +51,10 @@ jobs:
         keep_history: true
         target_branch: gh-pages
         on:
-          branch: 1-cleanup
-          #branch: test-branch
+          branch: ms_ci
 
   - name: Deploy production wheel
+    if: branch = xskip-job
     os: osx
     osx_image: xcode11 # python3.7 comes installed with xcode11 image
     language: rust
