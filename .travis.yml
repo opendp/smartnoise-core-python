@@ -65,7 +65,8 @@ jobs:
         update: true
         packages:
           - python3-pip
-    env: DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
+    env:
+      - DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
     install:
       - docker pull $DOCKER_IMAGE
       - chmod +x scripts/build_binaries_manylinux.sh
