@@ -1,4 +1,0 @@
--r dev.txt
-
-# removed
-# delocate==0.8.0

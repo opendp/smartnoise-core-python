@@ -1,9 +1,10 @@
 [![Build Status](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python)
 
 <a href="https://opendifferentialprivacy.github.io"><img src="https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/images/WhiteNoise%20Logo/SVG/Full_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
+
 ## WhiteNoise Core <br/> Differential Privacy Library Python Bindings <br/>
 
-This repository contains python bindings to the [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core) library and its underlying Rust binaries.
+This repository contains python bindings to [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core) and its underlying Rust binaries.
 
 - For examples of this library in action, please see the Python notebooks in [WhiteNoise-Samples](https://github.com/opendifferentialprivacy/whitenoise-samples).
 - In addition, see the accompanying [WhiteNoise-System](https://github.com/opendifferentialprivacy/whitenoise-system) repository which includes WhiteNoise tools for differential privacy.
@@ -17,7 +18,7 @@ This library provides an easy-to-use interface for building analyses.
 Differentially private computations are specified as a protobuf analysis graph that can be validated and executed to produce differentially private releases of data.
 
 
-- [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-runtime)
+- [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-python-bindings)
   - [Component List](#components)
   - [Architecture](#architecture)
 - [Installation](#installation)
@@ -48,36 +49,63 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 ### Binaries
 
-Initial Linux binaries are available on [pypi](https://pypi.org/project/opendp-whitenoise-core/) for Python 3.6+:
+Initial Linux and OS X binaries are available on [pypi](https://pypi.org/project/opendp-whitenoise-core/) for Python 3.6+:
   - https://pypi.org/project/opendp-whitenoise-core/
-  - ```pip install opendp-whitenoise-core```
+  - ```pip3 install opendp-whitenoise-core```
 
-The binaries have been used on OS X and Ubuntu and are in the process of additional testing.  Please use our [communication](#communication) channels below for any questions.
+The binaries have been used on OS X and Ubuntu and are in the process of additional testing.
 
 ### From Source
 
 1. Clone the repository
+    ```shell script
+    git clone --recurse-submodules git@github.com:opendifferentialprivacy/whitenoise-core-python.git
+    ```
 
-        git clone $REPOSITORY_URI --recurse-submodules
+    If you have already cloned the repository without the submodule
+    ```shell script
+    git submodule init
+    git submodule update
+    ```
 
 2. Install Whitenoise-core dependencies
-   https://github.com/opendifferentialprivacy/whitenoise-core#installation
+    Mac
+    ```shell script
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    xcode-select --install
+    brew install protobuf python
+    ```
 
-3. Generate code
+    Linux
+    ```shell script
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    sudo apt-get install diffutils gcc make m4 python
+    # snap for protobuf 3, because apt comes with protobuf 2
+    sudo snap install protobuf --classic
+    ```
 
-        python3 scripts/code_generation.py
+    Windows
+    Install WSL and refer to the linux instructions.
 
-4. Install the python bindings
+3. Install live-reloading developer version of package
+   ```shell script
+   pip3 install -r requirements/dev.txt
+   pip3 install -e .
+   ```
 
-        pip install -e ".[test,plotting]"
+4. Generate code (rerun anytime whitenoise-core changes)
+    ```shell script
+    python3 scripts/code_generation.py
+    ```
 
-    I recommend using `scripts/debug_*.sh` if you are developing the package.
-
----
+5. Build documentation (optional)
+    ```shell script
+    ./scripts/build_docs.sh
+    ```
 
 ### WhiteNoise Documentation
 
-- Python documentation: https://opendifferentialprivacy.github.io/whitenoise-core-python
+- [Python library documentation](https://opendifferentialprivacy.github.io/whitenoise-core-python)
 
 
 ## Communication
@@ -91,7 +119,9 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 Please let us know if you encounter a bug by [creating an issue](https://github.com/opendifferentialprivacy/whitenoise-core-python/issues).
 
-We appreciate all contributions. We welcome pull requests with bug-fixes without prior discussion.
+We appreciate all contributions and welcome pull requests with bug-fixes without prior discussion.
 
 If you plan to contribute new features, utility functions or extensions to the core, please first open an issue and discuss the feature with us.
   - Sending a pull request (PR) without discussion might end up resulting in a rejected PR, because we may be taking the core in a different direction than you might be aware of.
+
+There is also a [contributing guide](contributing.md) for new developers.
