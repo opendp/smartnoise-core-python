@@ -70,14 +70,15 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
     ```
 
 2. Install Whitenoise-core dependencies
-    Mac
+
+    **Mac**
     ```shell script
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     xcode-select --install
     brew install protobuf python
     ```
 
-    Linux
+    **Linux**
     ```shell script
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     sudo apt-get install diffutils gcc make m4 python
@@ -85,7 +86,8 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
     sudo snap install protobuf --classic
     ```
 
-    Windows
+    **Windows**
+
     Install WSL and refer to the linux instructions.
 
 3. Install live-reloading developer version of package
