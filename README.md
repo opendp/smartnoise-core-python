@@ -46,6 +46,7 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 
 ## Installation
+Refer to [troubleshooting.md](https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/troubleshooting.md) for install problems.
 
 ### Binaries
 
