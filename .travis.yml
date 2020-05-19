@@ -51,7 +51,7 @@ jobs:
         keep_history: true
         target_branch: gh-pages
         on:
-          branch: ms_ci
+          branch: master
 
   - name: Deploy production wheel
     if: branch = xskip-job
