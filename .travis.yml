@@ -33,6 +33,7 @@ jobs:
     - python3 -V; pip3 -V   # for debugging
     - pip3 install -U setuptools
     script:
+    - pip3 install -r requirements/dev.txt
     # Build Rust libraries + python binaries + OS X wheel
     - bash scripts/build_wheel.sh;
     # Run python tests (build stops if these fail)
