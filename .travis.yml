@@ -9,8 +9,6 @@ branches:
 # all jobs should enable the release flag for compiler optimizations
 env:
   global:
-  - WHITENOISE_RELEASE=True
-  - PROTO_VERSION=3.11.4
   # Note: Without the IS_CI_BUILD set to True, the python tests will stall
   - IS_CI_BUILD=True
   - TWINE_USERNAME=__token__
@@ -27,7 +25,6 @@ jobs:
   # - XBuild pypi OS X wheel
   # -------------------------------------------------------
   - name: Build/Test Python package
-    if: branch = skipit
     os: osx
     osx_image: xcode11 # python3.7 comes installed with xcode11 image
     language: rust
@@ -35,14 +32,11 @@ jobs:
     install:
     - python3 -V; pip3 -V   # for debugging
     - pip3 install -U setuptools
-    - pip3 install -r requirements/ci-osx_build.txt
     script:
     # Build Rust libraries + python binaries + OS X wheel
-    - bash scripts/ci-osx_build_wheel.sh;
+    - bash scripts/build_wheel.sh;
     # Run python tests (build stops if these fail)
     - python3 -m pytest -x -v;
-    # Clean up the wheel
-    - bash scripts/ci-osx_link_wheel.sh;
     # Build the python docs
     - bash scripts/build_docs.sh;
     deploy:
@@ -58,17 +52,35 @@ jobs:
         on:
           branch: 1-cleanup
           #branch: test-branch
-      # -------------------------------------------------------
-      # Deploy to pypi; credentials are in env variables
-      #     - TWINE_USERNAME, TWINE_PASSWORD (using token)
-      # -------------------------------------------------------
-      #- provider: script
-      #  skip_cleanup: true
-      #  script:
-      #    python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --non-interactive --verbose --skip-existing wheelhouse/*
-      #  on:
-      #    branch: master
-      #    #branch: test-branch
 
-# Manylinux CI build in progress
-#
+  - name: Deploy production wheel
+    os: osx
+    osx_image: xcode11 # python3.7 comes installed with xcode11 image
+    language: rust
+    rust: stable
+    services:
+      - docker
+    addons:
+      apt:
+        update: true
+        packages:
+          - python3-pip
+    env: DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
+    install:
+      - docker pull $DOCKER_IMAGE
+      - chmod +x scripts/build_binaries_manylinux.sh
+    script:
+      - docker run --rm -e PLAT=$PYTHON_PLAT -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_binaries_manylinux.sh
+      - cp whitenoise-core/target/release/libwhitenoise_validator.so tmp_binaries
+      - cp whitenoise-core/target/release/libwhitenoise_runtime.so tmp_binaries
+      - python3 scripts/code_generation.py
+      - cp tmp_binaries/libwhitenoise_validator.so opendp/whitenoise/core/lib
+      - cp tmp_binaries/libwhitenoise_runtime.so opendp/whitenoise/core/lib
+      - python3 setup.py bdist_wheel -d ./wheelhouse
+    deploy:
+      skip_cleanup: true
+      provider: script
+      script:
+        python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
+      on:
+        branch: develop
