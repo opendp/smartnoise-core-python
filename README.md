@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python)
 
+<a href="https://opendifferentialprivacy.github.io"><img src="https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/images/WhiteNoise%20Logo/SVG/Full_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
+
 ## WhiteNoise Core <br/> Differential Privacy Library Python Bindings <br/>
 
 This repository contains python bindings to [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core) and its underlying Rust binaries.
@@ -51,29 +53,29 @@ Initial Linux and OS X binaries are available on [pypi](https://pypi.org/project
   - https://pypi.org/project/opendp-whitenoise-core/
   - ```pip3 install opendp-whitenoise-core```
 
-The binaries have been used on OS X and Ubuntu and are in the process of additional testing. 
+The binaries have been used on OS X and Ubuntu and are in the process of additional testing.
 
 ### From Source
 
 1. Clone the repository
     ```shell script
     git clone --recurse-submodules git@github.com:opendifferentialprivacy/whitenoise-core-python.git
-    ``` 
+    ```
 
     If you have already cloned the repository without the submodule
     ```shell script
-    git submodule init 
+    git submodule init
     git submodule update
     ```
 
-2. Install Whitenoise-core dependencies  
+2. Install Whitenoise-core dependencies
     Mac
     ```shell script
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     xcode-select --install
     brew install protobuf python
     ```
-   
+
     Linux
     ```shell script
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -82,7 +84,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
     sudo snap install protobuf --classic
     ```
 
-    Windows 
+    Windows
     Install WSL and refer to the linux instructions.
 
 3. Install live-reloading developer version of package
@@ -90,12 +92,12 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
    pip3 install -r requirements/dev.txt
    pip3 install -e .
    ```
-   
+
 4. Generate code (rerun anytime whitenoise-core changes)
     ```shell script
     python3 scripts/code_generation.py
     ```
-   
+
 5. Build documentation (optional)
     ```shell script
     ./scripts/build_docs.sh
