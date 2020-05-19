@@ -12,15 +12,15 @@ bash scripts/clean.sh
 # Generate python classes from protobuf definitions as well as
 #  components.py and variant_message_map.py files
 #
-echo "(2) Generate python classes from protobuf definitions";
+echo "(2) Generate components.py, *_pb2.py and binaries";
 python3 scripts/code_generation.py
 
 # Build the source distribution (.tar.gz as specified in the setup.cfg)
 #
-echo "(3) Build the source distribution (may skip sdist in future builds)";
-python3 setup.py sdist -d ./wheelhouse
+#echo "(3) Build the source distribution";
+#python3 setup.py sdist -d ./wheelhouse
 
 # Build the binary distribution (wheel)
 #
-echo "(4) Build the binary distribution";
+echo "(3) Build the final wheel";
 python3 setup.py bdist_wheel -d ./wheelhouse
