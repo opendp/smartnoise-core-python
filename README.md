@@ -52,7 +52,7 @@ Refer to [troubleshooting.md](https://github.com/opendifferentialprivacy/whiteno
 
 Initial Linux and OS X binaries are available on [pypi](https://pypi.org/project/opendp-whitenoise-core/) for Python 3.6+:
   - https://pypi.org/project/opendp-whitenoise-core/
-  - ```pip3 install opendp-whitenoise-core```
+  - ```pip3 install opendp-whitenoise```
 
 The binaries have been used on OS X and Ubuntu and are in the process of additional testing.
 
