@@ -456,3 +456,90 @@ def test_properties():
         # print("props", clamped.properties)
         print("data_type", clamped.data_type)
         print("categories", clamped.categories)
+
+
+def test_groupby():
+
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        is_male = wn.to_bool(data['sex'], true_label="1")
+        partitioned = wn.partition(data[['educ', 'income']], by=is_male)
+
+        counts = {cat: wn.dp_count(partitioned[cat], privacy_usage={'epsilon': 0.1}) for cat in is_male.categories}
+
+    # analysis.plot()
+    analysis.release()
+    print('adlfkjalfda')
+    print(analysis.privacy_usage)
+    print({cat: counts[cat].value for cat in counts})
+
+    print('aejralx')
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        is_male = wn.to_bool(data['sex'], true_label="1")
+        print(wn.to_float(data[['educ', 'income']]).properties)
+        partitioned = wn.partition(wn.to_float(data[['educ', 'income']]), by=is_male)
+        print(is_male.properties)
+
+        counts = {
+            True: wn.dp_count(partitioned[True], privacy_usage={'epsilon': 0.1}),
+            False: wn.dp_mean(partitioned[False],
+                              privacy_usage={'epsilon': 0.1},
+                              data_rows=500,
+                              data_lower=[0., 0.], data_upper=[15., 200_000.])
+        }
+
+    # analysis.plot()
+    analysis.release()
+    print(analysis.privacy_usage)
+    print({cat: counts[cat].value for cat in counts})
+
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        is_male = wn.to_bool(data['sex'], true_label="1")
+        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+
+        partitioned = wn.partition(educ_inc, by=is_male)
+
+        means = {}
+        for cat in is_male.categories:
+            part = partitioned[cat]
+            part = wn.resize(part, number_rows=500)
+            part = wn.dp_mean(part, privacy_usage={"epsilon": 0.1})
+            print("mean: ", part.properties)
+            means[cat] = part
+
+        union = wn.union(means)
+
+    # analysis.plot()
+    analysis.release()
+    print(analysis.privacy_usage)
+    print(union.value)
+
+    # with wn.Analysis() as analysis:
+    #     data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    #
+    #     is_male = wn.to_bool(data['sex'], true_label="1")
+    #     educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+    #
+    #     partitioned = wn.partition(educ_inc, by=is_male)
+    #
+    #     means = {}
+    #     for cat in is_male.categories:
+    #         part = partitioned[cat]
+    #         part = wn.resize(part, number_rows=500)
+    #         part = wn.mean(part)
+    #         print("mean: ", part.properties)
+    #         means[cat] = part
+    #
+    #     union = wn.union(means)
+    #     noised = wn.laplace_mechanism(union, privacy_usage={"epsilon": 0.1})
+    #
+    # # analysis.plot()
+    # print(union.properties)
+    # analysis.release()
+    # print(analysis.privacy_usage)
+    # print(noised.value)

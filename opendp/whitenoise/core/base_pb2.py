@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nbase.proto\x12\nwhitenoise\x1a\x0bvalue.proto\x1a\x10\x63omponents.proto\"\x18\n\x05\x45rror\x12\x0f\n\x07message\x18\x01 \x01(\t\"~\n\x08\x41nalysis\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x37\n\x11\x63omputation_graph\x18\x02 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\"\xed\x01\n\x11PrivacyDefinition\x12\x12\n\ngroup_size\x18\x04 \x01(\r\x12\x38\n\x08\x64istance\x18\x05 \x01(\x0e\x32&.whitenoise.PrivacyDefinition.Distance\x12>\n\x0bneighboring\x18\x06 \x01(\x0e\x32).whitenoise.PrivacyDefinition.Neighboring\"\x1b\n\x08\x44istance\x12\x0f\n\x0b\x41PPROXIMATE\x10\x00\"-\n\x0bNeighboring\x12\x0e\n\nSUBSTITUTE\x10\x00\x12\x0e\n\nADD_REMOVE\x10\x01\"\x8f\x01\n\x10\x43omputationGraph\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.whitenoise.ComputationGraph.ValueEntry\x1a\x43\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\"\x82\x01\n\x07Release\x12/\n\x06values\x18\x01 \x03(\x0b\x32\x1f.whitenoise.Release.ValuesEntry\x1a\x46\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xe2\x01\n\x0fValueProperties\x12\x32\n\x08indexmap\x18\x01 \x01(\x0b\x32\x1e.whitenoise.IndexmapPropertiesH\x00\x12,\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ArrayPropertiesH\x00\x12.\n\x06jagged\x18\x03 \x01(\x0b\x32\x1c.whitenoise.JaggedPropertiesH\x00\x12\x32\n\x08\x66unction\x18\x04 \x01(\x0b\x32\x1e.whitenoise.FunctionPropertiesH\x00\x42\t\n\x07variant\"\x9a\x02\n\x12IndexmapProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x10\n\x08\x64isjoint\x18\x02 \x01(\x08\x12=\n\x10value_properties\x18\x03 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x37\n\x07variant\x18\x04 \x01(\x0e\x32&.whitenoise.IndexmapProperties.Variant\x12\'\n\ndataset_id\x18\x05 \x01(\x0b\x32\x13.whitenoise.I64Null\"\'\n\x07Variant\x12\r\n\tDATAFRAME\x10\x00\x12\r\n\tPARTITION\x10\x01\"\xce\x01\n\x17IndexmapValueProperties\x12\x38\n\x06string\x18\x01 \x01(\x0b\x32&.whitenoise.IndexmapValuePropertiesStrH\x00\x12\x37\n\x04\x62ool\x18\x02 \x01(\x0b\x32\'.whitenoise.IndexmapValuePropertiesBoolH\x00\x12\x35\n\x03i64\x18\x03 \x01(\x0b\x32&.whitenoise.IndexmapValuePropertiesI64H\x00\x42\t\n\x07variant\"\xa6\x01\n\x1aIndexmapValuePropertiesStr\x12>\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x30.whitenoise.IndexmapValuePropertiesStr.DataEntry\x1aH\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"\xa8\x01\n\x1bIndexmapValuePropertiesBool\x12?\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x31.whitenoise.IndexmapValuePropertiesBool.DataEntry\x1aH\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\x08\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"\xa6\x01\n\x1aIndexmapValuePropertiesI64\x12>\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x30.whitenoise.IndexmapValuePropertiesI64.DataEntry\x1aH\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"\x8a\x02\n\x14\x41ggregatorProperties\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x44\n\nproperties\x18\x02 \x03(\x0b\x32\x30.whitenoise.AggregatorProperties.PropertiesEntry\x12\x32\n\x12lipschitz_constant\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"\xf6\x03\n\x0f\x41rrayProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12(\n\x0bnum_columns\x18\x02 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x0f\n\x07nullity\x18\x03 \x01(\x08\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12\x34\n\naggregator\x18\x05 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x06 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x07 \x01(\x08\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x12\'\n\ndataset_id\x18\x08 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x14\n\x0cis_not_empty\x18\t \x01(\x08\x12+\n\x0e\x64imensionality\x18\n \x01(\x0b\x32\x13.whitenoise.I64NullB\x08\n\x06nature\"f\n\x10NatureContinuous\x12(\n\x07minimum\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dNull\x12(\n\x07maximum\x18\x02 \x01(\x0b\x32\x17.whitenoise.Array1dNull\";\n\x11NatureCategorical\x12&\n\ncategories\x18\x01 \x01(\x0b\x32\x12.whitenoise.Jagged\"\xb7\x02\n\x10JaggedProperties\x12+\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x16.whitenoise.Array1dI64\x12\x0f\n\x07nullity\x18\x02 \x01(\x08\x12\x34\n\naggregator\x18\x03 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x12\'\n\tdata_type\x18\x05 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x06 \x01(\x08\x42\x08\n\x06nature\"(\n\x12\x46unctionProperties\x12\x12\n\nreleasable\x18\x01 \x01(\x08\"\xc7\x01\n\x0fGraphProperties\x12?\n\nproperties\x18\x01 \x03(\x0b\x32+.whitenoise.GraphProperties.PropertiesEntry\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"2\n\nAccuracies\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.Accuracy\"(\n\x08\x41\x63\x63uracy\x12\r\n\x05value\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\xe6\x03\n\x12\x43omponentExpansion\x12O\n\x11\x63omputation_graph\x18\x01 \x03(\x0b\x32\x34.whitenoise.ComponentExpansion.ComputationGraphEntry\x12\x42\n\nproperties\x18\x02 \x03(\x0b\x32..whitenoise.ComponentExpansion.PropertiesEntry\x12>\n\x08releases\x18\x03 \x03(\x0b\x32,.whitenoise.ComponentExpansion.ReleasesEntry\x12\x11\n\ttraversal\x18\x04 \x03(\r\x1aN\n\x15\x43omputationGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\x1aH\n\rReleasesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xb7\x02\n\x08\x46unction\x12\x37\n\x11\x63omputation_graph\x18\x01 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x36\n\targuments\x18\x03 \x03(\x0b\x32#.whitenoise.Function.ArgumentsEntry\x12\x32\n\x07outputs\x18\x04 \x03(\x0b\x32!.whitenoise.Function.OutputsEntry\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x1a.\n\x0cOutputsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\"\xad\x01\n\x05Value\x12\"\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x11.whitenoise.ArrayH\x00\x12(\n\x08indexmap\x18\x03 \x01(\x0b\x32\x14.whitenoise.IndexmapH\x00\x12$\n\x06jagged\x18\x04 \x01(\x0b\x32\x12.whitenoise.JaggedH\x00\x12(\n\x08\x66unction\x18\x05 \x01(\x0b\x32\x14.whitenoise.FunctionH\x00\x42\x06\n\x04\x64\x61ta\">\n\x0bIndexmapStr\x12\x0c\n\x04keys\x18\x01 \x03(\t\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"?\n\x0cIndexmapBool\x12\x0c\n\x04keys\x18\x01 \x03(\x08\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\">\n\x0bIndexmapI64\x12\x0c\n\x04keys\x18\x01 \x03(\x03\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"\x92\x01\n\x08Indexmap\x12)\n\x06string\x18\x01 \x01(\x0b\x32\x17.whitenoise.IndexmapStrH\x00\x12(\n\x04\x62ool\x18\x02 \x01(\x0b\x32\x18.whitenoise.IndexmapBoolH\x00\x12&\n\x03i64\x18\x04 \x01(\x0b\x32\x17.whitenoise.IndexmapI64H\x00\x42\t\n\x07variant\"r\n\x0bReleaseNode\x12 \n\x05value\x18\x01 \x01(\x0b\x32\x11.whitenoise.Value\x12\x31\n\x0eprivacy_usages\x18\x02 \x01(\x0b\x32\x19.whitenoise.PrivacyUsages\x12\x0e\n\x06public\x18\x03 \x01(\x08*8\n\x0b\x46ilterLevel\x12\n\n\x06PUBLIC\x10\x00\x12\x14\n\x10PUBLIC_AND_PRIOR\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\nbase.proto\x12\nwhitenoise\x1a\x0bvalue.proto\x1a\x10\x63omponents.proto\"\x18\n\x05\x45rror\x12\x0f\n\x07message\x18\x01 \x01(\t\"~\n\x08\x41nalysis\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x37\n\x11\x63omputation_graph\x18\x02 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\"\xb3\x02\n\x11PrivacyDefinition\x12\x12\n\ngroup_size\x18\x01 \x01(\r\x12>\n\x0bneighboring\x18\x02 \x01(\x0e\x32).whitenoise.PrivacyDefinition.Neighboring\x12\x1f\n\x17strict_parameter_checks\x18\x03 \x01(\x08\x12\x18\n\x10protect_overflow\x18\x04 \x01(\x08\x12\x1c\n\x14protect_elapsed_time\x18\x05 \x01(\x08\x12\"\n\x1aprotect_memory_utilization\x18\x06 \x01(\x08\x12\x1e\n\x16protect_floating_point\x18\x07 \x01(\x08\"-\n\x0bNeighboring\x12\x0e\n\nSUBSTITUTE\x10\x00\x12\x0e\n\nADD_REMOVE\x10\x01\"\x8f\x01\n\x10\x43omputationGraph\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.whitenoise.ComputationGraph.ValueEntry\x1a\x43\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\"\x82\x01\n\x07Release\x12/\n\x06values\x18\x01 \x03(\x0b\x32\x1f.whitenoise.Release.ValuesEntry\x1a\x46\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xe2\x01\n\x0fValueProperties\x12\x32\n\x08indexmap\x18\x01 \x01(\x0b\x32\x1e.whitenoise.IndexmapPropertiesH\x00\x12,\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ArrayPropertiesH\x00\x12.\n\x06jagged\x18\x03 \x01(\x0b\x32\x1c.whitenoise.JaggedPropertiesH\x00\x12\x32\n\x08\x66unction\x18\x04 \x01(\x0b\x32\x1e.whitenoise.FunctionPropertiesH\x00\x42\t\n\x07variant\"\xb5\x01\n\x12IndexmapProperties\x12=\n\x10value_properties\x18\x01 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x37\n\x07variant\x18\x02 \x01(\x0e\x32&.whitenoise.IndexmapProperties.Variant\"\'\n\x07Variant\x12\r\n\tDATAFRAME\x10\x00\x12\r\n\tPARTITION\x10\x01\"j\n\x17IndexmapValueProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"\xda\x01\n\x14\x41ggregatorProperties\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x02 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x32\n\x12lipschitz_constant\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\"\x9d\x04\n\x0f\x41rrayProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12(\n\x0bnum_columns\x18\x02 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x0f\n\x07nullity\x18\x03 \x01(\x08\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12\x34\n\naggregator\x18\x05 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x06 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x07 \x01(\x08\x12\'\n\ndataset_id\x18\x08 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x14\n\x0cis_not_empty\x18\t \x01(\x08\x12+\n\x0e\x64imensionality\x18\n \x01(\x0b\x32\x13.whitenoise.I64Null\x12%\n\x08group_id\x18\x0b \x03(\x0b\x32\x13.whitenoise.GroupId\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"f\n\x10NatureContinuous\x12(\n\x07minimum\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dNull\x12(\n\x07maximum\x18\x02 \x01(\x0b\x32\x17.whitenoise.Array1dNull\";\n\x11NatureCategorical\x12&\n\ncategories\x18\x01 \x01(\x0b\x32\x12.whitenoise.Jagged\"D\n\x07GroupId\x12\x14\n\x0cpartition_id\x18\x01 \x01(\r\x12#\n\x05index\x18\x02 \x01(\x0b\x32\x14.whitenoise.IndexKey\"\xb7\x02\n\x10JaggedProperties\x12+\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x16.whitenoise.Array1dI64\x12\x0f\n\x07nullity\x18\x02 \x01(\x08\x12\x34\n\naggregator\x18\x03 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x04 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x05 \x01(\x08\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"(\n\x12\x46unctionProperties\x12\x12\n\nreleasable\x18\x01 \x01(\x08\"\xc7\x01\n\x0fGraphProperties\x12?\n\nproperties\x18\x01 \x03(\x0b\x32+.whitenoise.GraphProperties.PropertiesEntry\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"2\n\nAccuracies\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.Accuracy\"(\n\x08\x41\x63\x63uracy\x12\r\n\x05value\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\x8b\x04\n\x12\x43omponentExpansion\x12O\n\x11\x63omputation_graph\x18\x01 \x03(\x0b\x32\x34.whitenoise.ComponentExpansion.ComputationGraphEntry\x12\x42\n\nproperties\x18\x02 \x03(\x0b\x32..whitenoise.ComponentExpansion.PropertiesEntry\x12>\n\x08releases\x18\x03 \x03(\x0b\x32,.whitenoise.ComponentExpansion.ReleasesEntry\x12\x11\n\ttraversal\x18\x04 \x03(\r\x12#\n\x08warnings\x18\x05 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x15\x43omputationGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\x1aH\n\rReleasesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xad\x01\n\x05Value\x12\"\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x11.whitenoise.ArrayH\x00\x12(\n\x08indexmap\x18\x03 \x01(\x0b\x32\x14.whitenoise.IndexmapH\x00\x12$\n\x06jagged\x18\x04 \x01(\x0b\x32\x12.whitenoise.JaggedH\x00\x12(\n\x08\x66unction\x18\x05 \x01(\x0b\x32\x14.whitenoise.FunctionH\x00\x42\x06\n\x04\x64\x61ta\"Q\n\x08Indexmap\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"\xb7\x02\n\x08\x46unction\x12\x37\n\x11\x63omputation_graph\x18\x01 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x36\n\targuments\x18\x03 \x03(\x0b\x32#.whitenoise.Function.ArgumentsEntry\x12\x32\n\x07outputs\x18\x04 \x03(\x0b\x32!.whitenoise.Function.OutputsEntry\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x1a.\n\x0cOutputsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\"r\n\x0bReleaseNode\x12 \n\x05value\x18\x01 \x01(\x0b\x32\x11.whitenoise.Value\x12\x31\n\x0eprivacy_usages\x18\x02 \x01(\x0b\x32\x19.whitenoise.PrivacyUsages\x12\x0e\n\x06public\x18\x03 \x01(\x08\"b\n\x13IndexmapReleaseNode\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\'\n\x06values\x18\x02 \x03(\x0b\x32\x17.whitenoise.ReleaseNode*8\n\x0b\x46ilterLevel\x12\n\n\x06PUBLIC\x10\x00\x12\x14\n\x10PUBLIC_AND_PRIOR\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x62\x06proto3')
   ,
   dependencies=[value__pb2.DESCRIPTOR,components__pb2.DESCRIPTOR,])
 
@@ -48,8 +48,8 @@ _FILTERLEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=4990,
-  serialized_end=5046,
+  serialized_start=4288,
+  serialized_end=4344,
 )
 _sym_db.RegisterEnumDescriptor(_FILTERLEVEL)
 
@@ -58,24 +58,6 @@ PUBLIC = 0
 PUBLIC_AND_PRIOR = 1
 ALL = 2
 
-
-_PRIVACYDEFINITION_DISTANCE = _descriptor.EnumDescriptor(
-  name='Distance',
-  full_name='whitenoise.PrivacyDefinition.Distance',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='APPROXIMATE', index=0, number=0,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=375,
-  serialized_end=402,
-)
-_sym_db.RegisterEnumDescriptor(_PRIVACYDEFINITION_DISTANCE)
 
 _PRIVACYDEFINITION_NEIGHBORING = _descriptor.EnumDescriptor(
   name='Neighboring',
@@ -94,8 +76,8 @@ _PRIVACYDEFINITION_NEIGHBORING = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=404,
-  serialized_end=449,
+  serialized_start=474,
+  serialized_end=519,
 )
 _sym_db.RegisterEnumDescriptor(_PRIVACYDEFINITION_NEIGHBORING)
 
@@ -116,8 +98,8 @@ _INDEXMAPPROPERTIES_VARIANT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1203,
-  serialized_end=1242,
+  serialized_start=1172,
+  serialized_end=1211,
 )
 _sym_db.RegisterEnumDescriptor(_INDEXMAPPROPERTIES_VARIANT)
 
@@ -200,22 +182,50 @@ _PRIVACYDEFINITION = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='group_size', full_name='whitenoise.PrivacyDefinition.group_size', index=0,
-      number=4, type=13, cpp_type=3, label=1,
+      number=1, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='distance', full_name='whitenoise.PrivacyDefinition.distance', index=1,
-      number=5, type=14, cpp_type=8, label=1,
+      name='neighboring', full_name='whitenoise.PrivacyDefinition.neighboring', index=1,
+      number=2, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='neighboring', full_name='whitenoise.PrivacyDefinition.neighboring', index=2,
-      number=6, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
+      name='strict_parameter_checks', full_name='whitenoise.PrivacyDefinition.strict_parameter_checks', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='protect_overflow', full_name='whitenoise.PrivacyDefinition.protect_overflow', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='protect_elapsed_time', full_name='whitenoise.PrivacyDefinition.protect_elapsed_time', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='protect_memory_utilization', full_name='whitenoise.PrivacyDefinition.protect_memory_utilization', index=5,
+      number=6, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='protect_floating_point', full_name='whitenoise.PrivacyDefinition.protect_floating_point', index=6,
+      number=7, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -224,7 +234,6 @@ _PRIVACYDEFINITION = _descriptor.Descriptor(
   ],
   nested_types=[],
   enum_types=[
-    _PRIVACYDEFINITION_DISTANCE,
     _PRIVACYDEFINITION_NEIGHBORING,
   ],
   serialized_options=None,
@@ -234,7 +243,7 @@ _PRIVACYDEFINITION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=212,
-  serialized_end=449,
+  serialized_end=519,
 )
 
 
@@ -271,8 +280,8 @@ _COMPUTATIONGRAPH_VALUEENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=528,
-  serialized_end=595,
+  serialized_start=598,
+  serialized_end=665,
 )
 
 _COMPUTATIONGRAPH = _descriptor.Descriptor(
@@ -301,8 +310,8 @@ _COMPUTATIONGRAPH = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=452,
-  serialized_end=595,
+  serialized_start=522,
+  serialized_end=665,
 )
 
 
@@ -339,8 +348,8 @@ _RELEASE_VALUESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=658,
-  serialized_end=728,
+  serialized_start=728,
+  serialized_end=798,
 )
 
 _RELEASE = _descriptor.Descriptor(
@@ -369,8 +378,8 @@ _RELEASE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=598,
-  serialized_end=728,
+  serialized_start=668,
+  serialized_end=798,
 )
 
 
@@ -424,8 +433,8 @@ _VALUEPROPERTIES = _descriptor.Descriptor(
       name='variant', full_name='whitenoise.ValueProperties.variant',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=731,
-  serialized_end=957,
+  serialized_start=801,
+  serialized_end=1027,
 )
 
 
@@ -437,37 +446,16 @@ _INDEXMAPPROPERTIES = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='num_records', full_name='whitenoise.IndexmapProperties.num_records', index=0,
+      name='value_properties', full_name='whitenoise.IndexmapProperties.value_properties', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='disjoint', full_name='whitenoise.IndexmapProperties.disjoint', index=1,
-      number=2, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value_properties', full_name='whitenoise.IndexmapProperties.value_properties', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='variant', full_name='whitenoise.IndexmapProperties.variant', index=3,
-      number=4, type=14, cpp_type=8, label=1,
+      name='variant', full_name='whitenoise.IndexmapProperties.variant', index=1,
+      number=2, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='dataset_id', full_name='whitenoise.IndexmapProperties.dataset_id', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -484,8 +472,8 @@ _INDEXMAPPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=960,
-  serialized_end=1242,
+  serialized_start=1030,
+  serialized_end=1211,
 )
 
 
@@ -497,93 +485,15 @@ _INDEXMAPVALUEPROPERTIES = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='string', full_name='whitenoise.IndexmapValueProperties.string', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='bool', full_name='whitenoise.IndexmapValueProperties.bool', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='i64', full_name='whitenoise.IndexmapValueProperties.i64', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-    _descriptor.OneofDescriptor(
-      name='variant', full_name='whitenoise.IndexmapValueProperties.variant',
-      index=0, containing_type=None, fields=[]),
-  ],
-  serialized_start=1245,
-  serialized_end=1451,
-)
-
-
-_INDEXMAPVALUEPROPERTIESSTR_DATAENTRY = _descriptor.Descriptor(
-  name='DataEntry',
-  full_name='whitenoise.IndexmapValuePropertiesStr.DataEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='whitenoise.IndexmapValuePropertiesStr.DataEntry.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='whitenoise.IndexmapValuePropertiesStr.DataEntry.value', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=_b('8\001'),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1548,
-  serialized_end=1620,
-)
-
-_INDEXMAPVALUEPROPERTIESSTR = _descriptor.Descriptor(
-  name='IndexmapValuePropertiesStr',
-  full_name='whitenoise.IndexmapValuePropertiesStr',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='data', full_name='whitenoise.IndexmapValuePropertiesStr.data', index=0,
+      name='keys', full_name='whitenoise.IndexmapValueProperties.keys', index=0,
       number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='whitenoise.IndexmapValueProperties.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -591,7 +501,7 @@ _INDEXMAPVALUEPROPERTIESSTR = _descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[_INDEXMAPVALUEPROPERTIESSTR_DATAENTRY, ],
+  nested_types=[],
   enum_types=[
   ],
   serialized_options=None,
@@ -600,183 +510,10 @@ _INDEXMAPVALUEPROPERTIESSTR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1454,
-  serialized_end=1620,
+  serialized_start=1213,
+  serialized_end=1319,
 )
 
-
-_INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY = _descriptor.Descriptor(
-  name='DataEntry',
-  full_name='whitenoise.IndexmapValuePropertiesBool.DataEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='whitenoise.IndexmapValuePropertiesBool.DataEntry.key', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='whitenoise.IndexmapValuePropertiesBool.DataEntry.value', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=_b('8\001'),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1719,
-  serialized_end=1791,
-)
-
-_INDEXMAPVALUEPROPERTIESBOOL = _descriptor.Descriptor(
-  name='IndexmapValuePropertiesBool',
-  full_name='whitenoise.IndexmapValuePropertiesBool',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='data', full_name='whitenoise.IndexmapValuePropertiesBool.data', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[_INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY, ],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1623,
-  serialized_end=1791,
-)
-
-
-_INDEXMAPVALUEPROPERTIESI64_DATAENTRY = _descriptor.Descriptor(
-  name='DataEntry',
-  full_name='whitenoise.IndexmapValuePropertiesI64.DataEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='whitenoise.IndexmapValuePropertiesI64.DataEntry.key', index=0,
-      number=1, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='whitenoise.IndexmapValuePropertiesI64.DataEntry.value', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=_b('8\001'),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1888,
-  serialized_end=1960,
-)
-
-_INDEXMAPVALUEPROPERTIESI64 = _descriptor.Descriptor(
-  name='IndexmapValuePropertiesI64',
-  full_name='whitenoise.IndexmapValuePropertiesI64',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='data', full_name='whitenoise.IndexmapValuePropertiesI64.data', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[_INDEXMAPVALUEPROPERTIESI64_DATAENTRY, ],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1794,
-  serialized_end=1960,
-)
-
-
-_AGGREGATORPROPERTIES_PROPERTIESENTRY = _descriptor.Descriptor(
-  name='PropertiesEntry',
-  full_name='whitenoise.AggregatorProperties.PropertiesEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='whitenoise.AggregatorProperties.PropertiesEntry.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='whitenoise.AggregatorProperties.PropertiesEntry.value', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=_b('8\001'),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2151,
-  serialized_end=2229,
-)
 
 _AGGREGATORPROPERTIES = _descriptor.Descriptor(
   name='AggregatorProperties',
@@ -794,8 +531,8 @@ _AGGREGATORPROPERTIES = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='properties', full_name='whitenoise.AggregatorProperties.properties', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -806,10 +543,17 @@ _AGGREGATORPROPERTIES = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='c_stability', full_name='whitenoise.AggregatorProperties.c_stability', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
-  nested_types=[_AGGREGATORPROPERTIES_PROPERTIESENTRY, ],
+  nested_types=[],
   enum_types=[
   ],
   serialized_options=None,
@@ -818,8 +562,8 @@ _AGGREGATORPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1963,
-  serialized_end=2229,
+  serialized_start=1322,
+  serialized_end=1540,
 )
 
 
@@ -880,36 +624,43 @@ _ARRAYPROPERTIES = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='continuous', full_name='whitenoise.ArrayProperties.continuous', index=7,
-      number=100, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='categorical', full_name='whitenoise.ArrayProperties.categorical', index=8,
-      number=101, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='dataset_id', full_name='whitenoise.ArrayProperties.dataset_id', index=9,
+      name='dataset_id', full_name='whitenoise.ArrayProperties.dataset_id', index=7,
       number=8, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='is_not_empty', full_name='whitenoise.ArrayProperties.is_not_empty', index=10,
+      name='is_not_empty', full_name='whitenoise.ArrayProperties.is_not_empty', index=8,
       number=9, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dimensionality', full_name='whitenoise.ArrayProperties.dimensionality', index=11,
+      name='dimensionality', full_name='whitenoise.ArrayProperties.dimensionality', index=9,
       number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='group_id', full_name='whitenoise.ArrayProperties.group_id', index=10,
+      number=11, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='continuous', full_name='whitenoise.ArrayProperties.continuous', index=11,
+      number=100, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='categorical', full_name='whitenoise.ArrayProperties.categorical', index=12,
+      number=101, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -929,8 +680,8 @@ _ARRAYPROPERTIES = _descriptor.Descriptor(
       name='nature', full_name='whitenoise.ArrayProperties.nature',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2232,
-  serialized_end=2734,
+  serialized_start=1543,
+  serialized_end=2084,
 )
 
 
@@ -967,8 +718,8 @@ _NATURECONTINUOUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2736,
-  serialized_end=2838,
+  serialized_start=2086,
+  serialized_end=2188,
 )
 
 
@@ -998,8 +749,46 @@ _NATURECATEGORICAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2840,
-  serialized_end=2899,
+  serialized_start=2190,
+  serialized_end=2249,
+)
+
+
+_GROUPID = _descriptor.Descriptor(
+  name='GroupId',
+  full_name='whitenoise.GroupId',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='partition_id', full_name='whitenoise.GroupId.partition_id', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='index', full_name='whitenoise.GroupId.index', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2251,
+  serialized_end=2319,
 )
 
 
@@ -1032,30 +821,30 @@ _JAGGEDPROPERTIES = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='continuous', full_name='whitenoise.JaggedProperties.continuous', index=3,
+      name='data_type', full_name='whitenoise.JaggedProperties.data_type', index=3,
+      number=4, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='releasable', full_name='whitenoise.JaggedProperties.releasable', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='continuous', full_name='whitenoise.JaggedProperties.continuous', index=5,
       number=100, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='categorical', full_name='whitenoise.JaggedProperties.categorical', index=4,
+      name='categorical', full_name='whitenoise.JaggedProperties.categorical', index=6,
       number=101, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='data_type', full_name='whitenoise.JaggedProperties.data_type', index=5,
-      number=5, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='releasable', full_name='whitenoise.JaggedProperties.releasable', index=6,
-      number=6, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -1074,8 +863,8 @@ _JAGGEDPROPERTIES = _descriptor.Descriptor(
       name='nature', full_name='whitenoise.JaggedProperties.nature',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2902,
-  serialized_end=3213,
+  serialized_start=2322,
+  serialized_end=2633,
 )
 
 
@@ -1105,8 +894,8 @@ _FUNCTIONPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3215,
-  serialized_end=3255,
+  serialized_start=2635,
+  serialized_end=2675,
 )
 
 
@@ -1143,8 +932,8 @@ _GRAPHPROPERTIES_PROPERTIESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3379,
-  serialized_end=3457,
+  serialized_start=2799,
+  serialized_end=2877,
 )
 
 _GRAPHPROPERTIES = _descriptor.Descriptor(
@@ -1180,8 +969,8 @@ _GRAPHPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3258,
-  serialized_end=3457,
+  serialized_start=2678,
+  serialized_end=2877,
 )
 
 
@@ -1211,8 +1000,8 @@ _ACCURACIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3459,
-  serialized_end=3509,
+  serialized_start=2879,
+  serialized_end=2929,
 )
 
 
@@ -1249,8 +1038,8 @@ _ACCURACY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3511,
-  serialized_end=3551,
+  serialized_start=2931,
+  serialized_end=2971,
 )
 
 
@@ -1287,8 +1076,8 @@ _COMPONENTEXPANSION_COMPUTATIONGRAPHENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3808,
-  serialized_end=3886,
+  serialized_start=3265,
+  serialized_end=3343,
 )
 
 _COMPONENTEXPANSION_PROPERTIESENTRY = _descriptor.Descriptor(
@@ -1324,8 +1113,8 @@ _COMPONENTEXPANSION_PROPERTIESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3379,
-  serialized_end=3457,
+  serialized_start=2799,
+  serialized_end=2877,
 )
 
 _COMPONENTEXPANSION_RELEASESENTRY = _descriptor.Descriptor(
@@ -1361,8 +1150,8 @@ _COMPONENTEXPANSION_RELEASESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3968,
-  serialized_end=4040,
+  serialized_start=3425,
+  serialized_end=3497,
 )
 
 _COMPONENTEXPANSION = _descriptor.Descriptor(
@@ -1400,6 +1189,13 @@ _COMPONENTEXPANSION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='warnings', full_name='whitenoise.ComponentExpansion.warnings', index=4,
+      number=5, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1412,134 +1208,8 @@ _COMPONENTEXPANSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3554,
-  serialized_end=4040,
-)
-
-
-_FUNCTION_ARGUMENTSENTRY = _descriptor.Descriptor(
-  name='ArgumentsEntry',
-  full_name='whitenoise.Function.ArgumentsEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='whitenoise.Function.ArgumentsEntry.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='whitenoise.Function.ArgumentsEntry.value', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=_b('8\001'),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4258,
-  serialized_end=4306,
-)
-
-_FUNCTION_OUTPUTSENTRY = _descriptor.Descriptor(
-  name='OutputsEntry',
-  full_name='whitenoise.Function.OutputsEntry',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='key', full_name='whitenoise.Function.OutputsEntry.key', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='value', full_name='whitenoise.Function.OutputsEntry.value', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=_b('8\001'),
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4308,
-  serialized_end=4354,
-)
-
-_FUNCTION = _descriptor.Descriptor(
-  name='Function',
-  full_name='whitenoise.Function',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='computation_graph', full_name='whitenoise.Function.computation_graph', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='release', full_name='whitenoise.Function.release', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='arguments', full_name='whitenoise.Function.arguments', index=2,
-      number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='outputs', full_name='whitenoise.Function.outputs', index=3,
-      number=4, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[_FUNCTION_ARGUMENTSENTRY, _FUNCTION_OUTPUTSENTRY, ],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4043,
-  serialized_end=4354,
+  serialized_start=2974,
+  serialized_end=3497,
 )
 
 
@@ -1593,122 +1263,8 @@ _VALUE = _descriptor.Descriptor(
       name='data', full_name='whitenoise.Value.data',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=4357,
-  serialized_end=4530,
-)
-
-
-_INDEXMAPSTR = _descriptor.Descriptor(
-  name='IndexmapStr',
-  full_name='whitenoise.IndexmapStr',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='keys', full_name='whitenoise.IndexmapStr.keys', index=0,
-      number=1, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='values', full_name='whitenoise.IndexmapStr.values', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4532,
-  serialized_end=4594,
-)
-
-
-_INDEXMAPBOOL = _descriptor.Descriptor(
-  name='IndexmapBool',
-  full_name='whitenoise.IndexmapBool',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='keys', full_name='whitenoise.IndexmapBool.keys', index=0,
-      number=1, type=8, cpp_type=7, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='values', full_name='whitenoise.IndexmapBool.values', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4596,
-  serialized_end=4659,
-)
-
-
-_INDEXMAPI64 = _descriptor.Descriptor(
-  name='IndexmapI64',
-  full_name='whitenoise.IndexmapI64',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='keys', full_name='whitenoise.IndexmapI64.keys', index=0,
-      number=1, type=3, cpp_type=2, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='values', full_name='whitenoise.IndexmapI64.values', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=4661,
-  serialized_end=4723,
+  serialized_start=3500,
+  serialized_end=3673,
 )
 
 
@@ -1720,23 +1276,16 @@ _INDEXMAP = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='string', full_name='whitenoise.Indexmap.string', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='keys', full_name='whitenoise.Indexmap.keys', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='bool', full_name='whitenoise.Indexmap.bool', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='i64', full_name='whitenoise.Indexmap.i64', index=2,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='values', full_name='whitenoise.Indexmap.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -1751,12 +1300,135 @@ _INDEXMAP = _descriptor.Descriptor(
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
-    _descriptor.OneofDescriptor(
-      name='variant', full_name='whitenoise.Indexmap.variant',
-      index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=4726,
-  serialized_end=4872,
+  serialized_start=3675,
+  serialized_end=3756,
+)
+
+
+_FUNCTION_ARGUMENTSENTRY = _descriptor.Descriptor(
+  name='ArgumentsEntry',
+  full_name='whitenoise.Function.ArgumentsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='whitenoise.Function.ArgumentsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='whitenoise.Function.ArgumentsEntry.value', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3974,
+  serialized_end=4022,
+)
+
+_FUNCTION_OUTPUTSENTRY = _descriptor.Descriptor(
+  name='OutputsEntry',
+  full_name='whitenoise.Function.OutputsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='whitenoise.Function.OutputsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='whitenoise.Function.OutputsEntry.value', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4024,
+  serialized_end=4070,
+)
+
+_FUNCTION = _descriptor.Descriptor(
+  name='Function',
+  full_name='whitenoise.Function',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='computation_graph', full_name='whitenoise.Function.computation_graph', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='release', full_name='whitenoise.Function.release', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='arguments', full_name='whitenoise.Function.arguments', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='outputs', full_name='whitenoise.Function.outputs', index=3,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_FUNCTION_ARGUMENTSENTRY, _FUNCTION_OUTPUTSENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3759,
+  serialized_end=4070,
 )
 
 
@@ -1800,15 +1472,51 @@ _RELEASENODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4874,
-  serialized_end=4988,
+  serialized_start=4072,
+  serialized_end=4186,
+)
+
+
+_INDEXMAPRELEASENODE = _descriptor.Descriptor(
+  name='IndexmapReleaseNode',
+  full_name='whitenoise.IndexmapReleaseNode',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='keys', full_name='whitenoise.IndexmapReleaseNode.keys', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='whitenoise.IndexmapReleaseNode.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4188,
+  serialized_end=4286,
 )
 
 _ANALYSIS.fields_by_name['privacy_definition'].message_type = _PRIVACYDEFINITION
 _ANALYSIS.fields_by_name['computation_graph'].message_type = _COMPUTATIONGRAPH
-_PRIVACYDEFINITION.fields_by_name['distance'].enum_type = _PRIVACYDEFINITION_DISTANCE
 _PRIVACYDEFINITION.fields_by_name['neighboring'].enum_type = _PRIVACYDEFINITION_NEIGHBORING
-_PRIVACYDEFINITION_DISTANCE.containing_type = _PRIVACYDEFINITION
 _PRIVACYDEFINITION_NEIGHBORING.containing_type = _PRIVACYDEFINITION
 _COMPUTATIONGRAPH_VALUEENTRY.fields_by_name['value'].message_type = components__pb2._COMPONENT
 _COMPUTATIONGRAPH_VALUEENTRY.containing_type = _COMPUTATIONGRAPH
@@ -1832,46 +1540,25 @@ _VALUEPROPERTIES.fields_by_name['jagged'].containing_oneof = _VALUEPROPERTIES.on
 _VALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
   _VALUEPROPERTIES.fields_by_name['function'])
 _VALUEPROPERTIES.fields_by_name['function'].containing_oneof = _VALUEPROPERTIES.oneofs_by_name['variant']
-_INDEXMAPPROPERTIES.fields_by_name['num_records'].message_type = value__pb2._I64NULL
 _INDEXMAPPROPERTIES.fields_by_name['value_properties'].message_type = _INDEXMAPVALUEPROPERTIES
 _INDEXMAPPROPERTIES.fields_by_name['variant'].enum_type = _INDEXMAPPROPERTIES_VARIANT
-_INDEXMAPPROPERTIES.fields_by_name['dataset_id'].message_type = value__pb2._I64NULL
 _INDEXMAPPROPERTIES_VARIANT.containing_type = _INDEXMAPPROPERTIES
-_INDEXMAPVALUEPROPERTIES.fields_by_name['string'].message_type = _INDEXMAPVALUEPROPERTIESSTR
-_INDEXMAPVALUEPROPERTIES.fields_by_name['bool'].message_type = _INDEXMAPVALUEPROPERTIESBOOL
-_INDEXMAPVALUEPROPERTIES.fields_by_name['i64'].message_type = _INDEXMAPVALUEPROPERTIESI64
-_INDEXMAPVALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
-  _INDEXMAPVALUEPROPERTIES.fields_by_name['string'])
-_INDEXMAPVALUEPROPERTIES.fields_by_name['string'].containing_oneof = _INDEXMAPVALUEPROPERTIES.oneofs_by_name['variant']
-_INDEXMAPVALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
-  _INDEXMAPVALUEPROPERTIES.fields_by_name['bool'])
-_INDEXMAPVALUEPROPERTIES.fields_by_name['bool'].containing_oneof = _INDEXMAPVALUEPROPERTIES.oneofs_by_name['variant']
-_INDEXMAPVALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
-  _INDEXMAPVALUEPROPERTIES.fields_by_name['i64'])
-_INDEXMAPVALUEPROPERTIES.fields_by_name['i64'].containing_oneof = _INDEXMAPVALUEPROPERTIES.oneofs_by_name['variant']
-_INDEXMAPVALUEPROPERTIESSTR_DATAENTRY.fields_by_name['value'].message_type = _VALUEPROPERTIES
-_INDEXMAPVALUEPROPERTIESSTR_DATAENTRY.containing_type = _INDEXMAPVALUEPROPERTIESSTR
-_INDEXMAPVALUEPROPERTIESSTR.fields_by_name['data'].message_type = _INDEXMAPVALUEPROPERTIESSTR_DATAENTRY
-_INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY.fields_by_name['value'].message_type = _VALUEPROPERTIES
-_INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY.containing_type = _INDEXMAPVALUEPROPERTIESBOOL
-_INDEXMAPVALUEPROPERTIESBOOL.fields_by_name['data'].message_type = _INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY
-_INDEXMAPVALUEPROPERTIESI64_DATAENTRY.fields_by_name['value'].message_type = _VALUEPROPERTIES
-_INDEXMAPVALUEPROPERTIESI64_DATAENTRY.containing_type = _INDEXMAPVALUEPROPERTIESI64
-_INDEXMAPVALUEPROPERTIESI64.fields_by_name['data'].message_type = _INDEXMAPVALUEPROPERTIESI64_DATAENTRY
-_AGGREGATORPROPERTIES_PROPERTIESENTRY.fields_by_name['value'].message_type = _VALUEPROPERTIES
-_AGGREGATORPROPERTIES_PROPERTIESENTRY.containing_type = _AGGREGATORPROPERTIES
+_INDEXMAPVALUEPROPERTIES.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_INDEXMAPVALUEPROPERTIES.fields_by_name['values'].message_type = _VALUEPROPERTIES
 _AGGREGATORPROPERTIES.fields_by_name['component'].message_type = components__pb2._COMPONENT
-_AGGREGATORPROPERTIES.fields_by_name['properties'].message_type = _AGGREGATORPROPERTIES_PROPERTIESENTRY
+_AGGREGATORPROPERTIES.fields_by_name['properties'].message_type = _INDEXMAPVALUEPROPERTIES
 _AGGREGATORPROPERTIES.fields_by_name['lipschitz_constant'].message_type = value__pb2._ARRAY1DF64
+_AGGREGATORPROPERTIES.fields_by_name['c_stability'].message_type = value__pb2._ARRAY1DF64
 _ARRAYPROPERTIES.fields_by_name['num_records'].message_type = value__pb2._I64NULL
 _ARRAYPROPERTIES.fields_by_name['num_columns'].message_type = value__pb2._I64NULL
 _ARRAYPROPERTIES.fields_by_name['c_stability'].message_type = value__pb2._ARRAY1DF64
 _ARRAYPROPERTIES.fields_by_name['aggregator'].message_type = _AGGREGATORPROPERTIES
 _ARRAYPROPERTIES.fields_by_name['data_type'].enum_type = value__pb2._DATATYPE
-_ARRAYPROPERTIES.fields_by_name['continuous'].message_type = _NATURECONTINUOUS
-_ARRAYPROPERTIES.fields_by_name['categorical'].message_type = _NATURECATEGORICAL
 _ARRAYPROPERTIES.fields_by_name['dataset_id'].message_type = value__pb2._I64NULL
 _ARRAYPROPERTIES.fields_by_name['dimensionality'].message_type = value__pb2._I64NULL
+_ARRAYPROPERTIES.fields_by_name['group_id'].message_type = _GROUPID
+_ARRAYPROPERTIES.fields_by_name['continuous'].message_type = _NATURECONTINUOUS
+_ARRAYPROPERTIES.fields_by_name['categorical'].message_type = _NATURECATEGORICAL
 _ARRAYPROPERTIES.oneofs_by_name['nature'].fields.append(
   _ARRAYPROPERTIES.fields_by_name['continuous'])
 _ARRAYPROPERTIES.fields_by_name['continuous'].containing_oneof = _ARRAYPROPERTIES.oneofs_by_name['nature']
@@ -1881,11 +1568,12 @@ _ARRAYPROPERTIES.fields_by_name['categorical'].containing_oneof = _ARRAYPROPERTI
 _NATURECONTINUOUS.fields_by_name['minimum'].message_type = value__pb2._ARRAY1DNULL
 _NATURECONTINUOUS.fields_by_name['maximum'].message_type = value__pb2._ARRAY1DNULL
 _NATURECATEGORICAL.fields_by_name['categories'].message_type = value__pb2._JAGGED
+_GROUPID.fields_by_name['index'].message_type = value__pb2._INDEXKEY
 _JAGGEDPROPERTIES.fields_by_name['num_records'].message_type = value__pb2._ARRAY1DI64
 _JAGGEDPROPERTIES.fields_by_name['aggregator'].message_type = _AGGREGATORPROPERTIES
+_JAGGEDPROPERTIES.fields_by_name['data_type'].enum_type = value__pb2._DATATYPE
 _JAGGEDPROPERTIES.fields_by_name['continuous'].message_type = _NATURECONTINUOUS
 _JAGGEDPROPERTIES.fields_by_name['categorical'].message_type = _NATURECATEGORICAL
-_JAGGEDPROPERTIES.fields_by_name['data_type'].enum_type = value__pb2._DATATYPE
 _JAGGEDPROPERTIES.oneofs_by_name['nature'].fields.append(
   _JAGGEDPROPERTIES.fields_by_name['continuous'])
 _JAGGEDPROPERTIES.fields_by_name['continuous'].containing_oneof = _JAGGEDPROPERTIES.oneofs_by_name['nature']
@@ -1906,12 +1594,7 @@ _COMPONENTEXPANSION_RELEASESENTRY.containing_type = _COMPONENTEXPANSION
 _COMPONENTEXPANSION.fields_by_name['computation_graph'].message_type = _COMPONENTEXPANSION_COMPUTATIONGRAPHENTRY
 _COMPONENTEXPANSION.fields_by_name['properties'].message_type = _COMPONENTEXPANSION_PROPERTIESENTRY
 _COMPONENTEXPANSION.fields_by_name['releases'].message_type = _COMPONENTEXPANSION_RELEASESENTRY
-_FUNCTION_ARGUMENTSENTRY.containing_type = _FUNCTION
-_FUNCTION_OUTPUTSENTRY.containing_type = _FUNCTION
-_FUNCTION.fields_by_name['computation_graph'].message_type = _COMPUTATIONGRAPH
-_FUNCTION.fields_by_name['release'].message_type = _RELEASE
-_FUNCTION.fields_by_name['arguments'].message_type = _FUNCTION_ARGUMENTSENTRY
-_FUNCTION.fields_by_name['outputs'].message_type = _FUNCTION_OUTPUTSENTRY
+_COMPONENTEXPANSION.fields_by_name['warnings'].message_type = _ERROR
 _VALUE.fields_by_name['array'].message_type = value__pb2._ARRAY
 _VALUE.fields_by_name['indexmap'].message_type = _INDEXMAP
 _VALUE.fields_by_name['jagged'].message_type = value__pb2._JAGGED
@@ -1928,23 +1611,18 @@ _VALUE.fields_by_name['jagged'].containing_oneof = _VALUE.oneofs_by_name['data']
 _VALUE.oneofs_by_name['data'].fields.append(
   _VALUE.fields_by_name['function'])
 _VALUE.fields_by_name['function'].containing_oneof = _VALUE.oneofs_by_name['data']
-_INDEXMAPSTR.fields_by_name['values'].message_type = _VALUE
-_INDEXMAPBOOL.fields_by_name['values'].message_type = _VALUE
-_INDEXMAPI64.fields_by_name['values'].message_type = _VALUE
-_INDEXMAP.fields_by_name['string'].message_type = _INDEXMAPSTR
-_INDEXMAP.fields_by_name['bool'].message_type = _INDEXMAPBOOL
-_INDEXMAP.fields_by_name['i64'].message_type = _INDEXMAPI64
-_INDEXMAP.oneofs_by_name['variant'].fields.append(
-  _INDEXMAP.fields_by_name['string'])
-_INDEXMAP.fields_by_name['string'].containing_oneof = _INDEXMAP.oneofs_by_name['variant']
-_INDEXMAP.oneofs_by_name['variant'].fields.append(
-  _INDEXMAP.fields_by_name['bool'])
-_INDEXMAP.fields_by_name['bool'].containing_oneof = _INDEXMAP.oneofs_by_name['variant']
-_INDEXMAP.oneofs_by_name['variant'].fields.append(
-  _INDEXMAP.fields_by_name['i64'])
-_INDEXMAP.fields_by_name['i64'].containing_oneof = _INDEXMAP.oneofs_by_name['variant']
+_INDEXMAP.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_INDEXMAP.fields_by_name['values'].message_type = _VALUE
+_FUNCTION_ARGUMENTSENTRY.containing_type = _FUNCTION
+_FUNCTION_OUTPUTSENTRY.containing_type = _FUNCTION
+_FUNCTION.fields_by_name['computation_graph'].message_type = _COMPUTATIONGRAPH
+_FUNCTION.fields_by_name['release'].message_type = _RELEASE
+_FUNCTION.fields_by_name['arguments'].message_type = _FUNCTION_ARGUMENTSENTRY
+_FUNCTION.fields_by_name['outputs'].message_type = _FUNCTION_OUTPUTSENTRY
 _RELEASENODE.fields_by_name['value'].message_type = _VALUE
 _RELEASENODE.fields_by_name['privacy_usages'].message_type = value__pb2._PRIVACYUSAGES
+_INDEXMAPRELEASENODE.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_INDEXMAPRELEASENODE.fields_by_name['values'].message_type = _RELEASENODE
 DESCRIPTOR.message_types_by_name['Error'] = _ERROR
 DESCRIPTOR.message_types_by_name['Analysis'] = _ANALYSIS
 DESCRIPTOR.message_types_by_name['PrivacyDefinition'] = _PRIVACYDEFINITION
@@ -1953,26 +1631,22 @@ DESCRIPTOR.message_types_by_name['Release'] = _RELEASE
 DESCRIPTOR.message_types_by_name['ValueProperties'] = _VALUEPROPERTIES
 DESCRIPTOR.message_types_by_name['IndexmapProperties'] = _INDEXMAPPROPERTIES
 DESCRIPTOR.message_types_by_name['IndexmapValueProperties'] = _INDEXMAPVALUEPROPERTIES
-DESCRIPTOR.message_types_by_name['IndexmapValuePropertiesStr'] = _INDEXMAPVALUEPROPERTIESSTR
-DESCRIPTOR.message_types_by_name['IndexmapValuePropertiesBool'] = _INDEXMAPVALUEPROPERTIESBOOL
-DESCRIPTOR.message_types_by_name['IndexmapValuePropertiesI64'] = _INDEXMAPVALUEPROPERTIESI64
 DESCRIPTOR.message_types_by_name['AggregatorProperties'] = _AGGREGATORPROPERTIES
 DESCRIPTOR.message_types_by_name['ArrayProperties'] = _ARRAYPROPERTIES
 DESCRIPTOR.message_types_by_name['NatureContinuous'] = _NATURECONTINUOUS
 DESCRIPTOR.message_types_by_name['NatureCategorical'] = _NATURECATEGORICAL
+DESCRIPTOR.message_types_by_name['GroupId'] = _GROUPID
 DESCRIPTOR.message_types_by_name['JaggedProperties'] = _JAGGEDPROPERTIES
 DESCRIPTOR.message_types_by_name['FunctionProperties'] = _FUNCTIONPROPERTIES
 DESCRIPTOR.message_types_by_name['GraphProperties'] = _GRAPHPROPERTIES
 DESCRIPTOR.message_types_by_name['Accuracies'] = _ACCURACIES
 DESCRIPTOR.message_types_by_name['Accuracy'] = _ACCURACY
 DESCRIPTOR.message_types_by_name['ComponentExpansion'] = _COMPONENTEXPANSION
-DESCRIPTOR.message_types_by_name['Function'] = _FUNCTION
 DESCRIPTOR.message_types_by_name['Value'] = _VALUE
-DESCRIPTOR.message_types_by_name['IndexmapStr'] = _INDEXMAPSTR
-DESCRIPTOR.message_types_by_name['IndexmapBool'] = _INDEXMAPBOOL
-DESCRIPTOR.message_types_by_name['IndexmapI64'] = _INDEXMAPI64
 DESCRIPTOR.message_types_by_name['Indexmap'] = _INDEXMAP
+DESCRIPTOR.message_types_by_name['Function'] = _FUNCTION
 DESCRIPTOR.message_types_by_name['ReleaseNode'] = _RELEASENODE
+DESCRIPTOR.message_types_by_name['IndexmapReleaseNode'] = _INDEXMAPRELEASENODE
 DESCRIPTOR.enum_types_by_name['FilterLevel'] = _FILTERLEVEL
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -2048,65 +1722,12 @@ IndexmapValueProperties = _reflection.GeneratedProtocolMessageType('IndexmapValu
   })
 _sym_db.RegisterMessage(IndexmapValueProperties)
 
-IndexmapValuePropertiesStr = _reflection.GeneratedProtocolMessageType('IndexmapValuePropertiesStr', (_message.Message,), {
-
-  'DataEntry' : _reflection.GeneratedProtocolMessageType('DataEntry', (_message.Message,), {
-    'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIESSTR_DATAENTRY,
-    '__module__' : 'base_pb2'
-    # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValuePropertiesStr.DataEntry)
-    })
-  ,
-  'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIESSTR,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValuePropertiesStr)
-  })
-_sym_db.RegisterMessage(IndexmapValuePropertiesStr)
-_sym_db.RegisterMessage(IndexmapValuePropertiesStr.DataEntry)
-
-IndexmapValuePropertiesBool = _reflection.GeneratedProtocolMessageType('IndexmapValuePropertiesBool', (_message.Message,), {
-
-  'DataEntry' : _reflection.GeneratedProtocolMessageType('DataEntry', (_message.Message,), {
-    'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY,
-    '__module__' : 'base_pb2'
-    # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValuePropertiesBool.DataEntry)
-    })
-  ,
-  'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIESBOOL,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValuePropertiesBool)
-  })
-_sym_db.RegisterMessage(IndexmapValuePropertiesBool)
-_sym_db.RegisterMessage(IndexmapValuePropertiesBool.DataEntry)
-
-IndexmapValuePropertiesI64 = _reflection.GeneratedProtocolMessageType('IndexmapValuePropertiesI64', (_message.Message,), {
-
-  'DataEntry' : _reflection.GeneratedProtocolMessageType('DataEntry', (_message.Message,), {
-    'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIESI64_DATAENTRY,
-    '__module__' : 'base_pb2'
-    # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValuePropertiesI64.DataEntry)
-    })
-  ,
-  'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIESI64,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValuePropertiesI64)
-  })
-_sym_db.RegisterMessage(IndexmapValuePropertiesI64)
-_sym_db.RegisterMessage(IndexmapValuePropertiesI64.DataEntry)
-
 AggregatorProperties = _reflection.GeneratedProtocolMessageType('AggregatorProperties', (_message.Message,), {
-
-  'PropertiesEntry' : _reflection.GeneratedProtocolMessageType('PropertiesEntry', (_message.Message,), {
-    'DESCRIPTOR' : _AGGREGATORPROPERTIES_PROPERTIESENTRY,
-    '__module__' : 'base_pb2'
-    # @@protoc_insertion_point(class_scope:whitenoise.AggregatorProperties.PropertiesEntry)
-    })
-  ,
   'DESCRIPTOR' : _AGGREGATORPROPERTIES,
   '__module__' : 'base_pb2'
   # @@protoc_insertion_point(class_scope:whitenoise.AggregatorProperties)
   })
 _sym_db.RegisterMessage(AggregatorProperties)
-_sym_db.RegisterMessage(AggregatorProperties.PropertiesEntry)
 
 ArrayProperties = _reflection.GeneratedProtocolMessageType('ArrayProperties', (_message.Message,), {
   'DESCRIPTOR' : _ARRAYPROPERTIES,
@@ -2128,6 +1749,13 @@ NatureCategorical = _reflection.GeneratedProtocolMessageType('NatureCategorical'
   # @@protoc_insertion_point(class_scope:whitenoise.NatureCategorical)
   })
 _sym_db.RegisterMessage(NatureCategorical)
+
+GroupId = _reflection.GeneratedProtocolMessageType('GroupId', (_message.Message,), {
+  'DESCRIPTOR' : _GROUPID,
+  '__module__' : 'base_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.GroupId)
+  })
+_sym_db.RegisterMessage(GroupId)
 
 JaggedProperties = _reflection.GeneratedProtocolMessageType('JaggedProperties', (_message.Message,), {
   'DESCRIPTOR' : _JAGGEDPROPERTIES,
@@ -2203,6 +1831,20 @@ _sym_db.RegisterMessage(ComponentExpansion.ComputationGraphEntry)
 _sym_db.RegisterMessage(ComponentExpansion.PropertiesEntry)
 _sym_db.RegisterMessage(ComponentExpansion.ReleasesEntry)
 
+Value = _reflection.GeneratedProtocolMessageType('Value', (_message.Message,), {
+  'DESCRIPTOR' : _VALUE,
+  '__module__' : 'base_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.Value)
+  })
+_sym_db.RegisterMessage(Value)
+
+Indexmap = _reflection.GeneratedProtocolMessageType('Indexmap', (_message.Message,), {
+  'DESCRIPTOR' : _INDEXMAP,
+  '__module__' : 'base_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.Indexmap)
+  })
+_sym_db.RegisterMessage(Indexmap)
+
 Function = _reflection.GeneratedProtocolMessageType('Function', (_message.Message,), {
 
   'ArgumentsEntry' : _reflection.GeneratedProtocolMessageType('ArgumentsEntry', (_message.Message,), {
@@ -2226,41 +1868,6 @@ _sym_db.RegisterMessage(Function)
 _sym_db.RegisterMessage(Function.ArgumentsEntry)
 _sym_db.RegisterMessage(Function.OutputsEntry)
 
-Value = _reflection.GeneratedProtocolMessageType('Value', (_message.Message,), {
-  'DESCRIPTOR' : _VALUE,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.Value)
-  })
-_sym_db.RegisterMessage(Value)
-
-IndexmapStr = _reflection.GeneratedProtocolMessageType('IndexmapStr', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAPSTR,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapStr)
-  })
-_sym_db.RegisterMessage(IndexmapStr)
-
-IndexmapBool = _reflection.GeneratedProtocolMessageType('IndexmapBool', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAPBOOL,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapBool)
-  })
-_sym_db.RegisterMessage(IndexmapBool)
-
-IndexmapI64 = _reflection.GeneratedProtocolMessageType('IndexmapI64', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAPI64,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapI64)
-  })
-_sym_db.RegisterMessage(IndexmapI64)
-
-Indexmap = _reflection.GeneratedProtocolMessageType('Indexmap', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAP,
-  '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.Indexmap)
-  })
-_sym_db.RegisterMessage(Indexmap)
-
 ReleaseNode = _reflection.GeneratedProtocolMessageType('ReleaseNode', (_message.Message,), {
   'DESCRIPTOR' : _RELEASENODE,
   '__module__' : 'base_pb2'
@@ -2268,13 +1875,16 @@ ReleaseNode = _reflection.GeneratedProtocolMessageType('ReleaseNode', (_message.
   })
 _sym_db.RegisterMessage(ReleaseNode)
 
+IndexmapReleaseNode = _reflection.GeneratedProtocolMessageType('IndexmapReleaseNode', (_message.Message,), {
+  'DESCRIPTOR' : _INDEXMAPRELEASENODE,
+  '__module__' : 'base_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapReleaseNode)
+  })
+_sym_db.RegisterMessage(IndexmapReleaseNode)
+
 
 _COMPUTATIONGRAPH_VALUEENTRY._options = None
 _RELEASE_VALUESENTRY._options = None
-_INDEXMAPVALUEPROPERTIESSTR_DATAENTRY._options = None
-_INDEXMAPVALUEPROPERTIESBOOL_DATAENTRY._options = None
-_INDEXMAPVALUEPROPERTIESI64_DATAENTRY._options = None
-_AGGREGATORPROPERTIES_PROPERTIESENTRY._options = None
 _GRAPHPROPERTIES_PROPERTIESENTRY._options = None
 _COMPONENTEXPANSION_COMPUTATIONGRAPHENTRY._options = None
 _COMPONENTEXPANSION_PROPERTIESENTRY._options = None

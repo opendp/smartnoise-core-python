@@ -1,7 +1,6 @@
 import numpy as np
 
 from .variant_message_map import variant_message_map
-
 from opendp.whitenoise.core import base_pb2, components_pb2, value_pb2
 
 
@@ -54,18 +53,33 @@ def serialize_privacy_usage(usage):
 def serialize_privacy_definition(analysis):
     return base_pb2.PrivacyDefinition(
         group_size=analysis.group_size,
-        distance=base_pb2.PrivacyDefinition.Distance.Value(analysis.distance.upper()),
-        neighboring=base_pb2.PrivacyDefinition.Neighboring.Value(analysis.neighboring.upper())
+        neighboring=base_pb2.PrivacyDefinition.Neighboring.Value(analysis.neighboring.upper()),
+        strict_parameter_checks=analysis.strict_parameter_checks,
+        protect_overflow=analysis.protect_overflow,
+        protect_elapsed_time=analysis.protect_elapsed_time,
+        protect_memory_utilization=analysis.protect_memory_utilization,
+        protect_floating_point=analysis.protect_floating_point
     )
 
 
+def serialize_index_key(key):
+    return value_pb2.IndexKey(**{{
+        str: 'str', int: 'i64', bool: 'bool'
+    }[type(key)]: key})
+
+
 def serialize_component(component):
+    arguments = {
+        name: component_child.component_id
+        for name, component_child in component.arguments.items()
+        if component_child is not None
+    }
     return components_pb2.Component(**{
-        'arguments': {
-            name: component_child.component_id
-            for name, component_child in component.arguments.items()
-            if component_child is not None
-        },
+        'arguments': value_pb2.IndexmapNodeIds(
+            keys=map(serialize_index_key, arguments.keys()),
+            values=list(arguments.values())
+        ),
+        'submission': component.submission_id,
         variant_message_map[component.name]:
             getattr(components_pb2, component.name)(**(component.options or {}))
     })
@@ -120,12 +134,10 @@ def serialize_array1d(array):
 
 
 def serialize_indexmap(value):
-    data = {k: serialize_value(v) for k, v in value.items()}
-    return base_pb2.Indexmap(**{
-        str: lambda: {'string': base_pb2.IndexmapStr(keys=list(data.keys()), values=list(data.values()))},
-        bool: lambda: {'bool': base_pb2.IndexmapBool(keys=list(data.keys()), values=list(data.values()))},
-        int: lambda: {'i64': base_pb2.IndexmapI64(keys=list(data.keys()), values=list(data.values()))}
-    }[type(next(iter(value.keys())))]())
+    return base_pb2.Indexmap(
+        keys=[serialize_index_key(k) for k in value.keys()],
+        values=[serialize_value(v) for v in value.values()]
+    )
 
 
 def serialize_value(value, value_format=None):
@@ -187,6 +199,14 @@ def parse_privacy_usage(usage: value_pb2.PrivacyUsage):
     raise ValueError("unsupported privacy variant")
 
 
+def parse_index_key(value):
+    variant = value.WhichOneof("key")
+    if not variant:
+        raise ValueError("index key may not be empty")
+
+    return getattr(value, variant)
+
+
 def parse_array1d_null(array):
     data_type = array.WhichOneof("data")
     if not data_type:
@@ -202,34 +222,30 @@ def parse_array1d(array):
 
 
 def parse_jagged(value):
-    return [parse_array1d(column) for column in value.jagged.data]
+    return [parse_array1d(column) for column in value.data]
 
 
 def parse_array(value):
-    data = parse_array1d(value.array.flattened)
+    data = parse_array1d(value.flattened)
     if data:
-        if value.array.shape:
-            return np.array(data).reshape(value.array.shape)
+        if value.shape:
+            return np.array(data).reshape(value.shape)
         return data[0]
 
 
 def parse_indexmap(value):
-    data_type = value.indexmap.WhichOneof("variant")
-    if not data_type:
-        return
-    indexmap = getattr(value.indexmap, data_type)
-    return {k: parse_value(v) for k, v in zip(indexmap.keys, indexmap.values)}
+    return {parse_index_key(k): parse_value(v) for k, v in zip(value.keys, value.values)}
 
 
 def parse_value(value):
     if value.HasField("array"):
-        return parse_array(value)
+        return parse_array(value.array)
 
     if value.HasField("indexmap"):
-        return parse_indexmap(value)
+        return parse_indexmap(value.indexmap)
 
     if value.HasField("jagged"):
-        return parse_jagged(value)
+        return parse_jagged(value.jagged)
 
 
 def parse_release(release):

@@ -1,8 +1,7 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup
 import os
 
 setup(
-    packages=find_namespace_packages(include=["opendp.*"]),
     extras_require={
         "plotting": [
             "networkx",

@@ -4,6 +4,8 @@ import warnings
 from .api import LibraryWrapper, format_error
 from .value import *
 
+import typing
+
 from opendp.whitenoise.core import api_pb2, value_pb2, base_pb2
 
 core_wrapper = LibraryWrapper()
@@ -51,7 +53,7 @@ class Dataset(object):
                 value_format=value_format,
                 value_public=public)
 
-    def __getitem__(self, identifier):
+    def __getitem__(self, identifier) -> "Component":
         return self.component[identifier]
 
 
@@ -112,7 +114,7 @@ class Component(object):
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])
             options['privacy_usage'] = serialize_privacy_usage(privacy_usages)
 
-        self.batch = self.analysis.batch
+        self.submission_id = self.analysis.submission_id
 
     # pull the released values out from the analysis' release protobuf
     @property
@@ -139,7 +141,7 @@ class Component(object):
         List all nodes that use this node as a dependency/argument.
         :return: {[node_id]: [parent]}
         """
-        parents = [component for component in self.analysis.components.values()
+        parents = [component for component in self.analysis.components.values
                    if id(self) in list(id(i) for i in component.arguments.values())]
 
         return {parent: next(k for k, v in parent.arguments.items()
@@ -276,16 +278,16 @@ class Component(object):
     @property
     def categories(self):
         """view the statically derived category set"""
-        try:
-            categories = self.properties.array.categorical.categories.data
-            value = [parse_array1d(i) for i in categories]
-            if not value:
-                return None
-            if self.dimensionality <= 1 and value:
-                value = value[0]
-            return value
-        except AttributeError:
+        # try:
+        categories = self.properties.array.categorical.categories.data
+        value = [parse_array1d(i) for i in categories]
+        if not value:
             return None
+        if self.dimensionality <= 1 and value:
+            value = value[0]
+        return value
+        # except AttributeError:
+        #     return None
 
     def set(self, value):
         self.analysis.release_values[self.component_id] = {
@@ -293,101 +295,101 @@ class Component(object):
             'public': self.releasable
         }
 
-    def __pos__(self):
+    def __pos__(self) -> "Component":
         return self
 
-    def __neg__(self):
+    def __neg__(self) -> "Component":
         return Component('Negative', arguments={'data': self})
 
-    def __add__(self, other):
+    def __add__(self, other) -> "Component":
         return Component('Add', {'left': self, 'right': Component.of(other)})
 
-    def __radd__(self, other):
+    def __radd__(self, other) -> "Component":
         return Component('Add', {'left': Component.of(other), 'right': self})
 
-    def __sub__(self, other):
+    def __sub__(self, other) -> "Component":
         return Component('Subtract', {'left': self, 'right': Component.of(other)})
 
-    def __rsub__(self, other):
+    def __rsub__(self, other) -> "Component":
         return Component('Subtract', {'left': Component.of(other), 'right': self})
 
-    def __mul__(self, other):
+    def __mul__(self, other) -> "Component":
         return Component('Multiply', arguments={'left': self, 'right': Component.of(other)})
 
-    def __rmul__(self, other):
+    def __rmul__(self, other) -> "Component":
         return Component('Multiply', arguments={'left': Component.of(other), 'right': self})
 
-    def __floordiv__(self, other):
+    def __floordiv__(self, other) -> "Component":
         return Component('Divide', arguments={'left': self, 'right': Component.of(other)})
 
-    def __rfloordiv__(self, other):
+    def __rfloordiv__(self, other) -> "Component":
         return Component('Divide', arguments={'left': Component.of(other), 'right': self})
 
-    def __truediv__(self, other):
+    def __truediv__(self, other) -> "Component":
         return Component('Divide', arguments={
             'left': Component('Cast', arguments={'data': self}, options={"atomic_type": "float"}),
             'right': Component('Cast', arguments={'data': Component.of(other)}, options={"atomic_type": "float"})})
 
-    def __rtruediv__(self, other):
+    def __rtruediv__(self, other) -> "Component":
         return Component('Divide', arguments={
             'left': Component('Cast', arguments={'data': Component.of(other)}, options={"atomic_type": "float"}),
             'right': Component('Cast', arguments={'data': self}, options={"atomic_type": "float"})})
 
-    def __mod__(self, other):
+    def __mod__(self, other) -> "Component":
         return Component('Modulo', arguments={'left': self, 'right': Component.of(other)})
 
-    def __rmod__(self, other):
+    def __rmod__(self, other) -> "Component":
         return Component('Modulo', arguments={'left': Component.of(other), 'right': self})
 
-    def __pow__(self, power, modulo=None):
+    def __pow__(self, power, modulo=None) -> "Component":
         return Component('Power', arguments={'data': self, 'radical': Component.of(power)})
 
-    def __rpow__(self, other):
+    def __rpow__(self, other) -> "Component":
         return Component('Power', arguments={'left': Component.of(other), 'right': self})
 
-    def __or__(self, other):
+    def __or__(self, other) -> "Component":
         return Component('Or', arguments={'left': self, 'right': Component.of(other)})
 
-    def __ror__(self, other):
+    def __ror__(self, other) -> "Component":
         return Component('Or', arguments={'left': Component.of(other), 'right': self})
 
-    def __and__(self, other):
+    def __and__(self, other) -> "Component":
         return Component('And', arguments={'left': self, 'right': Component.of(other)})
 
-    def __rand__(self, other):
+    def __rand__(self, other) -> "Component":
         return Component('And', arguments={'left': Component.of(other), 'right': self})
 
-    def __invert__(self):
+    def __invert__(self) -> "Component":
         return Component('Negate', arguments={'data': self})
 
-    def __xor__(self, other):
+    def __xor__(self, other) -> "Component":
         return (self | other) & ~(self & other)
 
-    def __gt__(self, other):
+    def __gt__(self, other) -> "Component":
         return Component('GreaterThan', arguments={'left': self, 'right': Component.of(other)})
 
-    def __ge__(self, other):
+    def __ge__(self, other) -> "Component":
         return Component('GreaterThan', arguments={'left': self, 'right': Component.of(other)}) \
                or Component('Equal', arguments={'left': self, 'right': Component.of(other)})
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> "Component":
         return Component('LessThan', arguments={'left': self, 'right': Component.of(other)})
 
-    def __le__(self, other):
+    def __le__(self, other) -> "Component":
         return Component('LessThan', arguments={'left': self, 'right': Component.of(other)}) \
                or Component('Equal', arguments={'left': self, 'right': Component.of(other)})
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> "Component":
         return Component('Equal', arguments={'left': self, 'right': Component.of(other)})
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> "Component":
         return ~(self == other)
 
-    def __abs__(self):
+    def __abs__(self) -> "Component":
         return Component('Abs', arguments={'data': self})
 
-    def __getitem__(self, identifier):
-        return Component('Index', arguments={'columns': Component.of(identifier), 'data': self})
+    def __getitem__(self, identifier) -> "Component":
+        return Component('Index', arguments={'names': Component.of(identifier), 'data': self})
 
     def __hash__(self):
         return id(self)
@@ -415,7 +417,7 @@ class Component(object):
         return f'<{self.component_id}: {self.name} Component>'
 
     @staticmethod
-    def of(value, value_format=None, public=True):
+    def of(value, value_format=None, public=True) -> typing.Optional["Component"]:
         """
         Given an array, list of lists, or dictionary, attempt to wrap it in a component and place the value in the release.
         Loose literals are by default public.
@@ -564,7 +566,6 @@ class Analysis(object):
 
     :param dynamic: flag for enabling dynamic validation
     :param eager: release every time a component is added
-    :param distance: currently may only be `approximate`
     :param neighboring: may be `substitute` or `add_remove`
     :param group_size: number of individuals to protect simultaneously
     :param stack_traces: set to False to suppress potentially sensitive stack traces
@@ -591,15 +592,20 @@ class Analysis(object):
             # when eager is set, the analysis is released every time a new node is added
             warnings.warn("eager graph execution is inefficient, and should only be enabled for debugging")
 
-        self.batch = 0
+        self.submission_id = 0
 
         # privacy definition
-        self.distance: str = distance
         self.neighboring: str = neighboring
         self.group_size: int = group_size
+        # these are not exposed in the UI because they are not fully implemented yet
+        self.strict_parameter_checks = False
+        self.protect_overflow = False
+        self.protect_elapsed_time = False
+        self.protect_memory_utilization = False
+        self.protect_floating_point = False
 
         # core data structures
-        self.components: dict = {}
+        self.components: typing.Dict[int, Component] = {}
         self.release_values = {}
         self.datasets: list = []
 
@@ -611,7 +617,7 @@ class Analysis(object):
 
         # helper to track if properties are current
         self.properties = {}
-        self.properties_id = {"count": self.component_count, "batch": self.batch}
+        self.properties_id = {"count": self.component_count, "submission_id": self.submission_id}
 
         # stack traces for individual nodes that failed to execute
         self.warnings = []
@@ -654,7 +660,7 @@ class Analysis(object):
         If new nodes have been added or there has been a release, recompute the properties for all of the components.
         :return:
         """
-        if not (self.properties_id['count'] == self.component_count and self.properties_id['batch'] == self.batch):
+        if not (self.properties_id['count'] == self.component_count and self.properties_id['submission_id'] == self.submission_id):
             response = core_wrapper.get_properties(
                 serialize_analysis(self),
                 serialize_release(self.release_values))
@@ -664,7 +670,7 @@ class Analysis(object):
             if self.warnings:
                 warnings.warn("Some nodes were not allowed to execute.")
                 self.print_warnings()
-            self.properties_id = {'count': self.component_count, 'batch': self.batch}
+            self.properties_id = {'count': self.component_count, 'submission_id': self.submission_id}
 
     def validate(self):
         """
@@ -712,7 +718,7 @@ class Analysis(object):
         if self.warnings:
             warnings.warn("Some nodes were not allowed to execute.")
             self.print_warnings()
-        self.batch += 1
+        self.submission_id += 1
 
     def report(self):
         """
@@ -804,7 +810,7 @@ class Analysis(object):
             return f'{node_id} {analysis.computation_graph.value[node_id].WhichOneof("variant")}'
 
         for nodeId, component in list(analysis.computation_graph.value.items()):
-            for source_node_id in component.arguments.values():
+            for source_node_id in component.arguments.values:
                 graph.add_edge(label(source_node_id), label(nodeId))
 
         return graph

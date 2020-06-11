@@ -7,7 +7,8 @@ from tests.test_base import (
     test_everything,
     test_histogram,
     test_covariance,
-    test_properties
+    test_properties,
+    test_groupby
 )
 
 from tests import test_components
@@ -17,35 +18,36 @@ from tests import test_insertion
 import os
 os.environ['RUST_BACKTRACE'] = 'full'
 
+test_groupby()
 
-test_components.test_dp_median()
-
-
-# test_validator_properties.test_dp_mean()
-test_insertion.test_insertion_simple()
-test_components.test_partition()
-
-test_properties()
-
-
-analysis = test_multilayer_analysis(run=False)
-analysis.release()
-
-analysis = test_dp_linear_stats(run=False)
-analysis.release()
-
-analysis = test_raw_dataset(run=False)
-analysis.release()
-
-analysis = test_everything(run=False)
-analysis.release()
-
-analysis.plot()
-analysis.clean()
-print('privacy usage:', analysis.privacy_usage)
-
-# print('all released values (internal):', analysis.release_values)
-print('release report:', json.dumps(analysis.report(), indent=4))
-
-test_histogram()
-test_covariance()
+# test_components.test_dp_median()
+#
+#
+# # test_validator_properties.test_dp_mean()
+# test_insertion.test_insertion_simple()
+# test_components.test_partition()
+#
+# test_properties()
+#
+#
+# analysis = test_multilayer_analysis(run=False)
+# analysis.release()
+#
+# analysis = test_dp_linear_stats(run=False)
+# analysis.release()
+#
+# analysis = test_raw_dataset(run=False)
+# analysis.release()
+#
+# analysis = test_everything(run=False)
+# analysis.release()
+#
+# analysis.plot()
+# analysis.clean()
+# print('privacy usage:', analysis.privacy_usage)
+#
+# # print('all released values (internal):', analysis.release_values)
+# print('release report:', json.dumps(analysis.report(), indent=4))
+#
+# test_histogram()
+# test_covariance()
