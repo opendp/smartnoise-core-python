@@ -63,9 +63,12 @@ def serialize_privacy_definition(analysis):
 
 
 def serialize_index_key(key):
-    return value_pb2.IndexKey(**{{
-        str: 'str', int: 'i64', bool: 'bool'
-    }[type(key)]: key})
+    if type(key) == tuple:
+        kwargs = {"tuple": value_pb2.IndexKey.Tuple(values=[serialize_index_key(k) for k in key])}
+    else:
+        kwargs = {{str: 'str', int: 'i64', bool: 'bool'}[type(key)]: key}
+
+    return value_pb2.IndexKey(**kwargs)
 
 
 def serialize_component(component):
@@ -203,6 +206,9 @@ def parse_index_key(value):
     variant = value.WhichOneof("key")
     if not variant:
         raise ValueError("index key may not be empty")
+
+    if variant == "tuple":
+        return tuple(parse_index_key(v) for v in value.tuple.values)
 
     return getattr(value, variant)
 

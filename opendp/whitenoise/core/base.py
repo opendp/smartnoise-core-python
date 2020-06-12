@@ -114,8 +114,6 @@ class Component(object):
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])
             options['privacy_usage'] = serialize_privacy_usage(privacy_usages)
 
-        self.submission_id = self.analysis.submission_id
-
     # pull the released values out from the analysis' release protobuf
     @property
     def value(self):
@@ -482,7 +480,7 @@ class Component(object):
 
                 del constraints[argument + '_columns']
 
-            if 'upper' in filtered and 'lower' in filtered:
+            elif 'upper' in filtered and 'lower' in filtered:
                 min_component = Component.of(constraints[argument + '_lower'])
                 max_component = Component.of(constraints[argument + '_upper'])
 
@@ -573,7 +571,7 @@ class Analysis(object):
     """
     def __init__(self,
                  dynamic=True, eager=False,
-                 distance='approximate', neighboring='substitute', group_size=1,
+                 neighboring='substitute', group_size=1,
                  stack_traces=True, filter_level='public'):
 
         # if false, validate the analysis before running it (enforces static validation)
@@ -592,7 +590,7 @@ class Analysis(object):
             # when eager is set, the analysis is released every time a new node is added
             warnings.warn("eager graph execution is inefficient, and should only be enabled for debugging")
 
-        self.submission_id = 0
+        self.submission_count = 0
 
         # privacy definition
         self.neighboring: str = neighboring
@@ -617,7 +615,7 @@ class Analysis(object):
 
         # helper to track if properties are current
         self.properties = {}
-        self.properties_id = {"count": self.component_count, "submission_id": self.submission_id}
+        self.properties_id = {"count": self.component_count, "submission_count": self.submission_count}
 
         # stack traces for individual nodes that failed to execute
         self.warnings = []
@@ -638,6 +636,7 @@ class Analysis(object):
         # component should be able to reference back to the analysis to get released values/ownership
         component.analysis = self
         component.component_id = self.component_count
+        component.submission_id = self.submission_count
 
         if value is not None:
             # don't filter this private value from the analysis
@@ -660,7 +659,7 @@ class Analysis(object):
         If new nodes have been added or there has been a release, recompute the properties for all of the components.
         :return:
         """
-        if not (self.properties_id['count'] == self.component_count and self.properties_id['submission_id'] == self.submission_id):
+        if not (self.properties_id['count'] == self.component_count and self.properties_id['submission_count'] == self.submission_count):
             response = core_wrapper.get_properties(
                 serialize_analysis(self),
                 serialize_release(self.release_values))
@@ -670,7 +669,7 @@ class Analysis(object):
             if self.warnings:
                 warnings.warn("Some nodes were not allowed to execute.")
                 self.print_warnings()
-            self.properties_id = {'count': self.component_count, 'submission_id': self.submission_id}
+            self.properties_id = {'count': self.component_count, 'submission_count': self.submission_count}
 
     def validate(self):
         """
@@ -718,7 +717,7 @@ class Analysis(object):
         if self.warnings:
             warnings.warn("Some nodes were not allowed to execute.")
             self.print_warnings()
-        self.submission_id += 1
+        self.submission_count += 1
 
     def report(self):
         """
