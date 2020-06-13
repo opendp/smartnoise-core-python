@@ -143,6 +143,13 @@ def serialize_indexmap(value):
     )
 
 
+def serialize_indexmap_value_properties(value):
+    return base_pb2.IndexmapValueProperties(
+        keys=[serialize_index_key(k) for k in value.keys()],
+        values=[v for v in value.values()]
+    )
+
+
 def serialize_value(value, value_format=None):
 
     if value_format == 'indexmap' or issubclass(type(value), dict):

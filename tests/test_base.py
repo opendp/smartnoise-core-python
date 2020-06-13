@@ -607,23 +607,23 @@ def test_multilayer_partition():
 
             inner_count = {}
             inner_means = {}
-            for cat in [5, 8, 12]:
-                educ_level_part = repartitioned[cat]
+            for key in [5, 8, 12]:
+                educ_level_part = repartitioned[key]
 
-                inner_count[cat] = wn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
-                inner_means[cat] = wn.dp_mean(
+                inner_count[key] = wn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
+                inner_means[key] = wn.dp_mean(
                     educ_level_part,
                     privacy_usage={"epsilon": 0.6},
-                    data_rows=wn.row_max(1, inner_count[cat]))
+                    data_rows=wn.row_max(1, inner_count[key]))
 
             return wn.union(inner_means, flatten=False), wn.union(inner_count, flatten=False)
 
         means = {}
         counts = {}
-        for cat in is_male.categories:
-            part_means, part_counts = analyze(partitioned[cat])
-            means[cat] = part_means
-            counts[cat] = part_counts
+        for key in partitioned.partition_keys:
+            part_means, part_counts = analyze(partitioned[key])
+            means[key] = part_means
+            counts[key] = part_counts
 
         means = wn.union(means, flatten=False)
         counts = wn.union(counts, flatten=False)
@@ -654,22 +654,22 @@ def test_multilayer_partition():
 
             inner_count = {}
             inner_means = {}
-            for cat in [5, 8, 12]:
-                educ_level_part = repartitioned[cat]
+            for key in [5, 8, 12]:
+                educ_level_part = repartitioned[key]
 
-                inner_count[cat] = wn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
-                inner_means[cat] = wn.mean(wn.resize(
+                inner_count[key] = wn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
+                inner_means[key] = wn.mean(wn.resize(
                     educ_level_part,
-                    number_rows=wn.row_min(1, inner_count[cat] * 4 // 5)))
+                    number_rows=wn.row_min(1, inner_count[key] * 4 // 5)))
 
             return wn.union(inner_means), wn.union(inner_count)
 
         means = {}
         counts = {}
-        for cat in is_male.categories:
-            part_means, part_counts = analyze(partitioned[cat])
-            means[cat] = part_means
-            counts[cat] = part_counts
+        for key in partitioned.partition_keys:
+            part_means, part_counts = analyze(partitioned[key])
+            means[key] = part_means
+            counts[key] = part_counts
 
         means = wn.laplace_mechanism(wn.union(means), privacy_usage={"epsilon": 0.6})
         counts = wn.union(counts)
@@ -682,3 +682,46 @@ def test_multilayer_partition():
 
     print("Means:")
     print(means.value)
+    print(means.get_accuracy(.05))
+
+
+def test_dataframe_partitioning():
+
+    # dataframe partition
+    with wn.Analysis(eager=False) as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        is_male = wn.to_bool(data['sex'], true_label="1")
+        partitioned = wn.partition(data, by=is_male)
+
+        means = {
+            key: wn.dp_mean(wn.impute(wn.clamp(wn.to_float(partitioned[key]['income']), 0., 200_000.)), implementation="plug-in", privacy_usage={"epsilon": 0.5})
+            for key in partitioned.partition_keys
+        }
+
+        print(wn.union(means).value)
+
+    # dataframe partition with multi-index grouping
+    with wn.Analysis(eager=False):
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        grouper = wn.clamp(
+            data[['sex', 'educ']],
+            categories=[['0', '1'],
+                        [str(i) for i in range(14)]],
+            null_value='-1')
+        partitioned = wn.partition(data, by=grouper)
+
+        print(wn.union({
+            key: wn.dp_count(partitioned[key],
+                             privacy_usage={"epsilon": 0.5})
+            for key in partitioned.partition_keys
+        }).value)
+
+        print(wn.union({
+            key: wn.dp_mean(wn.impute(wn.clamp(wn.to_float(partitioned[key]['income']), 0., 200_000.)),
+                            implementation="plug-in",
+                            privacy_usage={"epsilon": 0.5})
+            for key in partitioned.partition_keys
+        }).value)
+

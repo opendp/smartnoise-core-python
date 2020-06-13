@@ -123,6 +123,9 @@ class Component(object):
 
         :return: The value stored in the release corresponding to this node
         """
+        if self.component_id not in self.analysis.release_values:
+            self.analysis.release()
+
         return self.analysis.release_values.get(self.component_id, {"value": None})["value"]
 
     @property
@@ -152,10 +155,11 @@ class Component(object):
         """
         self.analysis.update_properties()
 
+        properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
         response = core_wrapper.privacy_usage_to_accuracy(
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
-            properties={name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg},
+            properties=serialize_indexmap_value_properties(properties),
             alpha=alpha)
 
         value = [accuracy.value for accuracy in response.values]
@@ -276,16 +280,27 @@ class Component(object):
     @property
     def categories(self):
         """view the statically derived category set"""
-        # try:
-        categories = self.properties.array.categorical.categories.data
-        value = [parse_array1d(i) for i in categories]
-        if not value:
+        try:
+            categories = self.properties.array.categorical.categories.data
+            value = [parse_array1d(i) for i in categories]
+            if not value:
+                return None
+            if self.dimensionality <= 1 and value:
+                value = value[0]
+            return value
+        except AttributeError:
             return None
-        if self.dimensionality <= 1 and value:
-            value = value[0]
-        return value
-        # except AttributeError:
-        #     return None
+
+    @property
+    def partition_keys(self):
+        try:
+            keys = self.properties.indexmap.children.keys
+            value = [parse_index_key(i) for i in keys]
+            if not value:
+                return None
+            return value
+        except AttributeError:
+            return None
 
     def set(self, value):
         self.analysis.release_values[self.component_id] = {

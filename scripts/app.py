@@ -10,7 +10,8 @@ from tests.test_base import (
     test_properties,
     test_groupby,
     test_groupby_c_stab,
-    test_multilayer_partition
+    test_multilayer_partition,
+    test_dataframe_partitioning
 )
 
 from tests import test_components
@@ -20,7 +21,7 @@ from tests import test_insertion
 import os
 os.environ['RUST_BACKTRACE'] = 'full'
 
-test_multilayer_partition()
+test_dataframe_partitioning()
 
 # test_components.test_dp_median()
 #
