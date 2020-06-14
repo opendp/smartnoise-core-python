@@ -8,12 +8,9 @@ from tests.test_base import (
     test_histogram,
     test_covariance,
     test_properties,
-    test_groupby,
-    test_groupby_c_stab,
-    test_multilayer_partition,
-    test_dataframe_partitioning
 )
 
+from tests import test_partitioning
 from tests import test_components
 from tests import test_insertion
 
@@ -21,7 +18,7 @@ from tests import test_insertion
 import os
 os.environ['RUST_BACKTRACE'] = 'full'
 
-test_dataframe_partitioning()
+test_partitioning.test_dataframe_partitioning()
 
 # test_components.test_dp_median()
 #

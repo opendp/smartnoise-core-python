@@ -3,6 +3,8 @@ import random
 import string
 import numpy as np
 
+from test_base import TEST_CSV_PATH, test_csv_names
+
 
 def generate_bools():
     private_data = [[True, True], [True, False], [False, True], [False, False]]
@@ -99,6 +101,13 @@ def test_dp_mean():
 
         print("accuracy", mean.get_accuracy(0.05))
         print(mean.from_accuracy(2.3, .05))
+
+    with wn.Analysis():
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        print(wn.dp_mean(wn.to_float(data['income']),
+                         implementation="plug-in",
+                         data_lower=0., data_upper=200_000.,
+                         privacy_usage={"epsilon": 0.5}).value)
 
 
 def test_dp_median():
