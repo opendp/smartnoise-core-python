@@ -286,8 +286,8 @@ def test_everything(run=True):
         numerics + [[1., 2.]]
 
         # index into first column
-        age = numerics[0]
-        income = numerics[[False, True]]
+        age = wn.index(numerics, indices=0)
+        income = wn.index(numerics, mask=[False, True])
 
         # boolean ops and broadcasting
         mask = sex & married | (~married ^ False) | (age > 50.) | (age_int == 25)

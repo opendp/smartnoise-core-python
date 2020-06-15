@@ -64,7 +64,7 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
         bool: 'bool', float: 'float', int: 'int', str: 'str'
     }[var_type], true_label=True, lower=0, upper=10)
     resized = wn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
-    return wn.rename(resized, column_names=names)
+    return wn.dataframe(resized, names=names)
 
 
 def test_divide():
@@ -97,7 +97,7 @@ def test_dp_mean():
             accuracy={'value': .2, 'alpha': .05},
             data_lower=0.,
             data_upper=10.,
-            data_n=10)
+            data_rows=10)
 
         print("accuracy", mean.get_accuracy(0.05))
         print(mean.from_accuracy(2.3, .05))
@@ -111,17 +111,20 @@ def test_dp_mean():
 
 
 def test_dp_median():
-    with wn.Analysis(eager=True, dynamic=False) as analysis:
+    with wn.Analysis(eager=True, dynamic=False, filter_level='all') as analysis:
         data = generate_synthetic(float, variants=['Random'])
+        print(data.value)
 
-        dp_median = wn.dp_median(
+        candidates = wn.Component.of([-10., -2., 2., 3., 4., 7., 10., 12.], value_format='jagged')
+
+        median_scores = wn.median(
             data['F_Random'],
-            privacy_usage={"epsilon": .1},
-            candidates=[-10., -2., 2., 3., 4., 7., 10., 12.],
+            candidates=candidates,
+            data_rows=10,
             data_lower=0.,
             data_upper=10.)
 
-        analysis.release()
+        dp_median = wn.exponential_mechanism(median_scores, candidates=candidates, privacy_usage={"epsilon": 1.})
 
         print(dp_median.value)
 
@@ -130,7 +133,7 @@ def test_equal():
     with wn.Analysis(filter_level='all') as analysis:
         data = generate_bools()
 
-        equality = data[0] == data[1]
+        equality = wn.index(data, indices=0) == wn.index(data, indices=1)
 
         analysis.release()
         assert np.array_equal(equality.value, np.array([True, False, False, True]))
@@ -153,7 +156,7 @@ def test_index():
     with wn.Analysis(filter_level='all') as analysis:
         data = generate_bools()
 
-        index_0 = data[0]
+        index_0 = wn.index(data, indices=0)
 
         analysis.release()
         assert all(a == b for a, b in zip(index_0.value, [True, True, False, False]))

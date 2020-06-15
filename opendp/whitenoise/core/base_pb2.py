@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nbase.proto\x12\nwhitenoise\x1a\x0bvalue.proto\x1a\x10\x63omponents.proto\"\x18\n\x05\x45rror\x12\x0f\n\x07message\x18\x01 \x01(\t\"~\n\x08\x41nalysis\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x37\n\x11\x63omputation_graph\x18\x02 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\"\xb3\x02\n\x11PrivacyDefinition\x12\x12\n\ngroup_size\x18\x01 \x01(\r\x12>\n\x0bneighboring\x18\x02 \x01(\x0e\x32).whitenoise.PrivacyDefinition.Neighboring\x12\x1f\n\x17strict_parameter_checks\x18\x03 \x01(\x08\x12\x18\n\x10protect_overflow\x18\x04 \x01(\x08\x12\x1c\n\x14protect_elapsed_time\x18\x05 \x01(\x08\x12\"\n\x1aprotect_memory_utilization\x18\x06 \x01(\x08\x12\x1e\n\x16protect_floating_point\x18\x07 \x01(\x08\"-\n\x0bNeighboring\x12\x0e\n\nSUBSTITUTE\x10\x00\x12\x0e\n\nADD_REMOVE\x10\x01\"\x8f\x01\n\x10\x43omputationGraph\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.whitenoise.ComputationGraph.ValueEntry\x1a\x43\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\"\x82\x01\n\x07Release\x12/\n\x06values\x18\x01 \x03(\x0b\x32\x1f.whitenoise.Release.ValuesEntry\x1a\x46\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xe2\x01\n\x0fValueProperties\x12\x32\n\x08indexmap\x18\x01 \x01(\x0b\x32\x1e.whitenoise.IndexmapPropertiesH\x00\x12,\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ArrayPropertiesH\x00\x12.\n\x06jagged\x18\x03 \x01(\x0b\x32\x1c.whitenoise.JaggedPropertiesH\x00\x12\x32\n\x08\x66unction\x18\x04 \x01(\x0b\x32\x1e.whitenoise.FunctionPropertiesH\x00\x42\t\n\x07variant\"\xad\x01\n\x12IndexmapProperties\x12\x35\n\x08\x63hildren\x18\x01 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x37\n\x07variant\x18\x02 \x01(\x0e\x32&.whitenoise.IndexmapProperties.Variant\"\'\n\x07Variant\x12\r\n\tDATAFRAME\x10\x00\x12\r\n\tPARTITION\x10\x01\"j\n\x17IndexmapValueProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"\xda\x01\n\x14\x41ggregatorProperties\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x02 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x32\n\x12lipschitz_constant\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\"\x9d\x04\n\x0f\x41rrayProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12(\n\x0bnum_columns\x18\x02 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x0f\n\x07nullity\x18\x03 \x01(\x08\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12\x34\n\naggregator\x18\x05 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x06 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x07 \x01(\x08\x12\'\n\ndataset_id\x18\x08 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x14\n\x0cis_not_empty\x18\t \x01(\x08\x12+\n\x0e\x64imensionality\x18\n \x01(\x0b\x32\x13.whitenoise.I64Null\x12%\n\x08group_id\x18\x0b \x03(\x0b\x32\x13.whitenoise.GroupId\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"f\n\x10NatureContinuous\x12(\n\x07minimum\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dNull\x12(\n\x07maximum\x18\x02 \x01(\x0b\x32\x17.whitenoise.Array1dNull\";\n\x11NatureCategorical\x12&\n\ncategories\x18\x01 \x01(\x0b\x32\x12.whitenoise.Jagged\"D\n\x07GroupId\x12\x14\n\x0cpartition_id\x18\x01 \x01(\r\x12#\n\x05index\x18\x02 \x01(\x0b\x32\x14.whitenoise.IndexKey\"\xb7\x02\n\x10JaggedProperties\x12+\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x16.whitenoise.Array1dI64\x12\x0f\n\x07nullity\x18\x02 \x01(\x08\x12\x34\n\naggregator\x18\x03 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x04 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x05 \x01(\x08\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"(\n\x12\x46unctionProperties\x12\x12\n\nreleasable\x18\x01 \x01(\x08\"\xc7\x01\n\x0fGraphProperties\x12?\n\nproperties\x18\x01 \x03(\x0b\x32+.whitenoise.GraphProperties.PropertiesEntry\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"2\n\nAccuracies\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.Accuracy\"(\n\x08\x41\x63\x63uracy\x12\r\n\x05value\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\x8b\x04\n\x12\x43omponentExpansion\x12O\n\x11\x63omputation_graph\x18\x01 \x03(\x0b\x32\x34.whitenoise.ComponentExpansion.ComputationGraphEntry\x12\x42\n\nproperties\x18\x02 \x03(\x0b\x32..whitenoise.ComponentExpansion.PropertiesEntry\x12>\n\x08releases\x18\x03 \x03(\x0b\x32,.whitenoise.ComponentExpansion.ReleasesEntry\x12\x11\n\ttraversal\x18\x04 \x03(\r\x12#\n\x08warnings\x18\x05 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x15\x43omputationGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\x1aH\n\rReleasesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xad\x01\n\x05Value\x12\"\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x11.whitenoise.ArrayH\x00\x12(\n\x08indexmap\x18\x03 \x01(\x0b\x32\x14.whitenoise.IndexmapH\x00\x12$\n\x06jagged\x18\x04 \x01(\x0b\x32\x12.whitenoise.JaggedH\x00\x12(\n\x08\x66unction\x18\x05 \x01(\x0b\x32\x14.whitenoise.FunctionH\x00\x42\x06\n\x04\x64\x61ta\"Q\n\x08Indexmap\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"\xb7\x02\n\x08\x46unction\x12\x37\n\x11\x63omputation_graph\x18\x01 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x36\n\targuments\x18\x03 \x03(\x0b\x32#.whitenoise.Function.ArgumentsEntry\x12\x32\n\x07outputs\x18\x04 \x03(\x0b\x32!.whitenoise.Function.OutputsEntry\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x1a.\n\x0cOutputsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\"r\n\x0bReleaseNode\x12 \n\x05value\x18\x01 \x01(\x0b\x32\x11.whitenoise.Value\x12\x31\n\x0eprivacy_usages\x18\x02 \x01(\x0b\x32\x19.whitenoise.PrivacyUsages\x12\x0e\n\x06public\x18\x03 \x01(\x08\"b\n\x13IndexmapReleaseNode\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\'\n\x06values\x18\x02 \x03(\x0b\x32\x17.whitenoise.ReleaseNode*8\n\x0b\x46ilterLevel\x12\n\n\x06PUBLIC\x10\x00\x12\x14\n\x10PUBLIC_AND_PRIOR\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\nbase.proto\x12\nwhitenoise\x1a\x0bvalue.proto\x1a\x10\x63omponents.proto\"\x18\n\x05\x45rror\x12\x0f\n\x07message\x18\x01 \x01(\t\"~\n\x08\x41nalysis\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x37\n\x11\x63omputation_graph\x18\x02 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\"\xb3\x02\n\x11PrivacyDefinition\x12\x12\n\ngroup_size\x18\x01 \x01(\r\x12>\n\x0bneighboring\x18\x02 \x01(\x0e\x32).whitenoise.PrivacyDefinition.Neighboring\x12\x1f\n\x17strict_parameter_checks\x18\x03 \x01(\x08\x12\x18\n\x10protect_overflow\x18\x04 \x01(\x08\x12\x1c\n\x14protect_elapsed_time\x18\x05 \x01(\x08\x12\"\n\x1aprotect_memory_utilization\x18\x06 \x01(\x08\x12\x1e\n\x16protect_floating_point\x18\x07 \x01(\x08\"-\n\x0bNeighboring\x12\x0e\n\nSUBSTITUTE\x10\x00\x12\x0e\n\nADD_REMOVE\x10\x01\"\x8f\x01\n\x10\x43omputationGraph\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.whitenoise.ComputationGraph.ValueEntry\x1a\x43\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\"\x82\x01\n\x07Release\x12/\n\x06values\x18\x01 \x03(\x0b\x32\x1f.whitenoise.Release.ValuesEntry\x1a\x46\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xe2\x01\n\x0fValueProperties\x12\x32\n\x08indexmap\x18\x01 \x01(\x0b\x32\x1e.whitenoise.IndexmapPropertiesH\x00\x12,\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ArrayPropertiesH\x00\x12.\n\x06jagged\x18\x03 \x01(\x0b\x32\x1c.whitenoise.JaggedPropertiesH\x00\x12\x32\n\x08\x66unction\x18\x04 \x01(\x0b\x32\x1e.whitenoise.FunctionPropertiesH\x00\x42\t\n\x07variant\"\xad\x01\n\x12IndexmapProperties\x12\x35\n\x08\x63hildren\x18\x01 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x37\n\x07variant\x18\x02 \x01(\x0e\x32&.whitenoise.IndexmapProperties.Variant\"\'\n\x07Variant\x12\r\n\tDATAFRAME\x10\x00\x12\r\n\tPARTITION\x10\x01\"j\n\x17IndexmapValueProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"\xa9\x01\n\x14\x41ggregatorProperties\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x02 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12.\n\x13lipschitz_constants\x18\x03 \x01(\x0b\x32\x11.whitenoise.Value\"\x9d\x04\n\x0f\x41rrayProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12(\n\x0bnum_columns\x18\x02 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x0f\n\x07nullity\x18\x03 \x01(\x08\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12\x34\n\naggregator\x18\x05 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x06 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x07 \x01(\x08\x12\'\n\ndataset_id\x18\x08 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x14\n\x0cis_not_empty\x18\t \x01(\x08\x12+\n\x0e\x64imensionality\x18\n \x01(\x0b\x32\x13.whitenoise.I64Null\x12%\n\x08group_id\x18\x0b \x03(\x0b\x32\x13.whitenoise.GroupId\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"f\n\x10NatureContinuous\x12(\n\x07minimum\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dNull\x12(\n\x07maximum\x18\x02 \x01(\x0b\x32\x17.whitenoise.Array1dNull\";\n\x11NatureCategorical\x12&\n\ncategories\x18\x01 \x01(\x0b\x32\x12.whitenoise.Jagged\"D\n\x07GroupId\x12\x14\n\x0cpartition_id\x18\x01 \x01(\r\x12#\n\x05index\x18\x02 \x01(\x0b\x32\x14.whitenoise.IndexKey\"\xb7\x02\n\x10JaggedProperties\x12+\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x16.whitenoise.Array1dI64\x12\x0f\n\x07nullity\x18\x02 \x01(\x08\x12\x34\n\naggregator\x18\x03 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x04 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x05 \x01(\x08\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"(\n\x12\x46unctionProperties\x12\x12\n\nreleasable\x18\x01 \x01(\x08\"\xc7\x01\n\x0fGraphProperties\x12?\n\nproperties\x18\x01 \x03(\x0b\x32+.whitenoise.GraphProperties.PropertiesEntry\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"2\n\nAccuracies\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.Accuracy\"(\n\x08\x41\x63\x63uracy\x12\r\n\x05value\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\x8b\x04\n\x12\x43omponentExpansion\x12O\n\x11\x63omputation_graph\x18\x01 \x03(\x0b\x32\x34.whitenoise.ComponentExpansion.ComputationGraphEntry\x12\x42\n\nproperties\x18\x02 \x03(\x0b\x32..whitenoise.ComponentExpansion.PropertiesEntry\x12>\n\x08releases\x18\x03 \x03(\x0b\x32,.whitenoise.ComponentExpansion.ReleasesEntry\x12\x11\n\ttraversal\x18\x04 \x03(\r\x12#\n\x08warnings\x18\x05 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x15\x43omputationGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\x1aH\n\rReleasesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xad\x01\n\x05Value\x12\"\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x11.whitenoise.ArrayH\x00\x12(\n\x08indexmap\x18\x03 \x01(\x0b\x32\x14.whitenoise.IndexmapH\x00\x12$\n\x06jagged\x18\x04 \x01(\x0b\x32\x12.whitenoise.JaggedH\x00\x12(\n\x08\x66unction\x18\x05 \x01(\x0b\x32\x14.whitenoise.FunctionH\x00\x42\x06\n\x04\x64\x61ta\"Q\n\x08Indexmap\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"\xb7\x02\n\x08\x46unction\x12\x37\n\x11\x63omputation_graph\x18\x01 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x36\n\targuments\x18\x03 \x03(\x0b\x32#.whitenoise.Function.ArgumentsEntry\x12\x32\n\x07outputs\x18\x04 \x03(\x0b\x32!.whitenoise.Function.OutputsEntry\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x1a.\n\x0cOutputsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\"r\n\x0bReleaseNode\x12 \n\x05value\x18\x01 \x01(\x0b\x32\x11.whitenoise.Value\x12\x31\n\x0eprivacy_usages\x18\x02 \x01(\x0b\x32\x19.whitenoise.PrivacyUsages\x12\x0e\n\x06public\x18\x03 \x01(\x08\"b\n\x13IndexmapReleaseNode\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\'\n\x06values\x18\x02 \x03(\x0b\x32\x17.whitenoise.ReleaseNode*8\n\x0b\x46ilterLevel\x12\n\n\x06PUBLIC\x10\x00\x12\x14\n\x10PUBLIC_AND_PRIOR\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x62\x06proto3')
   ,
   dependencies=[value__pb2.DESCRIPTOR,components__pb2.DESCRIPTOR,])
 
@@ -48,8 +48,8 @@ _FILTERLEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=4280,
-  serialized_end=4336,
+  serialized_start=4231,
+  serialized_end=4287,
 )
 _sym_db.RegisterEnumDescriptor(_FILTERLEVEL)
 
@@ -537,15 +537,8 @@ _AGGREGATORPROPERTIES = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='lipschitz_constant', full_name='whitenoise.AggregatorProperties.lipschitz_constant', index=2,
+      name='lipschitz_constants', full_name='whitenoise.AggregatorProperties.lipschitz_constants', index=2,
       number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='c_stability', full_name='whitenoise.AggregatorProperties.c_stability', index=3,
-      number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -563,7 +556,7 @@ _AGGREGATORPROPERTIES = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=1314,
-  serialized_end=1532,
+  serialized_end=1483,
 )
 
 
@@ -680,8 +673,8 @@ _ARRAYPROPERTIES = _descriptor.Descriptor(
       name='nature', full_name='whitenoise.ArrayProperties.nature',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1535,
-  serialized_end=2076,
+  serialized_start=1486,
+  serialized_end=2027,
 )
 
 
@@ -718,8 +711,8 @@ _NATURECONTINUOUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2078,
-  serialized_end=2180,
+  serialized_start=2029,
+  serialized_end=2131,
 )
 
 
@@ -749,8 +742,8 @@ _NATURECATEGORICAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2182,
-  serialized_end=2241,
+  serialized_start=2133,
+  serialized_end=2192,
 )
 
 
@@ -787,8 +780,8 @@ _GROUPID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2243,
-  serialized_end=2311,
+  serialized_start=2194,
+  serialized_end=2262,
 )
 
 
@@ -863,8 +856,8 @@ _JAGGEDPROPERTIES = _descriptor.Descriptor(
       name='nature', full_name='whitenoise.JaggedProperties.nature',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2314,
-  serialized_end=2625,
+  serialized_start=2265,
+  serialized_end=2576,
 )
 
 
@@ -894,8 +887,8 @@ _FUNCTIONPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2627,
-  serialized_end=2667,
+  serialized_start=2578,
+  serialized_end=2618,
 )
 
 
@@ -932,8 +925,8 @@ _GRAPHPROPERTIES_PROPERTIESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2791,
-  serialized_end=2869,
+  serialized_start=2742,
+  serialized_end=2820,
 )
 
 _GRAPHPROPERTIES = _descriptor.Descriptor(
@@ -969,8 +962,8 @@ _GRAPHPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2670,
-  serialized_end=2869,
+  serialized_start=2621,
+  serialized_end=2820,
 )
 
 
@@ -1000,8 +993,8 @@ _ACCURACIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2871,
-  serialized_end=2921,
+  serialized_start=2822,
+  serialized_end=2872,
 )
 
 
@@ -1038,8 +1031,8 @@ _ACCURACY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2923,
-  serialized_end=2963,
+  serialized_start=2874,
+  serialized_end=2914,
 )
 
 
@@ -1076,8 +1069,8 @@ _COMPONENTEXPANSION_COMPUTATIONGRAPHENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3257,
-  serialized_end=3335,
+  serialized_start=3208,
+  serialized_end=3286,
 )
 
 _COMPONENTEXPANSION_PROPERTIESENTRY = _descriptor.Descriptor(
@@ -1113,8 +1106,8 @@ _COMPONENTEXPANSION_PROPERTIESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2791,
-  serialized_end=2869,
+  serialized_start=2742,
+  serialized_end=2820,
 )
 
 _COMPONENTEXPANSION_RELEASESENTRY = _descriptor.Descriptor(
@@ -1150,8 +1143,8 @@ _COMPONENTEXPANSION_RELEASESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3417,
-  serialized_end=3489,
+  serialized_start=3368,
+  serialized_end=3440,
 )
 
 _COMPONENTEXPANSION = _descriptor.Descriptor(
@@ -1208,8 +1201,8 @@ _COMPONENTEXPANSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2966,
-  serialized_end=3489,
+  serialized_start=2917,
+  serialized_end=3440,
 )
 
 
@@ -1263,8 +1256,8 @@ _VALUE = _descriptor.Descriptor(
       name='data', full_name='whitenoise.Value.data',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=3492,
-  serialized_end=3665,
+  serialized_start=3443,
+  serialized_end=3616,
 )
 
 
@@ -1301,8 +1294,8 @@ _INDEXMAP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3667,
-  serialized_end=3748,
+  serialized_start=3618,
+  serialized_end=3699,
 )
 
 
@@ -1339,8 +1332,8 @@ _FUNCTION_ARGUMENTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3966,
-  serialized_end=4014,
+  serialized_start=3917,
+  serialized_end=3965,
 )
 
 _FUNCTION_OUTPUTSENTRY = _descriptor.Descriptor(
@@ -1376,8 +1369,8 @@ _FUNCTION_OUTPUTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4016,
-  serialized_end=4062,
+  serialized_start=3967,
+  serialized_end=4013,
 )
 
 _FUNCTION = _descriptor.Descriptor(
@@ -1427,8 +1420,8 @@ _FUNCTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3751,
-  serialized_end=4062,
+  serialized_start=3702,
+  serialized_end=4013,
 )
 
 
@@ -1472,8 +1465,8 @@ _RELEASENODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4064,
-  serialized_end=4178,
+  serialized_start=4015,
+  serialized_end=4129,
 )
 
 
@@ -1510,8 +1503,8 @@ _INDEXMAPRELEASENODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4180,
-  serialized_end=4278,
+  serialized_start=4131,
+  serialized_end=4229,
 )
 
 _ANALYSIS.fields_by_name['privacy_definition'].message_type = _PRIVACYDEFINITION
@@ -1547,8 +1540,7 @@ _INDEXMAPVALUEPROPERTIES.fields_by_name['keys'].message_type = value__pb2._INDEX
 _INDEXMAPVALUEPROPERTIES.fields_by_name['values'].message_type = _VALUEPROPERTIES
 _AGGREGATORPROPERTIES.fields_by_name['component'].message_type = components__pb2._COMPONENT
 _AGGREGATORPROPERTIES.fields_by_name['properties'].message_type = _INDEXMAPVALUEPROPERTIES
-_AGGREGATORPROPERTIES.fields_by_name['lipschitz_constant'].message_type = value__pb2._ARRAY1DF64
-_AGGREGATORPROPERTIES.fields_by_name['c_stability'].message_type = value__pb2._ARRAY1DF64
+_AGGREGATORPROPERTIES.fields_by_name['lipschitz_constants'].message_type = _VALUE
 _ARRAYPROPERTIES.fields_by_name['num_records'].message_type = value__pb2._I64NULL
 _ARRAYPROPERTIES.fields_by_name['num_columns'].message_type = value__pb2._I64NULL
 _ARRAYPROPERTIES.fields_by_name['c_stability'].message_type = value__pb2._ARRAY1DF64

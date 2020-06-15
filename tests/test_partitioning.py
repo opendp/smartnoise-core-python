@@ -12,7 +12,7 @@ assert isfile(TEST_CSV_PATH), f'Error: file not found: {TEST_CSV_PATH}'
 test_csv_names = ["age", "sex", "educ", "race", "income", "married"]
 
 
-def test_groupby():
+def test_groupby_1():
 
     with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
@@ -27,6 +27,8 @@ def test_groupby():
     print(analysis.privacy_usage)
     print({cat: counts[cat].value for cat in counts})
 
+
+def test_groupby_2():
     with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
 
@@ -46,6 +48,8 @@ def test_groupby():
     print(analysis.privacy_usage)
     print({cat: counts[cat].value for cat in counts})
 
+
+def test_groupby_3():
     # now union the released output
     with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
@@ -70,6 +74,8 @@ def test_groupby():
     print(analysis.privacy_usage)
     print(union.value)
 
+
+def test_groupby_4():
     # now union private data, and apply mechanism after
     with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
@@ -96,7 +102,7 @@ def test_groupby():
 
 
 def test_fail_groupby():
-    with wn.Analysis() as analysis, pytest.raises(Exception):
+    with wn.Analysis() as analysis, pytest.raises(RuntimeError):
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
@@ -113,7 +119,7 @@ def test_fail_groupby():
 
         wn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
 
-    print(analysis.privacy_usage)
+        print(analysis.privacy_usage)
 
 
 def test_groupby_c_stab():
@@ -242,19 +248,22 @@ def test_multilayer_partition():
 def test_dataframe_partitioning():
 
     # dataframe partition
-    # with wn.Analysis() as analysis:
-    #     data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
-    #
-    #     is_male = wn.to_bool(data['sex'], true_label="1")
-    #     partitioned = wn.partition(data, by=is_male)
-    #
-    #     print(wn.union({
-    #         key: wn.dp_mean(wn.impute(wn.clamp(wn.to_float(partitioned[key]['income']), 0., 200_000.)), implementation="plug-in", privacy_usage={"epsilon": 0.5})
-    #         for key in partitioned.partition_keys
-    #     }).value)
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        is_male = wn.to_bool(data['sex'], true_label="1")
+        partitioned = wn.partition(data, by=is_male)
+
+        print(wn.union({
+            key: wn.dp_mean(wn.impute(wn.clamp(wn.to_float(partitioned[key]['income']), 0., 200_000.)),
+                            implementation="plug-in",
+                            privacy_usage={"epsilon": 0.5})
+            for key in partitioned.partition_keys
+        }).value)
+        print(analysis.privacy_usage)
 
     # dataframe partition with multi-index grouping
-    with wn.Analysis(eager=False) as analysis:
+    with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
 
         grouper = wn.clamp(
@@ -264,12 +273,11 @@ def test_dataframe_partitioning():
             null_value='-1')
         partitioned = wn.partition(data, by=grouper)
 
-        print(wn.union({
+        wn.union({
             key: wn.dp_count(partitioned[key],
                              privacy_usage={"epsilon": 0.5})
             for key in partitioned.partition_keys
-        }, flatten=False))
-        print(analysis.privacy_usage)
+        }, flatten=False)
 
         print(wn.union({
             key: wn.dp_mean(wn.to_float(partitioned[key]['income']),

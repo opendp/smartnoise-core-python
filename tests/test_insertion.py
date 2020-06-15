@@ -22,7 +22,7 @@ def test_insertion_simple():
         actual_mean = wn.mean(col_a_resized)
 
         # insert aggregated data from an external system
-        actual_mean.set(10)
+        actual_mean.set(10.)
 
         # describe the differentially private operation
         gaussian_mean = wn.gaussian_mechanism(actual_mean, privacy_usage={"epsilon": .4, "delta": 1e-6})
@@ -38,7 +38,7 @@ def test_insertion_simple():
 
         # release a couple other statistics using other mechanisms in the same batch
         actual_sum = wn.sum(col_a_clamped)
-        actual_sum.set(123456)
+        actual_sum.set(123456.)
         laplace_sum = wn.laplace_mechanism(actual_sum, privacy_usage={"epsilon": .1})
 
         actual_count = wn.count(col_a)
@@ -57,7 +57,7 @@ def test_insertion_simple():
         col_c = wn.to_bool(data['C'], true_label="T")
         actual_histogram_c = wn.histogram(col_c)
         actual_histogram_c.set([5000, 5000])
-        lap_histogram_c = wn.laplace_mechanism(actual_histogram_c, privacy_usage={"epsilon": .1})
+        lap_histogram_c = wn.simple_geometric_mechanism(actual_histogram_c, 0, 10000, privacy_usage={"epsilon": .1})
 
         analysis.release()
         print("noised histogram b", geo_histogram_b.value)

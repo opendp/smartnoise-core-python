@@ -183,7 +183,9 @@ class Component(object):
         privacy_usages = core_wrapper.accuracy_to_privacy_usage(
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
-            properties={name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg},
+            properties=serialize_indexmap_value_properties({
+                name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg
+            }),
             accuracies=base_pb2.Accuracies(values=[
                 base_pb2.Accuracy(value=value, alpha=alpha) for value, alpha in zip(value, alpha)
             ]))
@@ -495,7 +497,7 @@ class Component(object):
 
                 del constraints[argument + '_columns']
 
-            elif 'upper' in filtered and 'lower' in filtered:
+            if 'upper' in filtered and 'lower' in filtered:
                 min_component = Component.of(constraints[argument + '_lower'])
                 max_component = Component.of(constraints[argument + '_upper'])
 
