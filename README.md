@@ -20,7 +20,7 @@ This library provides an easy-to-use interface for building analyses.
 Differentially private computations are specified as a protobuf analysis graph that can be validated and executed to produce differentially private releases of data.
 
 
-- [More about the Core Python Bindings](#more-abou-core-python-bindings)
+- [More about the Core Python Bindings](#more-about-core-python-bindings)
   - [Component List](#components)
   - [Architecture](#architecture)
 - [Installation](#installation)
