@@ -1,36 +1,38 @@
+[**Please note that we are renaming the toolkit and will be introducing the new name in the coming weeks.**](https://projects.iq.harvard.edu/opendp/blog/building-inclusive-community)
+
 [![Build Status](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/whitenoise-core-python)
 
-<a href="https://opendifferentialprivacy.github.io"><img src="https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/images/WhiteNoise%20Logo/SVG/Full_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
+<a href="https://opendifferentialprivacy.github.io"><img src="https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/images/WhiteNoise%20Logo/SVG/LogoMark_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
 
-## WhiteNoise Core <br/> Differential Privacy Library Python Bindings <br/>
+## Core Differential Privacy Library Python Bindings <br/>
 
-This repository contains python bindings to [Whitenoise-Core](https://github.com/opendifferentialprivacy/whitenoise-core) and its underlying Rust binaries.
+This repository contains python bindings to the [Core library](https://github.com/opendifferentialprivacy/whitenoise-core) and its underlying Rust binaries.
 
-- For examples of this library in action, please see the Python notebooks in [WhiteNoise-Samples](https://github.com/opendifferentialprivacy/whitenoise-samples).
-- In addition, see the accompanying [WhiteNoise-System](https://github.com/opendifferentialprivacy/whitenoise-system) repository which includes WhiteNoise tools for differential privacy.
+- For examples of this library in action, please see the Python notebooks in the [Samples repository](https://github.com/opendifferentialprivacy/whitenoise-samples).
+- In addition, see the accompanying [System repository](https://github.com/opendifferentialprivacy/whitenoise-system) repository which includes tools for differential privacy.
 
 ---
 
-Differential privacy is the gold standard definition of privacy protection. The WhiteNoise project aims to connect theoretical solutions from the academic community with the practical lessons learned from real-world deployments, to make differential privacy broadly accessible to future deployments. Specifically, we provide several basic building blocks that can be used by people involved with sensitive data, with implementations based on vetted and mature differential privacy research. In WhiteNoise Core, we provide a pluggable open source library of differentially private algorithms and mechanisms for releasing privacy preserving queries and statistics, as well as APIs for defining an analysis and a validator for evaluating these analyses and composing the total privacy loss on a dataset.
+Differential privacy is the gold standard definition of privacy protection. This project aims to connect theoretical solutions from the academic community with the practical lessons learned from real-world deployments, to make differential privacy broadly accessible to future deployments. Specifically, we provide several basic building blocks that can be used by people involved with sensitive data, with implementations based on vetted and mature differential privacy research. In the Core library, we provide a pluggable open source library of differentially private algorithms and mechanisms for releasing privacy preserving queries and statistics, as well as APIs for defining an analysis and a validator for evaluating these analyses and composing the total privacy loss on a dataset.
 
 This library provides an easy-to-use interface for building analyses.
 
 Differentially private computations are specified as a protobuf analysis graph that can be validated and executed to produce differentially private releases of data.
 
 
-- [More about WhiteNoise Core Python Bindings](#more-about-whitenoise-core-python-bindings)
+- [More about the Core Python Bindings](#more-about-core-python-bindings)
   - [Component List](#components)
   - [Architecture](#architecture)
 - [Installation](#installation)
   - [Binaries](#binaries)
   - [From Source](#from-source)
-- [WhiteNoise Documentation](#whitenoise-documentation)
+- [Core Documentation](#core-documentation)
 - [Communication](#communication)
 - [Releases and Contributing](#releases-and-contributing)
 
 ---
 
-## More about WhiteNoise Core Python Bindings
+## More about Core Python Bindings
 
 ### Components
 
@@ -38,7 +40,7 @@ For a full listing of the extensive set of components available in the library [
 
 ### Architecture
 
-The Whitenoise-core system architecture [is described in the parent project](https://github.com/opendifferentialprivacy/whitenoise-core#Architecture).
+The Core library system architecture [is described in the parent project](https://github.com/opendifferentialprivacy/whitenoise-core#Architecture).
 This package is an instance of the language bindings. The purpose of the language bindings is to provide a straightforward programming interface to Python for building and releasing analyses.
 
 Logic for determining if a component releases differentially private data, as well as the scaling of noise, property tracking, and accuracy estimates are handled by a native rust library called the Validator.
@@ -69,7 +71,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
     git submodule update
     ```
 
-2. Install Whitenoise-core dependencies
+2. Install the Core dependencies
 
     **Mac**
     ```shell script
@@ -96,7 +98,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
    pip3 install -e .
    ```
 
-4. Generate code (rerun anytime whitenoise-core changes)
+4. Generate code (rerun anytime the Core changes)
     ```shell script
     python3 scripts/code_generation.py
     ```
@@ -106,7 +108,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
     ./scripts/build_docs.sh
     ```
 
-### WhiteNoise Documentation
+### Core Documentation
 
 - [Python library documentation](https://opendifferentialprivacy.github.io/whitenoise-core-python)
 
