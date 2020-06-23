@@ -153,7 +153,8 @@ class Component(object):
         Retrieve the accuracy for the values released by the component.
         The true value differs from the estimate by at most "accuracy amount" with (1 - alpha)100% confidence.
         """
-        self.analysis.update_properties()
+        self.analysis.update_properties(
+            component_ids=[arg.component_id for arg in self.arguments.values()])
 
         properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
         response = core_wrapper.privacy_usage_to_accuracy(
@@ -162,23 +163,20 @@ class Component(object):
             properties=serialize_indexmap_value_properties(properties),
             alpha=alpha)
 
-        value = [accuracy.value for accuracy in response.values]
-        if self.dimensionality <= 1 and value:
-            value = value[0]
-        return value
+        return [accuracy.value for accuracy in response.values]
 
     def from_accuracy(self, value, alpha):
         """
         Retrieve the privacy usage necessary such that the true value differs from the estimate by at most "value amount" with (1 - alpha)100% confidence
         """
 
-        self.analysis.update_properties()
+        self.analysis.update_properties([arg.component_id for arg in self.arguments.values()])
 
         if not issubclass(type(value), list):
-            value = [value for _ in range(self.num_columns)]
+            value = [value]
 
         if not issubclass(type(alpha), list):
-            alpha = [alpha for _ in range(self.num_columns)]
+            alpha = [alpha]
 
         privacy_usages = core_wrapper.accuracy_to_privacy_usage(
             privacy_definition=serialize_privacy_definition(self.analysis),
@@ -190,10 +188,7 @@ class Component(object):
                 base_pb2.Accuracy(value=value, alpha=alpha) for value, alpha in zip(value, alpha)
             ]))
 
-        value = [parse_privacy_usage(usage) for usage in privacy_usages.values]
-        if self.dimensionality <= 1 and value:
-            value = value[0]
-        return value
+        return [parse_privacy_usage(usage) for usage in privacy_usages.values]
 
     @property
     def properties(self):
@@ -671,7 +666,7 @@ class Analysis(object):
         if self.eager:
             self.release()
 
-    def update_properties(self):
+    def update_properties(self, component_ids=None, suppress_warnings=False):
         """
         If new nodes have been added or there has been a release, recompute the properties for all of the components.
         :return:
@@ -679,13 +674,15 @@ class Analysis(object):
         if not (self.properties_id['count'] == self.component_count and self.properties_id['submission_count'] == self.submission_count):
             response = core_wrapper.get_properties(
                 serialize_analysis(self),
-                serialize_release(self.release_values))
+                serialize_release(self.release_values),
+                node_ids=component_ids)
 
             self.properties = response.properties
-            self.warnings = [format_error(warning) for warning in response.warnings]
-            if self.warnings:
-                warnings.warn("Some nodes were not allowed to execute.")
-                self.print_warnings()
+            if not suppress_warnings:
+                self.warnings = [format_error(warning) for warning in response.warnings]
+                if self.warnings:
+                    warnings.warn("Some nodes were not allowed to execute.")
+                    self.print_warnings()
             self.properties_id = {'count': self.component_count, 'submission_count': self.submission_count}
 
     def validate(self):

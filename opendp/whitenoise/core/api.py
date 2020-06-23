@@ -147,17 +147,18 @@ class LibraryWrapper(object):
             response_type=api_pb2.ResponsePrivacyUsageToAccuracy,
             destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
 
-    def get_properties(self, analysis, release):
+    def get_properties(self, analysis, release, node_ids=None):
         """
         FFI Helper. Derive static properties for all components in the graph.
         This function is data agnostic. It calls the validator rust FFI with protobuf objects.
 
         :param analysis: A description of computation
         :param release: A collection of public values
+        :param node_ids: An optional list of node ids to derive properties for
         :return: A dictionary of property sets, one set of properties per component
         """
         return _communicate(
-            argument=api_pb2.RequestGetProperties(analysis=analysis, release=release),
+            argument=api_pb2.RequestGetProperties(analysis=analysis, release=release, node_ids=node_ids),
             function=self.lib_whitenoise.get_properties,
             response_type=api_pb2.ResponseGetProperties,
             destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
