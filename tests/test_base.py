@@ -264,7 +264,7 @@ def test_raw_dataset(run=True):
 
 
 def test_everything(run=True):
-    with wn.Analysis(dynamic=True) as analysis:
+    with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
 
         age_int = wn.to_int(data['age'], 0, 150)

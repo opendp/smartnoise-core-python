@@ -150,7 +150,7 @@ def test_groupby_c_stab():
     print(noised.value)
 
 
-def test_multilayer_partition():
+def test_multilayer_partition_1():
     # multilayer partition with mechanisms applied inside partitions
     with wn.Analysis(eager=False) as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
@@ -189,6 +189,8 @@ def test_multilayer_partition():
         counts = wn.union(counts, flatten=False)
 
         # analysis.plot()
+    print("releasing")
+    print(len(analysis.components.items()))
     analysis.release()
     print(analysis.privacy_usage)
     print("Counts:")
@@ -197,6 +199,8 @@ def test_multilayer_partition():
     print("Means:")
     print(means.value)
 
+
+def test_multilayer_partition_2():
     #
     # multilayer partition with mechanisms applied after union
     with wn.Analysis(eager=False) as analysis:
@@ -245,7 +249,7 @@ def test_multilayer_partition():
     print(means.get_accuracy(.05))
 
 
-def test_dataframe_partitioning():
+def test_dataframe_partitioning_1():
 
     # dataframe partition
     with wn.Analysis() as analysis:
@@ -262,6 +266,8 @@ def test_dataframe_partitioning():
         }).value)
         print(analysis.privacy_usage)
 
+
+def test_dataframe_partitioning_2():
     # dataframe partition with multi-index grouping
     with wn.Analysis() as analysis:
         data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)

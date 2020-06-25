@@ -18,7 +18,9 @@ from tests import test_insertion
 import os
 os.environ['RUST_BACKTRACE'] = 'full'
 
-test_partitioning.test_dataframe_partitioning()
+# test_components.test_dp_mean()
+test_histogram()
+# test_partitioning.test_multilayer_partition_1()
 
 # test_components.test_dp_median()
 #
