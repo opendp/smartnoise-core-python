@@ -46,11 +46,11 @@ def build_rust_binaries():
 
     toml_path = os.path.join(rust_dir, "ffi-rust", "Cargo.toml")
 
-    cargo_features = ''
+    cargo_features = ' --features use-direct-api'
     if WN_USE_VULNERABLE_NOISE:
-        cargo_features = " --no-default-features --features use-runtime"
+        cargo_features = ' --no-default-features --features "use-runtime use-direct-api"'
     elif WN_USE_SYSTEM_LIBS:
-        cargo_features = " --features use-system-libs"
+        cargo_features = ' --features "use-system-libs use-direct-api"'
 
     rust_build_cmd = f"{rust_build_cmd}{cargo_features} --manifest-path={toml_path}"
 

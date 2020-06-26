@@ -59,6 +59,22 @@ class LibraryWrapper(object):
         self.lib_whitenoise.whitenoise_destroy_bytebuffer.restype = ctypes.c_void_p
         self.lib_whitenoise.whitenoise_destroy_bytebuffer.argtypes = [ByteBuffer]
 
+        # direct mechanism access
+        self.lib_whitenoise.laplace_mechanism.restype = ctypes.c_double
+        self.lib_whitenoise.laplace_mechanism.argtypes = [
+            ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+        ]
+
+        self.lib_whitenoise.gaussian_mechanism.restype = ctypes.c_double
+        self.lib_whitenoise.gaussian_mechanism.argtypes = [
+            ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+        ]
+
+        self.lib_whitenoise.simple_geometric_mechanism.restype = ctypes.c_int64
+        self.lib_whitenoise.simple_geometric_mechanism.argtypes = [
+            ctypes.c_int64, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_int64, ctypes.c_bool
+        ]
+
     def validate_analysis(self, analysis, release):
         """
         FFI Helper. Check if an analysis is differentially private, given a set of released values.
@@ -183,6 +199,30 @@ class LibraryWrapper(object):
             function=self.lib_whitenoise.release,
             response_type=api_pb2.ResponseRelease,
             destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+
+    def laplace_mechanism(self, value, epsilon, sensitivity, enforce_constant_time):
+        return self.lib_whitenoise.laplace_mechanism(
+            ctypes.c_double(value),
+            ctypes.c_double(epsilon),
+            ctypes.c_double(sensitivity),
+            ctypes.c_bool(enforce_constant_time))
+
+    def gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
+        return self.lib_whitenoise.laplace_mechanism(
+            ctypes.c_double(value),
+            ctypes.c_double(epsilon),
+            ctypes.c_double(delta),
+            ctypes.c_double(sensitivity),
+            ctypes.c_bool(enforce_constant_time))
+
+    def simple_geometric_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):
+        return self.lib_whitenoise.simple_geometric_mechanism(
+            ctypes.c_int64(value),
+            ctypes.c_double(epsilon),
+            ctypes.c_double(sensitivity),
+            ctypes.c_int64(min),
+            ctypes.c_int64(max),
+            ctypes.c_bool(enforce_constant_time))
 
 
 def _communicate(function, destroy, argument, response_type):

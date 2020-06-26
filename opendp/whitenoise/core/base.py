@@ -8,7 +8,7 @@ import typing
 
 from opendp.whitenoise.core import api_pb2, value_pb2, base_pb2
 
-core_wrapper = LibraryWrapper()
+core_library = LibraryWrapper()
 
 # All available extensions for arguments (data_rows, left_lower, etc)
 ALL_CONSTRAINTS = ["n", "rows", "columns", "lower", "upper", "categories"]
@@ -157,7 +157,7 @@ class Component(object):
             component_ids=[arg.component_id for arg in self.arguments.values()])
 
         properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
-        response = core_wrapper.privacy_usage_to_accuracy(
+        response = core_library.privacy_usage_to_accuracy(
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
             properties=serialize_indexmap_value_properties(properties),
@@ -178,7 +178,7 @@ class Component(object):
         if not issubclass(type(alpha), list):
             alpha = [alpha]
 
-        privacy_usages = core_wrapper.accuracy_to_privacy_usage(
+        privacy_usages = core_library.accuracy_to_privacy_usage(
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
             properties=serialize_indexmap_value_properties({
@@ -672,7 +672,7 @@ class Analysis(object):
         :return:
         """
         if not (self.properties_id['count'] == self.component_count and self.properties_id['submission_count'] == self.submission_count):
-            response = core_wrapper.get_properties(
+            response = core_library.get_properties(
                 serialize_analysis(self),
                 serialize_release(self.release_values),
                 node_ids=component_ids)
@@ -692,7 +692,7 @@ class Analysis(object):
 
         :return: A success or failure response
         """
-        return core_wrapper.validate_analysis(
+        return core_library.validate_analysis(
             serialize_analysis(self),
             serialize_release(self.release_values)).value
 
@@ -704,7 +704,7 @@ class Analysis(object):
 
         :return: A privacy usage response
         """
-        return core_wrapper.compute_privacy_usage(
+        return core_library.compute_privacy_usage(
             serialize_analysis(self),
             serialize_release(self.release_values))
 
@@ -720,7 +720,7 @@ class Analysis(object):
         if not self.dynamic:
             assert self.validate(), "cannot release, analysis is not valid"
 
-        response_proto: api_pb2.ResponseRelease.Success = core_wrapper.compute_release(
+        response_proto: api_pb2.ResponseRelease.Success = core_library.compute_release(
             serialize_analysis(self),
             serialize_release(self.release_values),
             self.stack_traces,
@@ -740,7 +740,7 @@ class Analysis(object):
 
         :return: parsed JSON array of summaries of releases
         """
-        return json.loads(core_wrapper.generate_report(
+        return json.loads(core_library.generate_report(
             serialize_analysis(self),
             serialize_release(self.release_values)))
 
