@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0bvalue.proto\x12\nwhitenoise\"$\n\x08\x42oolNull\x12\x10\n\x06option\x18\x01 \x01(\x08H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07I64Null\x12\x10\n\x06option\x18\x01 \x01(\x03H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07\x46\x36\x34Null\x12\x10\n\x06option\x18\x01 \x01(\x01H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07StrNull\x12\x10\n\x06option\x18\x01 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"5\n\x0f\x41rray1dBoolNull\x12\"\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x14.whitenoise.BoolNull\"3\n\x0e\x41rray1dI64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.I64Null\"3\n\x0e\x41rray1dF64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.F64Null\"3\n\x0e\x41rray1dStrNull\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.StrNull\"\xc6\x01\n\x0b\x41rray1dNull\x12+\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x1b.whitenoise.Array1dBoolNullH\x00\x12)\n\x03i64\x18\x02 \x01(\x0b\x32\x1a.whitenoise.Array1dI64NullH\x00\x12)\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x1a.whitenoise.Array1dF64NullH\x00\x12,\n\x06string\x18\x04 \x01(\x0b\x32\x1a.whitenoise.Array1dStrNullH\x00\x42\x06\n\x04\x64\x61ta\"\x1b\n\x0b\x41rray1dBool\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x08\"\x1a\n\nArray1dI64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x03\"\x1a\n\nArray1dF64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x01\"\x1a\n\nArray1dStr\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\t\"\xb2\x01\n\x07\x41rray1d\x12\'\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dBoolH\x00\x12%\n\x03i64\x18\x02 \x01(\x0b\x32\x16.whitenoise.Array1dI64H\x00\x12%\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64H\x00\x12(\n\x06string\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dStrH\x00\x42\x06\n\x04\x64\x61ta\">\n\x05\x41rray\x12&\n\tflattened\x18\x01 \x01(\x0b\x32\x13.whitenoise.Array1d\x12\r\n\x05shape\x18\x02 \x03(\x04\"T\n\x06Jagged\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.Array1d\x12\'\n\tdata_type\x18\x02 \x01(\x0e\x32\x14.whitenoise.DataType\"\x96\x01\n\x0cPrivacyUsage\x12\x43\n\x0b\x61pproximate\x18\x01 \x01(\x0b\x32,.whitenoise.PrivacyUsage.DistanceApproximateH\x00\x1a\x35\n\x13\x44istanceApproximate\x12\x0f\n\x07\x65psilon\x18\x01 \x01(\x01\x12\r\n\x05\x64\x65lta\x18\x02 \x01(\x01\x42\n\n\x08\x64istance\"9\n\rPrivacyUsages\x12(\n\x06values\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"E\n\x0fIndexmapNodeIds\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\x0e\n\x06values\x18\x02 \x03(\r\"\x9b\x01\n\x08IndexKey\x12\r\n\x03str\x18\x01 \x01(\tH\x00\x12\r\n\x03i64\x18\x02 \x01(\x03H\x00\x12\x0e\n\x04\x62ool\x18\x03 \x01(\x08H\x00\x12+\n\x05tuple\x18\x04 \x01(\x0b\x32\x1a.whitenoise.IndexKey.TupleH\x00\x1a-\n\x05Tuple\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKeyB\x05\n\x03key*?\n\x08\x44\x61taType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04\x42OOL\x10\x01\x12\x07\n\x03I64\x10\x02\x12\x07\n\x03\x46\x36\x34\x10\x03\x12\n\n\x06STRING\x10\x04\x62\x06proto3')
+  serialized_pb=_b('\n\x0bvalue.proto\x12\nwhitenoise\"$\n\x08\x42oolNull\x12\x10\n\x06option\x18\x01 \x01(\x08H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07I64Null\x12\x10\n\x06option\x18\x01 \x01(\x03H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07\x46\x36\x34Null\x12\x10\n\x06option\x18\x01 \x01(\x01H\x00\x42\x06\n\x04\x64\x61ta\"#\n\x07StrNull\x12\x10\n\x06option\x18\x01 \x01(\tH\x00\x42\x06\n\x04\x64\x61ta\"5\n\x0f\x41rray1dBoolNull\x12\"\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x14.whitenoise.BoolNull\"3\n\x0e\x41rray1dI64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.I64Null\"3\n\x0e\x41rray1dF64Null\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.F64Null\"3\n\x0e\x41rray1dStrNull\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.StrNull\"\xc6\x01\n\x0b\x41rray1dNull\x12+\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x1b.whitenoise.Array1dBoolNullH\x00\x12)\n\x03i64\x18\x02 \x01(\x0b\x32\x1a.whitenoise.Array1dI64NullH\x00\x12)\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x1a.whitenoise.Array1dF64NullH\x00\x12,\n\x06string\x18\x04 \x01(\x0b\x32\x1a.whitenoise.Array1dStrNullH\x00\x42\x06\n\x04\x64\x61ta\"\x1b\n\x0b\x41rray1dBool\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x08\"\x1a\n\nArray1dI64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x03\"\x1a\n\nArray1dF64\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x01\"\x1a\n\nArray1dStr\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\t\"\xb2\x01\n\x07\x41rray1d\x12\'\n\x04\x62ool\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dBoolH\x00\x12%\n\x03i64\x18\x02 \x01(\x0b\x32\x16.whitenoise.Array1dI64H\x00\x12%\n\x03\x66\x36\x34\x18\x03 \x01(\x0b\x32\x16.whitenoise.Array1dF64H\x00\x12(\n\x06string\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dStrH\x00\x42\x06\n\x04\x64\x61ta\">\n\x05\x41rray\x12&\n\tflattened\x18\x01 \x01(\x0b\x32\x13.whitenoise.Array1d\x12\r\n\x05shape\x18\x02 \x03(\x04\"T\n\x06Jagged\x12!\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x13.whitenoise.Array1d\x12\'\n\tdata_type\x18\x02 \x01(\x0e\x32\x14.whitenoise.DataType\"\x96\x01\n\x0cPrivacyUsage\x12\x43\n\x0b\x61pproximate\x18\x01 \x01(\x0b\x32,.whitenoise.PrivacyUsage.DistanceApproximateH\x00\x1a\x35\n\x13\x44istanceApproximate\x12\x0f\n\x07\x65psilon\x18\x01 \x01(\x01\x12\r\n\x05\x64\x65lta\x18\x02 \x01(\x01\x42\n\n\x08\x64istance\"9\n\rPrivacyUsages\x12(\n\x06values\x18\x01 \x03(\x0b\x32\x18.whitenoise.PrivacyUsage\"E\n\x0f\x41rgumentNodeIds\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\x0e\n\x06values\x18\x02 \x03(\r\"\x9b\x01\n\x08IndexKey\x12\r\n\x03str\x18\x01 \x01(\tH\x00\x12\r\n\x03i64\x18\x02 \x01(\x03H\x00\x12\x0e\n\x04\x62ool\x18\x03 \x01(\x08H\x00\x12+\n\x05tuple\x18\x04 \x01(\x0b\x32\x1a.whitenoise.IndexKey.TupleH\x00\x1a-\n\x05Tuple\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKeyB\x05\n\x03key*?\n\x08\x44\x61taType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04\x42OOL\x10\x01\x12\x07\n\x03I64\x10\x02\x12\x07\n\x03\x46\x36\x34\x10\x03\x12\n\n\x06STRING\x10\x04\x62\x06proto3')
 )
 
 _DATATYPE = _descriptor.EnumDescriptor(
@@ -739,22 +739,22 @@ _PRIVACYUSAGES = _descriptor.Descriptor(
 )
 
 
-_INDEXMAPNODEIDS = _descriptor.Descriptor(
-  name='IndexmapNodeIds',
-  full_name='whitenoise.IndexmapNodeIds',
+_ARGUMENTNODEIDS = _descriptor.Descriptor(
+  name='ArgumentNodeIds',
+  full_name='whitenoise.ArgumentNodeIds',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='keys', full_name='whitenoise.IndexmapNodeIds.keys', index=0,
+      name='keys', full_name='whitenoise.ArgumentNodeIds.keys', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='values', full_name='whitenoise.IndexmapNodeIds.values', index=1,
+      name='values', full_name='whitenoise.ArgumentNodeIds.values', index=1,
       number=2, type=13, cpp_type=3, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -918,7 +918,7 @@ _PRIVACYUSAGE.oneofs_by_name['distance'].fields.append(
   _PRIVACYUSAGE.fields_by_name['approximate'])
 _PRIVACYUSAGE.fields_by_name['approximate'].containing_oneof = _PRIVACYUSAGE.oneofs_by_name['distance']
 _PRIVACYUSAGES.fields_by_name['values'].message_type = _PRIVACYUSAGE
-_INDEXMAPNODEIDS.fields_by_name['keys'].message_type = _INDEXKEY
+_ARGUMENTNODEIDS.fields_by_name['keys'].message_type = _INDEXKEY
 _INDEXKEY_TUPLE.fields_by_name['values'].message_type = _INDEXKEY
 _INDEXKEY_TUPLE.containing_type = _INDEXKEY
 _INDEXKEY.fields_by_name['tuple'].message_type = _INDEXKEY_TUPLE
@@ -952,7 +952,7 @@ DESCRIPTOR.message_types_by_name['Array'] = _ARRAY
 DESCRIPTOR.message_types_by_name['Jagged'] = _JAGGED
 DESCRIPTOR.message_types_by_name['PrivacyUsage'] = _PRIVACYUSAGE
 DESCRIPTOR.message_types_by_name['PrivacyUsages'] = _PRIVACYUSAGES
-DESCRIPTOR.message_types_by_name['IndexmapNodeIds'] = _INDEXMAPNODEIDS
+DESCRIPTOR.message_types_by_name['ArgumentNodeIds'] = _ARGUMENTNODEIDS
 DESCRIPTOR.message_types_by_name['IndexKey'] = _INDEXKEY
 DESCRIPTOR.enum_types_by_name['DataType'] = _DATATYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -1091,12 +1091,12 @@ PrivacyUsages = _reflection.GeneratedProtocolMessageType('PrivacyUsages', (_mess
   })
 _sym_db.RegisterMessage(PrivacyUsages)
 
-IndexmapNodeIds = _reflection.GeneratedProtocolMessageType('IndexmapNodeIds', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAPNODEIDS,
+ArgumentNodeIds = _reflection.GeneratedProtocolMessageType('ArgumentNodeIds', (_message.Message,), {
+  'DESCRIPTOR' : _ARGUMENTNODEIDS,
   '__module__' : 'value_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapNodeIds)
+  # @@protoc_insertion_point(class_scope:whitenoise.ArgumentNodeIds)
   })
-_sym_db.RegisterMessage(IndexmapNodeIds)
+_sym_db.RegisterMessage(ArgumentNodeIds)
 
 IndexKey = _reflection.GeneratedProtocolMessageType('IndexKey', (_message.Message,), {
 

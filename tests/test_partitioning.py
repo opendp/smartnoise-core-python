@@ -294,3 +294,79 @@ def test_dataframe_partitioning_2():
             for key in partitioned.partition_keys
         }))
         print(analysis.privacy_usage)
+
+
+def test_map_1():
+    # map a count over all dataframe partitions
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        partitioned = wn.partition(
+            data,
+            by=wn.to_bool(data['sex'], true_label="1"))
+
+        counts = wn.dp_count(
+            partitioned,
+            privacy_usage={"epsilon": 0.5})
+
+        print(counts.value)
+        print(analysis.privacy_usage)
+
+
+def test_map_2():
+    # map a count over a large number of tuple partitions of dataframes
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        grouper = wn.clamp(
+            data[['sex', 'educ']],
+            categories=[['0', '1'],
+                        [str(i) for i in range(14)]],
+            null_value='-1')
+        partitioned = wn.partition(data, by=grouper)
+
+        counts = wn.dp_count(
+            partitioned,
+            privacy_usage={"epsilon": 0.5})
+
+        print(counts.value)
+        print(analysis.privacy_usage)
+
+
+def test_map_3():
+    # chain multiple maps over an array partition with implicit preprocessing
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        partitioned = wn.partition(
+            wn.to_float(data['age']),
+            by=wn.to_bool(data['sex'], true_label="1"))
+
+        means = wn.dp_mean(
+            partitioned,
+            privacy_usage={'epsilon': 0.1},
+            data_rows=500,
+            data_lower=0., data_upper=15.)
+
+        print(means.value)
+        print(analysis.privacy_usage)
+
+
+def test_map_4():
+    # chain multiple mapped releases over a partition with implicit preprocessing
+    with wn.Analysis() as analysis:
+        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        partitioned = wn.partition(
+            wn.to_float(data['age']),
+            by=wn.to_bool(data['sex'], true_label="1"))
+
+        means = wn.dp_mean(
+            partitioned,
+            privacy_usage={'epsilon': 0.5},
+            data_rows=wn.row_max(
+                1, wn.dp_count(partitioned, privacy_usage={'epsilon': 0.5})),
+            data_lower=0., data_upper=15.)
+
+        print(means.value)
+        # print(analysis.privacy_usage)

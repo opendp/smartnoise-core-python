@@ -160,7 +160,7 @@ class Component(object):
         response = core_library.privacy_usage_to_accuracy(
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
-            properties=serialize_indexmap_value_properties(properties),
+            properties=serialize_argument_properties(properties),
             alpha=alpha)
 
         return [accuracy.value for accuracy in response.values]
@@ -181,7 +181,7 @@ class Component(object):
         privacy_usages = core_library.accuracy_to_privacy_usage(
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
-            properties=serialize_indexmap_value_properties({
+            properties=serialize_argument_properties({
                 name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg
             }),
             accuracies=base_pb2.Accuracies(values=[
@@ -291,7 +291,7 @@ class Component(object):
     @property
     def partition_keys(self):
         try:
-            keys = self.properties.indexmap.children.keys
+            keys = self.properties.partitions.keys
             value = [parse_index_key(i) for i in keys]
             if not value:
                 return None

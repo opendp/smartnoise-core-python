@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\tapi.proto\x12\nwhitenoise\x1a\nbase.proto\x1a\x10\x63omponents.proto\x1a\x0bvalue.proto\"g\n\x17RequestValidateAnalysis\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\"j\n\x1aRequestComputePrivacyUsage\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\"e\n\x15RequestGenerateReport\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\"v\n\x14RequestGetProperties\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x10\n\x08node_ids\x18\x03 \x03(\r\"\xe9\x01\n\x1dRequestAccuracyToPrivacyUsage\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12(\n\tcomponent\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x03 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12*\n\naccuracies\x18\x04 \x01(\x0b\x32\x16.whitenoise.Accuracies\"\xcc\x01\n\x1dRequestPrivacyUsageToAccuracy\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12(\n\tcomponent\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x03 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\r\n\x05\x61lpha\x18\x04 \x01(\x01\"\x94\x02\n\x16RequestExpandComponent\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x02 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x32\n\targuments\x18\x03 \x01(\x0b\x32\x1f.whitenoise.IndexmapReleaseNode\x12\x39\n\x12privacy_definition\x18\x04 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x14\n\x0c\x63omponent_id\x18\x05 \x01(\r\x12\x12\n\nmaximum_id\x18\x06 \x01(\r\"\xa2\x01\n\x0eRequestRelease\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x13\n\x0bstack_trace\x18\n \x01(\x08\x12-\n\x0c\x66ilter_level\x18\x0b \x01(\x0e\x32\x17.whitenoise.FilterLevel\"\xb4\x01\n\x18ResponseValidateAnalysis\x12>\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32..whitenoise.ResponseValidateAnalysis.ValidatedH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x1a+\n\tValidated\x12\r\n\x05value\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\tB\x07\n\x05value\"t\n\x1bResponseComputePrivacyUsage\x12(\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x18.whitenoise.PrivacyUsageH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"U\n\x16ResponseGenerateReport\x12\x0e\n\x04\x64\x61ta\x18\x01 \x01(\tH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"q\n\x15ResponseGetProperties\x12+\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x1b.whitenoise.GraphPropertiesH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"x\n\x1eResponseAccuracyToPrivacyUsage\x12)\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x19.whitenoise.PrivacyUsagesH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"u\n\x1eResponsePrivacyUsageToAccuracy\x12&\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x16.whitenoise.AccuraciesH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"v\n\x17ResponseExpandComponent\x12.\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x1e.whitenoise.ComponentExpansionH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"\xc9\x01\n\x0fResponseRelease\x12\x33\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32#.whitenoise.ResponseRelease.SuccessH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x1aT\n\x07Success\x12$\n\x07release\x18\x01 \x01(\x0b\x32\x13.whitenoise.Release\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.ErrorB\x07\n\x05valueb\x06proto3')
+  serialized_pb=_b('\n\tapi.proto\x12\nwhitenoise\x1a\nbase.proto\x1a\x10\x63omponents.proto\x1a\x0bvalue.proto\"g\n\x17RequestValidateAnalysis\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\"j\n\x1aRequestComputePrivacyUsage\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\"e\n\x15RequestGenerateReport\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\"v\n\x14RequestGetProperties\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x10\n\x08node_ids\x18\x03 \x03(\r\"\xe4\x01\n\x1dRequestAccuracyToPrivacyUsage\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12(\n\tcomponent\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component\x12\x32\n\nproperties\x18\x03 \x01(\x0b\x32\x1e.whitenoise.ArgumentProperties\x12*\n\naccuracies\x18\x04 \x01(\x0b\x32\x16.whitenoise.Accuracies\"\xc7\x01\n\x1dRequestPrivacyUsageToAccuracy\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12(\n\tcomponent\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component\x12\x32\n\nproperties\x18\x03 \x01(\x0b\x32\x1e.whitenoise.ArgumentProperties\x12\r\n\x05\x61lpha\x18\x04 \x01(\x01\"\x8f\x02\n\x16RequestExpandComponent\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x32\n\nproperties\x18\x02 \x01(\x0b\x32\x1e.whitenoise.ArgumentProperties\x12\x32\n\targuments\x18\x03 \x01(\x0b\x32\x1f.whitenoise.IndexmapReleaseNode\x12\x39\n\x12privacy_definition\x18\x04 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x14\n\x0c\x63omponent_id\x18\x05 \x01(\r\x12\x12\n\nmaximum_id\x18\x06 \x01(\r\"\xa2\x01\n\x0eRequestRelease\x12&\n\x08\x61nalysis\x18\x01 \x01(\x0b\x32\x14.whitenoise.Analysis\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x13\n\x0bstack_trace\x18\n \x01(\x08\x12-\n\x0c\x66ilter_level\x18\x0b \x01(\x0e\x32\x17.whitenoise.FilterLevel\"\xb4\x01\n\x18ResponseValidateAnalysis\x12>\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32..whitenoise.ResponseValidateAnalysis.ValidatedH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x1a+\n\tValidated\x12\r\n\x05value\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\tB\x07\n\x05value\"t\n\x1bResponseComputePrivacyUsage\x12(\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x18.whitenoise.PrivacyUsageH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"U\n\x16ResponseGenerateReport\x12\x0e\n\x04\x64\x61ta\x18\x01 \x01(\tH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"q\n\x15ResponseGetProperties\x12+\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x1b.whitenoise.GraphPropertiesH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"x\n\x1eResponseAccuracyToPrivacyUsage\x12)\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x19.whitenoise.PrivacyUsagesH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"u\n\x1eResponsePrivacyUsageToAccuracy\x12&\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x16.whitenoise.AccuraciesH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"v\n\x17ResponseExpandComponent\x12.\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32\x1e.whitenoise.ComponentExpansionH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x42\x07\n\x05value\"\xc9\x01\n\x0fResponseRelease\x12\x33\n\x04\x64\x61ta\x18\x01 \x01(\x0b\x32#.whitenoise.ResponseRelease.SuccessH\x00\x12\"\n\x05\x65rror\x18\x02 \x01(\x0b\x32\x11.whitenoise.ErrorH\x00\x1aT\n\x07Success\x12$\n\x07release\x18\x01 \x01(\x0b\x32\x13.whitenoise.Release\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.ErrorB\x07\n\x05valueb\x06proto3')
   ,
   dependencies=[base__pb2.DESCRIPTOR,components__pb2.DESCRIPTOR,value__pb2.DESCRIPTOR,])
 
@@ -237,7 +237,7 @@ _REQUESTACCURACYTOPRIVACYUSAGE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=505,
-  serialized_end=738,
+  serialized_end=733,
 )
 
 
@@ -288,8 +288,8 @@ _REQUESTPRIVACYUSAGETOACCURACY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=741,
-  serialized_end=945,
+  serialized_start=736,
+  serialized_end=935,
 )
 
 
@@ -354,8 +354,8 @@ _REQUESTEXPANDCOMPONENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=948,
-  serialized_end=1224,
+  serialized_start=938,
+  serialized_end=1209,
 )
 
 
@@ -406,8 +406,8 @@ _REQUESTRELEASE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1227,
-  serialized_end=1389,
+  serialized_start=1212,
+  serialized_end=1374,
 )
 
 
@@ -444,8 +444,8 @@ _RESPONSEVALIDATEANALYSIS_VALIDATED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1520,
-  serialized_end=1563,
+  serialized_start=1505,
+  serialized_end=1548,
 )
 
 _RESPONSEVALIDATEANALYSIS = _descriptor.Descriptor(
@@ -484,8 +484,8 @@ _RESPONSEVALIDATEANALYSIS = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseValidateAnalysis.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1392,
-  serialized_end=1572,
+  serialized_start=1377,
+  serialized_end=1557,
 )
 
 
@@ -525,8 +525,8 @@ _RESPONSECOMPUTEPRIVACYUSAGE = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseComputePrivacyUsage.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1574,
-  serialized_end=1690,
+  serialized_start=1559,
+  serialized_end=1675,
 )
 
 
@@ -566,8 +566,8 @@ _RESPONSEGENERATEREPORT = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseGenerateReport.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1692,
-  serialized_end=1777,
+  serialized_start=1677,
+  serialized_end=1762,
 )
 
 
@@ -607,8 +607,8 @@ _RESPONSEGETPROPERTIES = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseGetProperties.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1779,
-  serialized_end=1892,
+  serialized_start=1764,
+  serialized_end=1877,
 )
 
 
@@ -648,8 +648,8 @@ _RESPONSEACCURACYTOPRIVACYUSAGE = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseAccuracyToPrivacyUsage.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1894,
-  serialized_end=2014,
+  serialized_start=1879,
+  serialized_end=1999,
 )
 
 
@@ -689,8 +689,8 @@ _RESPONSEPRIVACYUSAGETOACCURACY = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponsePrivacyUsageToAccuracy.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2016,
-  serialized_end=2133,
+  serialized_start=2001,
+  serialized_end=2118,
 )
 
 
@@ -730,8 +730,8 @@ _RESPONSEEXPANDCOMPONENT = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseExpandComponent.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2135,
-  serialized_end=2253,
+  serialized_start=2120,
+  serialized_end=2238,
 )
 
 
@@ -768,8 +768,8 @@ _RESPONSERELEASE_SUCCESS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2364,
-  serialized_end=2448,
+  serialized_start=2349,
+  serialized_end=2433,
 )
 
 _RESPONSERELEASE = _descriptor.Descriptor(
@@ -808,8 +808,8 @@ _RESPONSERELEASE = _descriptor.Descriptor(
       name='value', full_name='whitenoise.ResponseRelease.value',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2256,
-  serialized_end=2457,
+  serialized_start=2241,
+  serialized_end=2442,
 )
 
 _REQUESTVALIDATEANALYSIS.fields_by_name['analysis'].message_type = base__pb2._ANALYSIS
@@ -822,13 +822,13 @@ _REQUESTGETPROPERTIES.fields_by_name['analysis'].message_type = base__pb2._ANALY
 _REQUESTGETPROPERTIES.fields_by_name['release'].message_type = base__pb2._RELEASE
 _REQUESTACCURACYTOPRIVACYUSAGE.fields_by_name['privacy_definition'].message_type = base__pb2._PRIVACYDEFINITION
 _REQUESTACCURACYTOPRIVACYUSAGE.fields_by_name['component'].message_type = components__pb2._COMPONENT
-_REQUESTACCURACYTOPRIVACYUSAGE.fields_by_name['properties'].message_type = base__pb2._INDEXMAPVALUEPROPERTIES
+_REQUESTACCURACYTOPRIVACYUSAGE.fields_by_name['properties'].message_type = base__pb2._ARGUMENTPROPERTIES
 _REQUESTACCURACYTOPRIVACYUSAGE.fields_by_name['accuracies'].message_type = base__pb2._ACCURACIES
 _REQUESTPRIVACYUSAGETOACCURACY.fields_by_name['privacy_definition'].message_type = base__pb2._PRIVACYDEFINITION
 _REQUESTPRIVACYUSAGETOACCURACY.fields_by_name['component'].message_type = components__pb2._COMPONENT
-_REQUESTPRIVACYUSAGETOACCURACY.fields_by_name['properties'].message_type = base__pb2._INDEXMAPVALUEPROPERTIES
+_REQUESTPRIVACYUSAGETOACCURACY.fields_by_name['properties'].message_type = base__pb2._ARGUMENTPROPERTIES
 _REQUESTEXPANDCOMPONENT.fields_by_name['component'].message_type = components__pb2._COMPONENT
-_REQUESTEXPANDCOMPONENT.fields_by_name['properties'].message_type = base__pb2._INDEXMAPVALUEPROPERTIES
+_REQUESTEXPANDCOMPONENT.fields_by_name['properties'].message_type = base__pb2._ARGUMENTPROPERTIES
 _REQUESTEXPANDCOMPONENT.fields_by_name['arguments'].message_type = base__pb2._INDEXMAPRELEASENODE
 _REQUESTEXPANDCOMPONENT.fields_by_name['privacy_definition'].message_type = base__pb2._PRIVACYDEFINITION
 _REQUESTRELEASE.fields_by_name['analysis'].message_type = base__pb2._ANALYSIS

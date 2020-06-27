@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='whitenoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nbase.proto\x12\nwhitenoise\x1a\x0bvalue.proto\x1a\x10\x63omponents.proto\"\x18\n\x05\x45rror\x12\x0f\n\x07message\x18\x01 \x01(\t\"~\n\x08\x41nalysis\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x37\n\x11\x63omputation_graph\x18\x02 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\"\xb3\x02\n\x11PrivacyDefinition\x12\x12\n\ngroup_size\x18\x01 \x01(\r\x12>\n\x0bneighboring\x18\x02 \x01(\x0e\x32).whitenoise.PrivacyDefinition.Neighboring\x12\x1f\n\x17strict_parameter_checks\x18\x03 \x01(\x08\x12\x18\n\x10protect_overflow\x18\x04 \x01(\x08\x12\x1c\n\x14protect_elapsed_time\x18\x05 \x01(\x08\x12\"\n\x1aprotect_memory_utilization\x18\x06 \x01(\x08\x12\x1e\n\x16protect_floating_point\x18\x07 \x01(\x08\"-\n\x0bNeighboring\x12\x0e\n\nSUBSTITUTE\x10\x00\x12\x0e\n\nADD_REMOVE\x10\x01\"\x8f\x01\n\x10\x43omputationGraph\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.whitenoise.ComputationGraph.ValueEntry\x1a\x43\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\"\x82\x01\n\x07Release\x12/\n\x06values\x18\x01 \x03(\x0b\x32\x1f.whitenoise.Release.ValuesEntry\x1a\x46\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xe2\x01\n\x0fValueProperties\x12\x32\n\x08indexmap\x18\x01 \x01(\x0b\x32\x1e.whitenoise.IndexmapPropertiesH\x00\x12,\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ArrayPropertiesH\x00\x12.\n\x06jagged\x18\x03 \x01(\x0b\x32\x1c.whitenoise.JaggedPropertiesH\x00\x12\x32\n\x08\x66unction\x18\x04 \x01(\x0b\x32\x1e.whitenoise.FunctionPropertiesH\x00\x42\t\n\x07variant\"\xad\x01\n\x12IndexmapProperties\x12\x35\n\x08\x63hildren\x18\x01 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12\x37\n\x07variant\x18\x02 \x01(\x0e\x32&.whitenoise.IndexmapProperties.Variant\"\'\n\x07Variant\x12\r\n\tDATAFRAME\x10\x00\x12\r\n\tPARTITION\x10\x01\"j\n\x17IndexmapValueProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"\xa9\x01\n\x14\x41ggregatorProperties\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x37\n\nproperties\x18\x02 \x01(\x0b\x32#.whitenoise.IndexmapValueProperties\x12.\n\x13lipschitz_constants\x18\x03 \x01(\x0b\x32\x11.whitenoise.Value\"\x9d\x04\n\x0f\x41rrayProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12(\n\x0bnum_columns\x18\x02 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x0f\n\x07nullity\x18\x03 \x01(\x08\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12\x34\n\naggregator\x18\x05 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x06 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x07 \x01(\x08\x12\'\n\ndataset_id\x18\x08 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x14\n\x0cis_not_empty\x18\t \x01(\x08\x12+\n\x0e\x64imensionality\x18\n \x01(\x0b\x32\x13.whitenoise.I64Null\x12%\n\x08group_id\x18\x0b \x03(\x0b\x32\x13.whitenoise.GroupId\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"f\n\x10NatureContinuous\x12(\n\x07minimum\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dNull\x12(\n\x07maximum\x18\x02 \x01(\x0b\x32\x17.whitenoise.Array1dNull\";\n\x11NatureCategorical\x12&\n\ncategories\x18\x01 \x01(\x0b\x32\x12.whitenoise.Jagged\"D\n\x07GroupId\x12\x14\n\x0cpartition_id\x18\x01 \x01(\r\x12#\n\x05index\x18\x02 \x01(\x0b\x32\x14.whitenoise.IndexKey\"\xb7\x02\n\x10JaggedProperties\x12+\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x16.whitenoise.Array1dI64\x12\x0f\n\x07nullity\x18\x02 \x01(\x08\x12\x34\n\naggregator\x18\x03 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x04 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x05 \x01(\x08\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"(\n\x12\x46unctionProperties\x12\x12\n\nreleasable\x18\x01 \x01(\x08\"\xc7\x01\n\x0fGraphProperties\x12?\n\nproperties\x18\x01 \x03(\x0b\x32+.whitenoise.GraphProperties.PropertiesEntry\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"2\n\nAccuracies\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.Accuracy\"(\n\x08\x41\x63\x63uracy\x12\r\n\x05value\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\x8b\x04\n\x12\x43omponentExpansion\x12O\n\x11\x63omputation_graph\x18\x01 \x03(\x0b\x32\x34.whitenoise.ComponentExpansion.ComputationGraphEntry\x12\x42\n\nproperties\x18\x02 \x03(\x0b\x32..whitenoise.ComponentExpansion.PropertiesEntry\x12>\n\x08releases\x18\x03 \x03(\x0b\x32,.whitenoise.ComponentExpansion.ReleasesEntry\x12\x11\n\ttraversal\x18\x04 \x03(\r\x12#\n\x08warnings\x18\x05 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x15\x43omputationGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\x1aH\n\rReleasesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xad\x01\n\x05Value\x12\"\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x11.whitenoise.ArrayH\x00\x12(\n\x08indexmap\x18\x03 \x01(\x0b\x32\x14.whitenoise.IndexmapH\x00\x12$\n\x06jagged\x18\x04 \x01(\x0b\x32\x12.whitenoise.JaggedH\x00\x12(\n\x08\x66unction\x18\x05 \x01(\x0b\x32\x14.whitenoise.FunctionH\x00\x42\x06\n\x04\x64\x61ta\"Q\n\x08Indexmap\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"\xb7\x02\n\x08\x46unction\x12\x37\n\x11\x63omputation_graph\x18\x01 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x36\n\targuments\x18\x03 \x03(\x0b\x32#.whitenoise.Function.ArgumentsEntry\x12\x32\n\x07outputs\x18\x04 \x03(\x0b\x32!.whitenoise.Function.OutputsEntry\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x1a.\n\x0cOutputsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\"r\n\x0bReleaseNode\x12 \n\x05value\x18\x01 \x01(\x0b\x32\x11.whitenoise.Value\x12\x31\n\x0eprivacy_usages\x18\x02 \x01(\x0b\x32\x19.whitenoise.PrivacyUsages\x12\x0e\n\x06public\x18\x03 \x01(\x08\"b\n\x13IndexmapReleaseNode\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\'\n\x06values\x18\x02 \x03(\x0b\x32\x17.whitenoise.ReleaseNode*8\n\x0b\x46ilterLevel\x12\n\n\x06PUBLIC\x10\x00\x12\x14\n\x10PUBLIC_AND_PRIOR\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x62\x06proto3')
+  serialized_pb=_b('\n\nbase.proto\x12\nwhitenoise\x1a\x0bvalue.proto\x1a\x10\x63omponents.proto\"\x18\n\x05\x45rror\x12\x0f\n\x07message\x18\x01 \x01(\t\"~\n\x08\x41nalysis\x12\x39\n\x12privacy_definition\x18\x01 \x01(\x0b\x32\x1d.whitenoise.PrivacyDefinition\x12\x37\n\x11\x63omputation_graph\x18\x02 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\"\xb3\x02\n\x11PrivacyDefinition\x12\x12\n\ngroup_size\x18\x01 \x01(\r\x12>\n\x0bneighboring\x18\x02 \x01(\x0e\x32).whitenoise.PrivacyDefinition.Neighboring\x12\x1f\n\x17strict_parameter_checks\x18\x03 \x01(\x08\x12\x18\n\x10protect_overflow\x18\x04 \x01(\x08\x12\x1c\n\x14protect_elapsed_time\x18\x05 \x01(\x08\x12\"\n\x1aprotect_memory_utilization\x18\x06 \x01(\x08\x12\x1e\n\x16protect_floating_point\x18\x07 \x01(\x08\"-\n\x0bNeighboring\x12\x0e\n\nSUBSTITUTE\x10\x00\x12\x0e\n\nADD_REMOVE\x10\x01\"\x8f\x01\n\x10\x43omputationGraph\x12\x36\n\x05value\x18\x01 \x03(\x0b\x32\'.whitenoise.ComputationGraph.ValueEntry\x1a\x43\n\nValueEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\"\x82\x01\n\x07Release\x12/\n\x06values\x18\x01 \x03(\x0b\x32\x1f.whitenoise.Release.ValuesEntry\x1a\x46\n\x0bValuesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\x9c\x02\n\x0fValueProperties\x12\x34\n\tdataframe\x18\x01 \x01(\x0b\x32\x1f.whitenoise.DataframePropertiesH\x00\x12\x36\n\npartitions\x18\x02 \x01(\x0b\x32 .whitenoise.PartitionsPropertiesH\x00\x12,\n\x05\x61rray\x18\x03 \x01(\x0b\x32\x1b.whitenoise.ArrayPropertiesH\x00\x12.\n\x06jagged\x18\x04 \x01(\x0b\x32\x1c.whitenoise.JaggedPropertiesH\x00\x12\x32\n\x08\x66unction\x18\x05 \x01(\x0b\x32\x1e.whitenoise.FunctionPropertiesH\x00\x42\t\n\x07variant\"e\n\x12\x41rgumentProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"f\n\x13\x44\x61taframeProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"g\n\x14PartitionsProperties\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12+\n\x06values\x18\x02 \x03(\x0b\x32\x1b.whitenoise.ValueProperties\"\xa4\x01\n\x14\x41ggregatorProperties\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.whitenoise.Component\x12\x32\n\nproperties\x18\x02 \x01(\x0b\x32\x1e.whitenoise.ArgumentProperties\x12.\n\x13lipschitz_constants\x18\x03 \x01(\x0b\x32\x11.whitenoise.Value\"\x9d\x04\n\x0f\x41rrayProperties\x12(\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x13.whitenoise.I64Null\x12(\n\x0bnum_columns\x18\x02 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x0f\n\x07nullity\x18\x03 \x01(\x08\x12+\n\x0b\x63_stability\x18\x04 \x01(\x0b\x32\x16.whitenoise.Array1dF64\x12\x34\n\naggregator\x18\x05 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x06 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x07 \x01(\x08\x12\'\n\ndataset_id\x18\x08 \x01(\x0b\x32\x13.whitenoise.I64Null\x12\x14\n\x0cis_not_empty\x18\t \x01(\x08\x12+\n\x0e\x64imensionality\x18\n \x01(\x0b\x32\x13.whitenoise.I64Null\x12%\n\x08group_id\x18\x0b \x03(\x0b\x32\x13.whitenoise.GroupId\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"f\n\x10NatureContinuous\x12(\n\x07minimum\x18\x01 \x01(\x0b\x32\x17.whitenoise.Array1dNull\x12(\n\x07maximum\x18\x02 \x01(\x0b\x32\x17.whitenoise.Array1dNull\";\n\x11NatureCategorical\x12&\n\ncategories\x18\x01 \x01(\x0b\x32\x12.whitenoise.Jagged\"D\n\x07GroupId\x12\x14\n\x0cpartition_id\x18\x01 \x01(\r\x12#\n\x05index\x18\x02 \x01(\x0b\x32\x14.whitenoise.IndexKey\"\xb7\x02\n\x10JaggedProperties\x12+\n\x0bnum_records\x18\x01 \x01(\x0b\x32\x16.whitenoise.Array1dI64\x12\x0f\n\x07nullity\x18\x02 \x01(\x08\x12\x34\n\naggregator\x18\x03 \x01(\x0b\x32 .whitenoise.AggregatorProperties\x12\'\n\tdata_type\x18\x04 \x01(\x0e\x32\x14.whitenoise.DataType\x12\x12\n\nreleasable\x18\x05 \x01(\x08\x12\x32\n\ncontinuous\x18\x64 \x01(\x0b\x32\x1c.whitenoise.NatureContinuousH\x00\x12\x34\n\x0b\x63\x61tegorical\x18\x65 \x01(\x0b\x32\x1d.whitenoise.NatureCategoricalH\x00\x42\x08\n\x06nature\"(\n\x12\x46unctionProperties\x12\x12\n\nreleasable\x18\x01 \x01(\x08\"\xc7\x01\n\x0fGraphProperties\x12?\n\nproperties\x18\x01 \x03(\x0b\x32+.whitenoise.GraphProperties.PropertiesEntry\x12#\n\x08warnings\x18\x02 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\"2\n\nAccuracies\x12$\n\x06values\x18\x01 \x03(\x0b\x32\x14.whitenoise.Accuracy\"(\n\x08\x41\x63\x63uracy\x12\r\n\x05value\x18\x01 \x01(\x01\x12\r\n\x05\x61lpha\x18\x02 \x01(\x01\"\x8b\x04\n\x12\x43omponentExpansion\x12O\n\x11\x63omputation_graph\x18\x01 \x03(\x0b\x32\x34.whitenoise.ComponentExpansion.ComputationGraphEntry\x12\x42\n\nproperties\x18\x02 \x03(\x0b\x32..whitenoise.ComponentExpansion.PropertiesEntry\x12>\n\x08releases\x18\x03 \x03(\x0b\x32,.whitenoise.ComponentExpansion.ReleasesEntry\x12\x11\n\ttraversal\x18\x04 \x03(\r\x12#\n\x08warnings\x18\x05 \x03(\x0b\x32\x11.whitenoise.Error\x1aN\n\x15\x43omputationGraphEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12$\n\x05value\x18\x02 \x01(\x0b\x32\x15.whitenoise.Component:\x02\x38\x01\x1aN\n\x0fPropertiesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12*\n\x05value\x18\x02 \x01(\x0b\x32\x1b.whitenoise.ValueProperties:\x02\x38\x01\x1aH\n\rReleasesEntry\x12\x0b\n\x03key\x18\x01 \x01(\r\x12&\n\x05value\x18\x02 \x01(\x0b\x32\x17.whitenoise.ReleaseNode:\x02\x38\x01\"\xdd\x01\n\x05Value\x12\"\n\x05\x61rray\x18\x02 \x01(\x0b\x32\x11.whitenoise.ArrayH\x00\x12*\n\tdataframe\x18\x03 \x01(\x0b\x32\x15.whitenoise.DataframeH\x00\x12,\n\npartitions\x18\x04 \x01(\x0b\x32\x16.whitenoise.PartitionsH\x00\x12$\n\x06jagged\x18\x05 \x01(\x0b\x32\x12.whitenoise.JaggedH\x00\x12(\n\x08\x66unction\x18\x06 \x01(\x0b\x32\x14.whitenoise.FunctionH\x00\x42\x06\n\x04\x64\x61ta\"R\n\tDataframe\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"S\n\nPartitions\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12!\n\x06values\x18\x02 \x03(\x0b\x32\x11.whitenoise.Value\"\xb7\x02\n\x08\x46unction\x12\x37\n\x11\x63omputation_graph\x18\x01 \x01(\x0b\x32\x1c.whitenoise.ComputationGraph\x12$\n\x07release\x18\x02 \x01(\x0b\x32\x13.whitenoise.Release\x12\x36\n\targuments\x18\x03 \x03(\x0b\x32#.whitenoise.Function.ArgumentsEntry\x12\x32\n\x07outputs\x18\x04 \x03(\x0b\x32!.whitenoise.Function.OutputsEntry\x1a\x30\n\x0e\x41rgumentsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\x1a.\n\x0cOutputsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\r:\x02\x38\x01\"r\n\x0bReleaseNode\x12 \n\x05value\x18\x01 \x01(\x0b\x32\x11.whitenoise.Value\x12\x31\n\x0eprivacy_usages\x18\x02 \x01(\x0b\x32\x19.whitenoise.PrivacyUsages\x12\x0e\n\x06public\x18\x03 \x01(\x08\"b\n\x13IndexmapReleaseNode\x12\"\n\x04keys\x18\x01 \x03(\x0b\x32\x14.whitenoise.IndexKey\x12\'\n\x06values\x18\x02 \x03(\x0b\x32\x17.whitenoise.ReleaseNode*8\n\x0b\x46ilterLevel\x12\n\n\x06PUBLIC\x10\x00\x12\x14\n\x10PUBLIC_AND_PRIOR\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x62\x06proto3')
   ,
   dependencies=[value__pb2.DESCRIPTOR,components__pb2.DESCRIPTOR,])
 
@@ -48,8 +48,8 @@ _FILTERLEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=4231,
-  serialized_end=4287,
+  serialized_start=4446,
+  serialized_end=4502,
 )
 _sym_db.RegisterEnumDescriptor(_FILTERLEVEL)
 
@@ -80,28 +80,6 @@ _PRIVACYDEFINITION_NEIGHBORING = _descriptor.EnumDescriptor(
   serialized_end=519,
 )
 _sym_db.RegisterEnumDescriptor(_PRIVACYDEFINITION_NEIGHBORING)
-
-_INDEXMAPPROPERTIES_VARIANT = _descriptor.EnumDescriptor(
-  name='Variant',
-  full_name='whitenoise.IndexmapProperties.Variant',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='DATAFRAME', index=0, number=0,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='PARTITION', index=1, number=1,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=1164,
-  serialized_end=1203,
-)
-_sym_db.RegisterEnumDescriptor(_INDEXMAPPROPERTIES_VARIANT)
 
 
 _ERROR = _descriptor.Descriptor(
@@ -391,29 +369,36 @@ _VALUEPROPERTIES = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='indexmap', full_name='whitenoise.ValueProperties.indexmap', index=0,
+      name='dataframe', full_name='whitenoise.ValueProperties.dataframe', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='array', full_name='whitenoise.ValueProperties.array', index=1,
+      name='partitions', full_name='whitenoise.ValueProperties.partitions', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='jagged', full_name='whitenoise.ValueProperties.jagged', index=2,
+      name='array', full_name='whitenoise.ValueProperties.array', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='function', full_name='whitenoise.ValueProperties.function', index=3,
+      name='jagged', full_name='whitenoise.ValueProperties.jagged', index=3,
       number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='function', full_name='whitenoise.ValueProperties.function', index=4,
+      number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -434,65 +419,26 @@ _VALUEPROPERTIES = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=801,
-  serialized_end=1027,
+  serialized_end=1085,
 )
 
 
-_INDEXMAPPROPERTIES = _descriptor.Descriptor(
-  name='IndexmapProperties',
-  full_name='whitenoise.IndexmapProperties',
+_ARGUMENTPROPERTIES = _descriptor.Descriptor(
+  name='ArgumentProperties',
+  full_name='whitenoise.ArgumentProperties',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='children', full_name='whitenoise.IndexmapProperties.children', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='variant', full_name='whitenoise.IndexmapProperties.variant', index=1,
-      number=2, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-    _INDEXMAPPROPERTIES_VARIANT,
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1030,
-  serialized_end=1203,
-)
-
-
-_INDEXMAPVALUEPROPERTIES = _descriptor.Descriptor(
-  name='IndexmapValueProperties',
-  full_name='whitenoise.IndexmapValueProperties',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='keys', full_name='whitenoise.IndexmapValueProperties.keys', index=0,
+      name='keys', full_name='whitenoise.ArgumentProperties.keys', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='values', full_name='whitenoise.IndexmapValueProperties.values', index=1,
+      name='values', full_name='whitenoise.ArgumentProperties.values', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -510,8 +456,84 @@ _INDEXMAPVALUEPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1205,
-  serialized_end=1311,
+  serialized_start=1087,
+  serialized_end=1188,
+)
+
+
+_DATAFRAMEPROPERTIES = _descriptor.Descriptor(
+  name='DataframeProperties',
+  full_name='whitenoise.DataframeProperties',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='keys', full_name='whitenoise.DataframeProperties.keys', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='whitenoise.DataframeProperties.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1190,
+  serialized_end=1292,
+)
+
+
+_PARTITIONSPROPERTIES = _descriptor.Descriptor(
+  name='PartitionsProperties',
+  full_name='whitenoise.PartitionsProperties',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='keys', full_name='whitenoise.PartitionsProperties.keys', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='whitenoise.PartitionsProperties.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1294,
+  serialized_end=1397,
 )
 
 
@@ -555,8 +577,8 @@ _AGGREGATORPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1314,
-  serialized_end=1483,
+  serialized_start=1400,
+  serialized_end=1564,
 )
 
 
@@ -673,8 +695,8 @@ _ARRAYPROPERTIES = _descriptor.Descriptor(
       name='nature', full_name='whitenoise.ArrayProperties.nature',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1486,
-  serialized_end=2027,
+  serialized_start=1567,
+  serialized_end=2108,
 )
 
 
@@ -711,8 +733,8 @@ _NATURECONTINUOUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2029,
-  serialized_end=2131,
+  serialized_start=2110,
+  serialized_end=2212,
 )
 
 
@@ -742,8 +764,8 @@ _NATURECATEGORICAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2133,
-  serialized_end=2192,
+  serialized_start=2214,
+  serialized_end=2273,
 )
 
 
@@ -780,8 +802,8 @@ _GROUPID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2194,
-  serialized_end=2262,
+  serialized_start=2275,
+  serialized_end=2343,
 )
 
 
@@ -856,8 +878,8 @@ _JAGGEDPROPERTIES = _descriptor.Descriptor(
       name='nature', full_name='whitenoise.JaggedProperties.nature',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2265,
-  serialized_end=2576,
+  serialized_start=2346,
+  serialized_end=2657,
 )
 
 
@@ -887,8 +909,8 @@ _FUNCTIONPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2578,
-  serialized_end=2618,
+  serialized_start=2659,
+  serialized_end=2699,
 )
 
 
@@ -925,8 +947,8 @@ _GRAPHPROPERTIES_PROPERTIESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2742,
-  serialized_end=2820,
+  serialized_start=2823,
+  serialized_end=2901,
 )
 
 _GRAPHPROPERTIES = _descriptor.Descriptor(
@@ -962,8 +984,8 @@ _GRAPHPROPERTIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2621,
-  serialized_end=2820,
+  serialized_start=2702,
+  serialized_end=2901,
 )
 
 
@@ -993,8 +1015,8 @@ _ACCURACIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2822,
-  serialized_end=2872,
+  serialized_start=2903,
+  serialized_end=2953,
 )
 
 
@@ -1031,8 +1053,8 @@ _ACCURACY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2874,
-  serialized_end=2914,
+  serialized_start=2955,
+  serialized_end=2995,
 )
 
 
@@ -1069,8 +1091,8 @@ _COMPONENTEXPANSION_COMPUTATIONGRAPHENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3208,
-  serialized_end=3286,
+  serialized_start=3289,
+  serialized_end=3367,
 )
 
 _COMPONENTEXPANSION_PROPERTIESENTRY = _descriptor.Descriptor(
@@ -1106,8 +1128,8 @@ _COMPONENTEXPANSION_PROPERTIESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2742,
-  serialized_end=2820,
+  serialized_start=2823,
+  serialized_end=2901,
 )
 
 _COMPONENTEXPANSION_RELEASESENTRY = _descriptor.Descriptor(
@@ -1143,8 +1165,8 @@ _COMPONENTEXPANSION_RELEASESENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3368,
-  serialized_end=3440,
+  serialized_start=3449,
+  serialized_end=3521,
 )
 
 _COMPONENTEXPANSION = _descriptor.Descriptor(
@@ -1201,8 +1223,8 @@ _COMPONENTEXPANSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2917,
-  serialized_end=3440,
+  serialized_start=2998,
+  serialized_end=3521,
 )
 
 
@@ -1221,22 +1243,29 @@ _VALUE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='indexmap', full_name='whitenoise.Value.indexmap', index=1,
+      name='dataframe', full_name='whitenoise.Value.dataframe', index=1,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='jagged', full_name='whitenoise.Value.jagged', index=2,
+      name='partitions', full_name='whitenoise.Value.partitions', index=2,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='function', full_name='whitenoise.Value.function', index=3,
+      name='jagged', full_name='whitenoise.Value.jagged', index=3,
       number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='function', full_name='whitenoise.Value.function', index=4,
+      number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1256,27 +1285,27 @@ _VALUE = _descriptor.Descriptor(
       name='data', full_name='whitenoise.Value.data',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=3443,
-  serialized_end=3616,
+  serialized_start=3524,
+  serialized_end=3745,
 )
 
 
-_INDEXMAP = _descriptor.Descriptor(
-  name='Indexmap',
-  full_name='whitenoise.Indexmap',
+_DATAFRAME = _descriptor.Descriptor(
+  name='Dataframe',
+  full_name='whitenoise.Dataframe',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='keys', full_name='whitenoise.Indexmap.keys', index=0,
+      name='keys', full_name='whitenoise.Dataframe.keys', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='values', full_name='whitenoise.Indexmap.values', index=1,
+      name='values', full_name='whitenoise.Dataframe.values', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -1294,8 +1323,46 @@ _INDEXMAP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3618,
-  serialized_end=3699,
+  serialized_start=3747,
+  serialized_end=3829,
+)
+
+
+_PARTITIONS = _descriptor.Descriptor(
+  name='Partitions',
+  full_name='whitenoise.Partitions',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='keys', full_name='whitenoise.Partitions.keys', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='whitenoise.Partitions.values', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3831,
+  serialized_end=3914,
 )
 
 
@@ -1332,8 +1399,8 @@ _FUNCTION_ARGUMENTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3917,
-  serialized_end=3965,
+  serialized_start=4132,
+  serialized_end=4180,
 )
 
 _FUNCTION_OUTPUTSENTRY = _descriptor.Descriptor(
@@ -1369,8 +1436,8 @@ _FUNCTION_OUTPUTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3967,
-  serialized_end=4013,
+  serialized_start=4182,
+  serialized_end=4228,
 )
 
 _FUNCTION = _descriptor.Descriptor(
@@ -1420,8 +1487,8 @@ _FUNCTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3702,
-  serialized_end=4013,
+  serialized_start=3917,
+  serialized_end=4228,
 )
 
 
@@ -1465,8 +1532,8 @@ _RELEASENODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4015,
-  serialized_end=4129,
+  serialized_start=4230,
+  serialized_end=4344,
 )
 
 
@@ -1503,8 +1570,8 @@ _INDEXMAPRELEASENODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4131,
-  serialized_end=4229,
+  serialized_start=4346,
+  serialized_end=4444,
 )
 
 _ANALYSIS.fields_by_name['privacy_definition'].message_type = _PRIVACYDEFINITION
@@ -1517,13 +1584,17 @@ _COMPUTATIONGRAPH.fields_by_name['value'].message_type = _COMPUTATIONGRAPH_VALUE
 _RELEASE_VALUESENTRY.fields_by_name['value'].message_type = _RELEASENODE
 _RELEASE_VALUESENTRY.containing_type = _RELEASE
 _RELEASE.fields_by_name['values'].message_type = _RELEASE_VALUESENTRY
-_VALUEPROPERTIES.fields_by_name['indexmap'].message_type = _INDEXMAPPROPERTIES
+_VALUEPROPERTIES.fields_by_name['dataframe'].message_type = _DATAFRAMEPROPERTIES
+_VALUEPROPERTIES.fields_by_name['partitions'].message_type = _PARTITIONSPROPERTIES
 _VALUEPROPERTIES.fields_by_name['array'].message_type = _ARRAYPROPERTIES
 _VALUEPROPERTIES.fields_by_name['jagged'].message_type = _JAGGEDPROPERTIES
 _VALUEPROPERTIES.fields_by_name['function'].message_type = _FUNCTIONPROPERTIES
 _VALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
-  _VALUEPROPERTIES.fields_by_name['indexmap'])
-_VALUEPROPERTIES.fields_by_name['indexmap'].containing_oneof = _VALUEPROPERTIES.oneofs_by_name['variant']
+  _VALUEPROPERTIES.fields_by_name['dataframe'])
+_VALUEPROPERTIES.fields_by_name['dataframe'].containing_oneof = _VALUEPROPERTIES.oneofs_by_name['variant']
+_VALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
+  _VALUEPROPERTIES.fields_by_name['partitions'])
+_VALUEPROPERTIES.fields_by_name['partitions'].containing_oneof = _VALUEPROPERTIES.oneofs_by_name['variant']
 _VALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
   _VALUEPROPERTIES.fields_by_name['array'])
 _VALUEPROPERTIES.fields_by_name['array'].containing_oneof = _VALUEPROPERTIES.oneofs_by_name['variant']
@@ -1533,13 +1604,14 @@ _VALUEPROPERTIES.fields_by_name['jagged'].containing_oneof = _VALUEPROPERTIES.on
 _VALUEPROPERTIES.oneofs_by_name['variant'].fields.append(
   _VALUEPROPERTIES.fields_by_name['function'])
 _VALUEPROPERTIES.fields_by_name['function'].containing_oneof = _VALUEPROPERTIES.oneofs_by_name['variant']
-_INDEXMAPPROPERTIES.fields_by_name['children'].message_type = _INDEXMAPVALUEPROPERTIES
-_INDEXMAPPROPERTIES.fields_by_name['variant'].enum_type = _INDEXMAPPROPERTIES_VARIANT
-_INDEXMAPPROPERTIES_VARIANT.containing_type = _INDEXMAPPROPERTIES
-_INDEXMAPVALUEPROPERTIES.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
-_INDEXMAPVALUEPROPERTIES.fields_by_name['values'].message_type = _VALUEPROPERTIES
+_ARGUMENTPROPERTIES.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_ARGUMENTPROPERTIES.fields_by_name['values'].message_type = _VALUEPROPERTIES
+_DATAFRAMEPROPERTIES.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_DATAFRAMEPROPERTIES.fields_by_name['values'].message_type = _VALUEPROPERTIES
+_PARTITIONSPROPERTIES.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_PARTITIONSPROPERTIES.fields_by_name['values'].message_type = _VALUEPROPERTIES
 _AGGREGATORPROPERTIES.fields_by_name['component'].message_type = components__pb2._COMPONENT
-_AGGREGATORPROPERTIES.fields_by_name['properties'].message_type = _INDEXMAPVALUEPROPERTIES
+_AGGREGATORPROPERTIES.fields_by_name['properties'].message_type = _ARGUMENTPROPERTIES
 _AGGREGATORPROPERTIES.fields_by_name['lipschitz_constants'].message_type = _VALUE
 _ARRAYPROPERTIES.fields_by_name['num_records'].message_type = value__pb2._I64NULL
 _ARRAYPROPERTIES.fields_by_name['num_columns'].message_type = value__pb2._I64NULL
@@ -1588,23 +1660,29 @@ _COMPONENTEXPANSION.fields_by_name['properties'].message_type = _COMPONENTEXPANS
 _COMPONENTEXPANSION.fields_by_name['releases'].message_type = _COMPONENTEXPANSION_RELEASESENTRY
 _COMPONENTEXPANSION.fields_by_name['warnings'].message_type = _ERROR
 _VALUE.fields_by_name['array'].message_type = value__pb2._ARRAY
-_VALUE.fields_by_name['indexmap'].message_type = _INDEXMAP
+_VALUE.fields_by_name['dataframe'].message_type = _DATAFRAME
+_VALUE.fields_by_name['partitions'].message_type = _PARTITIONS
 _VALUE.fields_by_name['jagged'].message_type = value__pb2._JAGGED
 _VALUE.fields_by_name['function'].message_type = _FUNCTION
 _VALUE.oneofs_by_name['data'].fields.append(
   _VALUE.fields_by_name['array'])
 _VALUE.fields_by_name['array'].containing_oneof = _VALUE.oneofs_by_name['data']
 _VALUE.oneofs_by_name['data'].fields.append(
-  _VALUE.fields_by_name['indexmap'])
-_VALUE.fields_by_name['indexmap'].containing_oneof = _VALUE.oneofs_by_name['data']
+  _VALUE.fields_by_name['dataframe'])
+_VALUE.fields_by_name['dataframe'].containing_oneof = _VALUE.oneofs_by_name['data']
+_VALUE.oneofs_by_name['data'].fields.append(
+  _VALUE.fields_by_name['partitions'])
+_VALUE.fields_by_name['partitions'].containing_oneof = _VALUE.oneofs_by_name['data']
 _VALUE.oneofs_by_name['data'].fields.append(
   _VALUE.fields_by_name['jagged'])
 _VALUE.fields_by_name['jagged'].containing_oneof = _VALUE.oneofs_by_name['data']
 _VALUE.oneofs_by_name['data'].fields.append(
   _VALUE.fields_by_name['function'])
 _VALUE.fields_by_name['function'].containing_oneof = _VALUE.oneofs_by_name['data']
-_INDEXMAP.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
-_INDEXMAP.fields_by_name['values'].message_type = _VALUE
+_DATAFRAME.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_DATAFRAME.fields_by_name['values'].message_type = _VALUE
+_PARTITIONS.fields_by_name['keys'].message_type = value__pb2._INDEXKEY
+_PARTITIONS.fields_by_name['values'].message_type = _VALUE
 _FUNCTION_ARGUMENTSENTRY.containing_type = _FUNCTION
 _FUNCTION_OUTPUTSENTRY.containing_type = _FUNCTION
 _FUNCTION.fields_by_name['computation_graph'].message_type = _COMPUTATIONGRAPH
@@ -1621,8 +1699,9 @@ DESCRIPTOR.message_types_by_name['PrivacyDefinition'] = _PRIVACYDEFINITION
 DESCRIPTOR.message_types_by_name['ComputationGraph'] = _COMPUTATIONGRAPH
 DESCRIPTOR.message_types_by_name['Release'] = _RELEASE
 DESCRIPTOR.message_types_by_name['ValueProperties'] = _VALUEPROPERTIES
-DESCRIPTOR.message_types_by_name['IndexmapProperties'] = _INDEXMAPPROPERTIES
-DESCRIPTOR.message_types_by_name['IndexmapValueProperties'] = _INDEXMAPVALUEPROPERTIES
+DESCRIPTOR.message_types_by_name['ArgumentProperties'] = _ARGUMENTPROPERTIES
+DESCRIPTOR.message_types_by_name['DataframeProperties'] = _DATAFRAMEPROPERTIES
+DESCRIPTOR.message_types_by_name['PartitionsProperties'] = _PARTITIONSPROPERTIES
 DESCRIPTOR.message_types_by_name['AggregatorProperties'] = _AGGREGATORPROPERTIES
 DESCRIPTOR.message_types_by_name['ArrayProperties'] = _ARRAYPROPERTIES
 DESCRIPTOR.message_types_by_name['NatureContinuous'] = _NATURECONTINUOUS
@@ -1635,7 +1714,8 @@ DESCRIPTOR.message_types_by_name['Accuracies'] = _ACCURACIES
 DESCRIPTOR.message_types_by_name['Accuracy'] = _ACCURACY
 DESCRIPTOR.message_types_by_name['ComponentExpansion'] = _COMPONENTEXPANSION
 DESCRIPTOR.message_types_by_name['Value'] = _VALUE
-DESCRIPTOR.message_types_by_name['Indexmap'] = _INDEXMAP
+DESCRIPTOR.message_types_by_name['Dataframe'] = _DATAFRAME
+DESCRIPTOR.message_types_by_name['Partitions'] = _PARTITIONS
 DESCRIPTOR.message_types_by_name['Function'] = _FUNCTION
 DESCRIPTOR.message_types_by_name['ReleaseNode'] = _RELEASENODE
 DESCRIPTOR.message_types_by_name['IndexmapReleaseNode'] = _INDEXMAPRELEASENODE
@@ -1700,19 +1780,26 @@ ValueProperties = _reflection.GeneratedProtocolMessageType('ValueProperties', (_
   })
 _sym_db.RegisterMessage(ValueProperties)
 
-IndexmapProperties = _reflection.GeneratedProtocolMessageType('IndexmapProperties', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAPPROPERTIES,
+ArgumentProperties = _reflection.GeneratedProtocolMessageType('ArgumentProperties', (_message.Message,), {
+  'DESCRIPTOR' : _ARGUMENTPROPERTIES,
   '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapProperties)
+  # @@protoc_insertion_point(class_scope:whitenoise.ArgumentProperties)
   })
-_sym_db.RegisterMessage(IndexmapProperties)
+_sym_db.RegisterMessage(ArgumentProperties)
 
-IndexmapValueProperties = _reflection.GeneratedProtocolMessageType('IndexmapValueProperties', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAPVALUEPROPERTIES,
+DataframeProperties = _reflection.GeneratedProtocolMessageType('DataframeProperties', (_message.Message,), {
+  'DESCRIPTOR' : _DATAFRAMEPROPERTIES,
   '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.IndexmapValueProperties)
+  # @@protoc_insertion_point(class_scope:whitenoise.DataframeProperties)
   })
-_sym_db.RegisterMessage(IndexmapValueProperties)
+_sym_db.RegisterMessage(DataframeProperties)
+
+PartitionsProperties = _reflection.GeneratedProtocolMessageType('PartitionsProperties', (_message.Message,), {
+  'DESCRIPTOR' : _PARTITIONSPROPERTIES,
+  '__module__' : 'base_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.PartitionsProperties)
+  })
+_sym_db.RegisterMessage(PartitionsProperties)
 
 AggregatorProperties = _reflection.GeneratedProtocolMessageType('AggregatorProperties', (_message.Message,), {
   'DESCRIPTOR' : _AGGREGATORPROPERTIES,
@@ -1830,12 +1917,19 @@ Value = _reflection.GeneratedProtocolMessageType('Value', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Value)
 
-Indexmap = _reflection.GeneratedProtocolMessageType('Indexmap', (_message.Message,), {
-  'DESCRIPTOR' : _INDEXMAP,
+Dataframe = _reflection.GeneratedProtocolMessageType('Dataframe', (_message.Message,), {
+  'DESCRIPTOR' : _DATAFRAME,
   '__module__' : 'base_pb2'
-  # @@protoc_insertion_point(class_scope:whitenoise.Indexmap)
+  # @@protoc_insertion_point(class_scope:whitenoise.Dataframe)
   })
-_sym_db.RegisterMessage(Indexmap)
+_sym_db.RegisterMessage(Dataframe)
+
+Partitions = _reflection.GeneratedProtocolMessageType('Partitions', (_message.Message,), {
+  'DESCRIPTOR' : _PARTITIONS,
+  '__module__' : 'base_pb2'
+  # @@protoc_insertion_point(class_scope:whitenoise.Partitions)
+  })
+_sym_db.RegisterMessage(Partitions)
 
 Function = _reflection.GeneratedProtocolMessageType('Function', (_message.Message,), {
 

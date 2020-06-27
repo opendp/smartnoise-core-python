@@ -64,7 +64,7 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
         bool: 'bool', float: 'float', int: 'int', str: 'str'
     }[var_type], true_label=True, lower=0, upper=10)
     resized = wn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
-    return wn.dataframe(resized, names=names)
+    return wn.column_bind(resized, names=names)
 
 
 def test_divide():

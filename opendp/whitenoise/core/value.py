@@ -78,7 +78,7 @@ def serialize_component(component):
         if component_child is not None
     }
     return components_pb2.Component(**{
-        'arguments': value_pb2.IndexmapNodeIds(
+        'arguments': value_pb2.ArgumentNodeIds(
             keys=map(serialize_index_key, arguments.keys()),
             values=list(arguments.values())
         ),
@@ -136,15 +136,22 @@ def serialize_array1d(array):
     })
 
 
-def serialize_indexmap(value):
-    return base_pb2.Indexmap(
+def serialize_partitions(value):
+    return base_pb2.Partitions(
         keys=[serialize_index_key(k) for k in value.keys()],
         values=[serialize_value(v) for v in value.values()]
     )
 
 
-def serialize_indexmap_value_properties(value):
-    return base_pb2.IndexmapValueProperties(
+def serialize_dataframe(value):
+    return base_pb2.Dataframe(
+        keys=[serialize_index_key(k) for k in value.keys()],
+        values=[serialize_value(v) for v in value.values()]
+    )
+
+
+def serialize_argument_properties(value):
+    return base_pb2.ArgumentProperties(
         keys=[serialize_index_key(k) for k in value.keys()],
         values=[v for v in value.values()]
     )
@@ -152,9 +159,13 @@ def serialize_indexmap_value_properties(value):
 
 def serialize_value(value, value_format=None):
 
-    if value_format == 'indexmap' or issubclass(type(value), dict):
+    if value_format == 'partitions':
         return base_pb2.Value(
-            indexmap=serialize_indexmap(value)
+            partitions=serialize_partitions(value)
+        )
+    if value_format == 'dataframe' or issubclass(type(value), dict):
+        return base_pb2.Value(
+            dataframe=serialize_dataframe(value)
         )
 
     if value_format == 'jagged':
@@ -177,7 +188,7 @@ def serialize_value(value, value_format=None):
         ))
 
     if value_format is not None and value_format != 'array':
-        raise ValueError('format must be either "array", "jagged", "indexmap" or None')
+        raise ValueError('format must be either "array", "jagged", "dataframe", "partitions" or None')
 
     array = np.array(value)
 
@@ -246,7 +257,11 @@ def parse_array(value):
         return data[0]
 
 
-def parse_indexmap(value):
+def parse_dataframe(value):
+    return {parse_index_key(k): parse_value(v) for k, v in zip(value.keys, value.values)}
+
+
+def parse_partitions(value):
     return {parse_index_key(k): parse_value(v) for k, v in zip(value.keys, value.values)}
 
 
@@ -254,8 +269,11 @@ def parse_value(value):
     if value.HasField("array"):
         return parse_array(value.array)
 
-    if value.HasField("indexmap"):
-        return parse_indexmap(value.indexmap)
+    if value.HasField("partitions"):
+        return parse_partitions(value.partitions)
+
+    if value.HasField("dataframe"):
+        return parse_dataframe(value.dataframe)
 
     if value.HasField("jagged"):
         return parse_jagged(value.jagged)
