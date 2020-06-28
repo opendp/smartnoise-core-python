@@ -361,11 +361,12 @@ def test_map_4():
             wn.to_float(data['age']),
             by=wn.to_bool(data['sex'], true_label="1"))
 
-        counts = wn.dp_count(partitioned, privacy_usage={'epsilon': 0.5})
+        counts = wn.row_max(
+            1, wn.dp_count(partitioned, privacy_usage={'epsilon': 0.5}))
 
         means = wn.dp_mean(
             partitioned,
-            privacy_usage={'epsilon': 0.5},
+            privacy_usage={'epsilon': 0.7},
             data_rows=counts,
             data_lower=0., data_upper=15.)
 
