@@ -19,8 +19,8 @@ import os
 os.environ['RUST_BACKTRACE'] = 'full'
 
 # test_components.test_dp_mean()
-test_histogram()
-# test_partitioning.test_multilayer_partition_1()
+# test_histogram()
+test_partitioning.test_map_4()
 
 # test_components.test_dp_median()
 #
