@@ -23,11 +23,11 @@ class LibraryWrapper(object):
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
         lib_dir = os.path.join(script_dir, "lib")
-        lib_whitenoise_path = os.path.join(lib_dir, "libwhitenoise_ffi" + extension)
+        lib_validator_path = os.path.join(lib_dir, "libwhitenoise_validator" + extension)
+        lib_runtime_path = os.path.join(lib_dir, "libwhitenoise_runtime" + extension)
 
-        self.lib_whitenoise = ctypes.cdll.LoadLibrary(lib_whitenoise_path)
-
-        proto_argtypes = [ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int32]
+        self.lib_validator = ctypes.cdll.LoadLibrary(lib_validator_path)
+        self.lib_runtime = ctypes.cdll.LoadLibrary(lib_runtime_path)
 
         class ByteBuffer(ctypes.Structure):
             _fields_ = [
@@ -35,45 +35,34 @@ class LibraryWrapper(object):
                 ('data', ctypes.POINTER(ctypes.c_uint8))]
 
         # validator
-        self.lib_whitenoise.accuracy_to_privacy_usage.argtypes = proto_argtypes
-        self.lib_whitenoise.compute_privacy_usage.argtypes = proto_argtypes
-        self.lib_whitenoise.expand_component.argtypes = proto_argtypes
-        self.lib_whitenoise.get_properties.argtypes = proto_argtypes
-        self.lib_whitenoise.generate_report.argtypes = proto_argtypes
-        self.lib_whitenoise.privacy_usage_to_accuracy.argtypes = proto_argtypes
-        self.lib_whitenoise.validate_analysis.argtypes = proto_argtypes
+        self.lib_validator.accuracy_to_privacy_usage.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.compute_privacy_usage.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.expand_component.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.get_properties.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.generate_report.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.privacy_usage_to_accuracy.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.validate_analysis.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_validator.whitenoise_validator_destroy_bytebuffer.argtypes = [ByteBuffer]
 
-        self.lib_whitenoise.accuracy_to_privacy_usage.restype = ByteBuffer
-        self.lib_whitenoise.compute_privacy_usage.restype = ByteBuffer
-        self.lib_whitenoise.expand_component.restype = ByteBuffer
-        self.lib_whitenoise.get_properties.restype = ByteBuffer
-        self.lib_whitenoise.generate_report.restype = ByteBuffer
-        self.lib_whitenoise.privacy_usage_to_accuracy.restype = ByteBuffer
-        self.lib_whitenoise.validate_analysis.restype = ByteBuffer
+        self.lib_validator.accuracy_to_privacy_usage.restype = ByteBuffer
+        self.lib_validator.compute_privacy_usage.restype = ByteBuffer
+        self.lib_validator.expand_component.restype = ByteBuffer
+        self.lib_validator.get_properties.restype = ByteBuffer
+        self.lib_validator.generate_report.restype = ByteBuffer
+        self.lib_validator.privacy_usage_to_accuracy.restype = ByteBuffer
+        self.lib_validator.validate_analysis.restype = ByteBuffer
+        self.lib_validator.whitenoise_validator_destroy_bytebuffer.restype = ctypes.c_void_p
 
         # runtime
-        self.lib_whitenoise.release.restype = ByteBuffer
-        self.lib_whitenoise.release.argtypes = proto_argtypes
+        self.lib_runtime.release.restype = ByteBuffer
+        self.lib_runtime.whitenoise_runtime_destroy_bytebuffer.restype = ctypes.c_void_p
 
-        # ffi
-        self.lib_whitenoise.whitenoise_destroy_bytebuffer.restype = ctypes.c_void_p
-        self.lib_whitenoise.whitenoise_destroy_bytebuffer.argtypes = [ByteBuffer]
+        self.lib_runtime.release.argtypes = LibraryWrapper._get_argtypes()
+        self.lib_runtime.whitenoise_runtime_destroy_bytebuffer.argtypes = [ByteBuffer]
 
-        # direct mechanism access
-        self.lib_whitenoise.laplace_mechanism.restype = ctypes.c_double
-        self.lib_whitenoise.laplace_mechanism.argtypes = [
-            ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
-        ]
-
-        self.lib_whitenoise.gaussian_mechanism.restype = ctypes.c_double
-        self.lib_whitenoise.gaussian_mechanism.argtypes = [
-            ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
-        ]
-
-        self.lib_whitenoise.simple_geometric_mechanism.restype = ctypes.c_int64
-        self.lib_whitenoise.simple_geometric_mechanism.argtypes = [
-            ctypes.c_int64, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_int64, ctypes.c_bool
-        ]
+    @staticmethod
+    def _get_argtypes():
+        return [ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int32]
 
     def validate_analysis(self, analysis, release):
         """
@@ -86,9 +75,9 @@ class LibraryWrapper(object):
         """
         return _communicate(
             argument=api_pb2.RequestValidateAnalysis(analysis=analysis, release=release),
-            function=self.lib_whitenoise.validate_analysis,
+            function=self.lib_validator.validate_analysis,
             response_type=api_pb2.ResponseValidateAnalysis,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_validator.whitenoise_validator_destroy_bytebuffer)
 
     def compute_privacy_usage(self, analysis, release):
         """
@@ -101,9 +90,9 @@ class LibraryWrapper(object):
         """
         return _communicate(
             argument=api_pb2.RequestComputePrivacyUsage(analysis=analysis, release=release),
-            function=self.lib_whitenoise.compute_privacy_usage,
+            function=self.lib_validator.compute_privacy_usage,
             response_type=api_pb2.ResponseComputePrivacyUsage,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_validator.whitenoise_validator_destroy_bytebuffer)
 
     def generate_report(self, analysis, release):
         """
@@ -117,9 +106,9 @@ class LibraryWrapper(object):
 
         return _communicate(
             argument=api_pb2.RequestGenerateReport(analysis=analysis, release=release),
-            function=self.lib_whitenoise.generate_report,
+            function=self.lib_validator.generate_report,
             response_type=api_pb2.ResponseGenerateReport,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_validator.whitenoise_validator_destroy_bytebuffer)
 
     def accuracy_to_privacy_usage(self, privacy_definition, component, properties, accuracies):
         """
@@ -138,9 +127,9 @@ class LibraryWrapper(object):
                 component=component,
                 properties=properties,
                 accuracies=accuracies),
-            function=self.lib_whitenoise.accuracy_to_privacy_usage,
+            function=self.lib_validator.accuracy_to_privacy_usage,
             response_type=api_pb2.ResponseAccuracyToPrivacyUsage,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_validator.whitenoise_validator_destroy_bytebuffer)
 
     def privacy_usage_to_accuracy(self, privacy_definition, component, properties, alpha):
         """
@@ -159,25 +148,24 @@ class LibraryWrapper(object):
                 component=component,
                 properties=properties,
                 alpha=alpha),
-            function=self.lib_whitenoise.privacy_usage_to_accuracy,
+            function=self.lib_validator.privacy_usage_to_accuracy,
             response_type=api_pb2.ResponsePrivacyUsageToAccuracy,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_validator.whitenoise_validator_destroy_bytebuffer)
 
-    def get_properties(self, analysis, release, node_ids=None):
+    def get_properties(self, analysis, release):
         """
         FFI Helper. Derive static properties for all components in the graph.
         This function is data agnostic. It calls the validator rust FFI with protobuf objects.
 
         :param analysis: A description of computation
         :param release: A collection of public values
-        :param node_ids: An optional list of node ids to derive properties for
         :return: A dictionary of property sets, one set of properties per component
         """
         return _communicate(
-            argument=api_pb2.RequestGetProperties(analysis=analysis, release=release, node_ids=node_ids),
-            function=self.lib_whitenoise.get_properties,
+            argument=api_pb2.RequestGetProperties(analysis=analysis, release=release),
+            function=self.lib_validator.get_properties,
             response_type=api_pb2.ResponseGetProperties,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_validator.whitenoise_validator_destroy_bytebuffer)
 
     def compute_release(self, analysis, release, stack_trace, filter_level):
         """
@@ -196,33 +184,9 @@ class LibraryWrapper(object):
                 release=release,
                 stack_trace=stack_trace,
                 filter_level=filter_level),
-            function=self.lib_whitenoise.release,
+            function=self.lib_runtime.release,
             response_type=api_pb2.ResponseRelease,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
-
-    def laplace_mechanism(self, value, epsilon, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.laplace_mechanism(
-            ctypes.c_double(value),
-            ctypes.c_double(epsilon),
-            ctypes.c_double(sensitivity),
-            ctypes.c_bool(enforce_constant_time))
-
-    def gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.laplace_mechanism(
-            ctypes.c_double(value),
-            ctypes.c_double(epsilon),
-            ctypes.c_double(delta),
-            ctypes.c_double(sensitivity),
-            ctypes.c_bool(enforce_constant_time))
-
-    def simple_geometric_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):
-        return self.lib_whitenoise.simple_geometric_mechanism(
-            ctypes.c_int64(value),
-            ctypes.c_double(epsilon),
-            ctypes.c_double(sensitivity),
-            ctypes.c_int64(min),
-            ctypes.c_int64(max),
-            ctypes.c_bool(enforce_constant_time))
+            destroy=self.lib_runtime.whitenoise_runtime_destroy_bytebuffer)
 
 
 def _communicate(function, destroy, argument, response_type):
