@@ -3,7 +3,7 @@ import random
 import string
 import numpy as np
 
-from test_base import TEST_CSV_PATH, test_csv_names
+from tests.test_base import TEST_CSV_PATH, test_csv_names
 
 
 def generate_bools():

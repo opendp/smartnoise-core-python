@@ -11,7 +11,7 @@ from datetime import datetime
 import subprocess
 import shutil
 
-# get the environment variable to increase compiler optimization
+# decrease compiler optimization for faster builds
 WN_DEBUG = os.environ.get("WN_DEBUG", "false") != "false"
 # get the environment variable to use precompiled external libraries
 WN_USE_SYSTEM_LIBS = os.environ.get("WN_USE_SYSTEM_LIBS", "false") != "false"

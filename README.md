@@ -100,6 +100,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 4. Generate code (rerun anytime the Core changes)
     ```shell script
+    export WN_DEBUG=1 # optional- for faster compilation/slower execution
     python3 scripts/code_generation.py
     ```
 
