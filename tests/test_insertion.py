@@ -16,13 +16,13 @@ def test_insertion_simple():
 
         # describe the preprocessing you actually perform on the data
         col_a_clamped = wn.impute(wn.clamp(col_a, lower=0., upper=10.))
-        col_a_resized = wn.resize(col_a_clamped, n=1000000)
+        col_a_resized = wn.resize(col_a_clamped, number_rows=1000000)
 
         # run a fake aggregation
         actual_mean = wn.mean(col_a_resized)
 
         # insert aggregated data from an external system
-        actual_mean.set(10)
+        actual_mean.set(10.)
 
         # describe the differentially private operation
         gaussian_mean = wn.gaussian_mechanism(actual_mean, privacy_usage={"epsilon": .4, "delta": 1e-6})
@@ -38,7 +38,7 @@ def test_insertion_simple():
 
         # release a couple other statistics using other mechanisms in the same batch
         actual_sum = wn.sum(col_a_clamped)
-        actual_sum.set(123456)
+        actual_sum.set(123456.)
         laplace_sum = wn.laplace_mechanism(actual_sum, privacy_usage={"epsilon": .1})
 
         actual_count = wn.count(col_a)
@@ -57,7 +57,7 @@ def test_insertion_simple():
         col_c = wn.to_bool(data['C'], true_label="T")
         actual_histogram_c = wn.histogram(col_c)
         actual_histogram_c.set([5000, 5000])
-        lap_histogram_c = wn.laplace_mechanism(actual_histogram_c, privacy_usage={"epsilon": .1})
+        lap_histogram_c = wn.simple_geometric_mechanism(actual_histogram_c, 0, 10000, privacy_usage={"epsilon": .1})
 
         analysis.release()
         print("noised histogram b", geo_histogram_b.value)
@@ -71,7 +71,7 @@ def test_insertion_simple():
         col_rest = wn.to_float(data[['C', 'D']])
 
         # describe the preprocessing you actually perform on the data
-        col_rest_resized = wn.resize(wn.impute(wn.clamp(col_rest, lower=[0., 5.], upper=1000.)), n=10000)
+        col_rest_resized = wn.resize(wn.impute(wn.clamp(col_rest, lower=[0., 5.], upper=1000.)), number_rows=10000)
 
         # run a fake aggregation
         actual_mean = wn.mean(col_rest_resized)
