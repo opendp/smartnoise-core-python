@@ -169,6 +169,8 @@ def serialize_value(value, value_format=None):
         )
 
     if value_format == 'jagged':
+        if issubclass(type(value), np.ndarray):
+            value = value.tolist()
         if not issubclass(type(value), list):
             value = [value]
         if not any(issubclass(type(elem), list) for elem in value):

@@ -386,6 +386,7 @@ def test_histogram():
 
     print("Income histogram Geometric DP release:   " + str(income_histogram.value))
 
+
 def test_covariance():
     import numpy as np
     import pandas as pd
