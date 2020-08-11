@@ -60,20 +60,25 @@ class LibraryWrapper(object):
         self.lib_whitenoise.whitenoise_destroy_bytebuffer.argtypes = [ByteBuffer]
 
         # direct mechanism access
-        self.lib_whitenoise.laplace_mechanism.restype = ctypes.c_double
-        self.lib_whitenoise.laplace_mechanism.argtypes = [
-            ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
-        ]
+        # library must be compiled with these endpoints to use them
+        try:
+            self.lib_whitenoise.laplace_mechanism.restype = ctypes.c_double
+            self.lib_whitenoise.laplace_mechanism.argtypes = [
+                ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+            ]
 
-        self.lib_whitenoise.gaussian_mechanism.restype = ctypes.c_double
-        self.lib_whitenoise.gaussian_mechanism.argtypes = [
-            ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
-        ]
+            self.lib_whitenoise.gaussian_mechanism.restype = ctypes.c_double
+            self.lib_whitenoise.gaussian_mechanism.argtypes = [
+                ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+            ]
 
-        self.lib_whitenoise.simple_geometric_mechanism.restype = ctypes.c_int64
-        self.lib_whitenoise.simple_geometric_mechanism.argtypes = [
-            ctypes.c_int64, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_int64, ctypes.c_bool
-        ]
+            self.lib_whitenoise.simple_geometric_mechanism.restype = ctypes.c_int64
+            self.lib_whitenoise.simple_geometric_mechanism.argtypes = [
+                ctypes.c_int64, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_int64, ctypes.c_bool
+            ]
+
+        except AttributeError:
+            pass
 
     def validate_analysis(self, analysis, release):
         """

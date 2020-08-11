@@ -66,6 +66,52 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
     resized = wn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
     return wn.column_bind(resized, names=names)
 
+def test_dp_covariance():
+
+    # establish data information
+    var_names = ["age", "sex", "educ", "race", "income", "married"]
+
+    with wn.Analysis() as analysis:
+        wn_data = wn.Dataset(path=TEST_CSV_PATH, column_names=var_names)
+
+        # # get scalar covariance
+        age_income_cov_scalar = wn.dp_covariance(
+            left=wn.to_float(wn_data['age']),
+            right=wn.to_float(wn_data['income']),
+            privacy_usage={'epsilon': 5000},
+            left_lower=0.,
+            left_upper=100.,
+            left_rows=1000,
+            right_lower=0.,
+            right_upper=500_000.,
+            right_rows=1000)
+
+        data = wn.to_float(wn_data['age', 'income'])
+        # get full covariance matrix
+        age_income_cov_matrix = wn.dp_covariance(
+            data=data,
+            privacy_usage={'epsilon': 5000},
+            data_lower=[0., 0.],
+            data_upper=[100., 500_000.],
+            data_rows=1000)
+
+        # get cross-covariance matrix
+        cross_covar = wn.dp_covariance(
+            left=data,
+            right=data,
+            privacy_usage={'epsilon': 5000},
+            left_lower=[0., 0.],
+            left_upper=[100., 500_000.],
+            left_rows=1_000,
+            right_lower=[0., 0.],
+            right_upper=[100., 500_000.],
+            right_rows=1000)
+
+    analysis.release()
+    print('scalar covariance:\n{0}\n'.format(age_income_cov_scalar.value))
+    print('covariance matrix:\n{0}\n'.format(age_income_cov_matrix.value))
+    print('cross-covariance matrix:\n{0}'.format(cross_covar.value))
+
 
 def test_divide():
     with wn.Analysis():
@@ -150,6 +196,30 @@ def test_partition():
         assert np.array_equal(partitioned.value[0], np.array([[True, True], [True, False]]))
         assert np.array_equal(partitioned.value[1], np.array([[False, True]]))
         assert np.array_equal(partitioned.value[2], np.array([[False, False]]))
+
+
+def test_histogram():
+    # generate raw data
+    import numpy as np
+    import pandas as pd
+    import tempfile
+    import os
+
+    n = 1000
+    data = np.random.normal(loc=10, scale=25, size=n)
+    mean = np.mean(data)
+    sd = np.std(data)
+    data = pd.DataFrame([(elem - mean) / sd for elem in data])
+
+    with wn.Analysis(), tempfile.TemporaryDirectory() as temp_dir:
+        data_path = os.path.join(temp_dir, 'temp_data.csv')
+        data.to_csv(data_path)
+
+        print(wn.dp_histogram(
+            wn.to_float(wn.Dataset(path=data_path, column_names=['d'])['d']),
+            edges=np.linspace(-3., 3., 1000),
+            privacy_usage={'epsilon': 0.1}
+        ).value)
 
 
 def test_index():
