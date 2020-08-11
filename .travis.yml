@@ -70,14 +70,12 @@ jobs:
       - DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
     install:
       - docker pull $DOCKER_IMAGE
-      - chmod +x scripts/build_binaries_manylinux.sh
+      - chmod +x scripts/build_manylinux_binaries.sh
     script:
-      - docker run --rm -e PLAT=$PYTHON_PLAT -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_binaries_manylinux.sh
-      - cp whitenoise-core/target/release/libwhitenoise_validator.so tmp_binaries
-      - cp whitenoise-core/target/release/libwhitenoise_runtime.so tmp_binaries
+      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_manylinux_binaries.sh
+      - cp whitenoise-core/target/release/libwhitenoise_ffi.so tmp_binaries
       - python3 scripts/code_generation.py
-      - cp tmp_binaries/libwhitenoise_validator.so opendp/whitenoise/core/lib
-      - cp tmp_binaries/libwhitenoise_runtime.so opendp/whitenoise/core/lib
+      - cp tmp_binaries/libwhitenoise_ffi.so opendp/whitenoise/core/lib
       - python3 setup.py bdist_wheel -d ./wheelhouse
     deploy:
       skip_cleanup: true
