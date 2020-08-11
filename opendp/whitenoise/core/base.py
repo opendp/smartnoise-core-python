@@ -163,7 +163,10 @@ class Component(object):
             properties=serialize_argument_properties(properties),
             alpha=alpha)
 
-        return [accuracy.value for accuracy in response.values]
+        value = [accuracy.value for accuracy in response.values]
+        if self.dimensionality is not None and self.dimensionality <= 1 and value:
+            value = value[0]
+        return value
 
     def from_accuracy(self, value, alpha):
         """
@@ -645,7 +648,11 @@ class Analysis(object):
 
         # helper to track if properties are current
         self.properties = {}
-        self.properties_id = {"count": self.component_count, "submission_count": self.submission_count}
+        self.properties_id = {
+            "count": self.component_count,
+            "submission_count": self.submission_count,
+            "component_ids": None
+        }
 
         # stack traces for individual nodes that failed to execute
         self.warnings = []
@@ -689,7 +696,9 @@ class Analysis(object):
         If new nodes have been added or there has been a release, recompute the properties for all of the components.
         :return:
         """
-        if not (self.properties_id['count'] == self.component_count and self.properties_id['submission_count'] == self.submission_count):
+        if not (self.properties_id['count'] == self.component_count
+                and self.properties_id['submission_count'] == self.submission_count
+                and self.properties_id['component_ids'] == component_ids):
             response = core_library.get_properties(
                 serialize_analysis(self),
                 serialize_release(self.release_values),
@@ -701,7 +710,11 @@ class Analysis(object):
                 if self.warnings:
                     warnings.warn("Some nodes were not allowed to execute.")
                     self.print_warnings()
-            self.properties_id = {'count': self.component_count, 'submission_count': self.submission_count}
+            self.properties_id = {
+                'count': self.component_count,
+                'submission_count': self.submission_count,
+                'component_ids': component_ids
+            }
 
     def validate(self):
         """
