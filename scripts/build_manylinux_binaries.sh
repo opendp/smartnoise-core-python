@@ -14,4 +14,4 @@ if ! [ -x "$(command -v cargo)" ]; then
 fi
 
 echo ">>> build the binaries";
-cargo build --features use-direct-api --release --manifest-path=whitenoise-core/Cargo.toml
+cargo +stable build --features use-direct-api --release --manifest-path=io/whitenoise-core/ffi-rust/Cargo.toml

@@ -42,7 +42,7 @@ def build_rust_binaries():
     print(build_rust_binaries.__doc__)
 
     rust_build_path = os.path.join(rust_dir, 'target', 'debug' if WN_DEBUG else 'release')
-    rust_build_cmd = 'cargo build' + ('' if WN_DEBUG else ' --release')
+    rust_build_cmd = 'cargo build' if WN_DEBUG else 'cargo +stable build --release'
 
     toml_path = os.path.join(rust_dir, "ffi-rust", "Cargo.toml")
 
