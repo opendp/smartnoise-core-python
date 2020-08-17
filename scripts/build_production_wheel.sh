@@ -43,6 +43,9 @@ cp whitenoise-core/target/release/libwhitenoise_ffi.so tmp_binaries/libwhitenois
 #
 
 echo "(E) mac binaries/packaging";
+export WN_USE_SYSTEM_LIBS=0;
+export WN_DEBUG=0;
+export WN_USE_VULNERABLE_NOISE=0;
 python3 scripts/code_generation.py
 
 # (3) check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
