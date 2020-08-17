@@ -218,6 +218,16 @@ class LibraryWrapper(object):
             ctypes.c_double(epsilon),
             ctypes.c_double(delta),
             ctypes.c_double(sensitivity),
+            ctypes.c_bool(False),
+            ctypes.c_bool(enforce_constant_time))
+
+    def analytic_gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
+        return self.lib_whitenoise.laplace_mechanism(
+            ctypes.c_double(value),
+            ctypes.c_double(epsilon),
+            ctypes.c_double(delta),
+            ctypes.c_double(sensitivity),
+            ctypes.c_bool(True),
             ctypes.c_bool(enforce_constant_time))
 
     def simple_geometric_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):

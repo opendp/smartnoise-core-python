@@ -13,6 +13,7 @@ from tests.test_base import (
 from tests import test_partitioning
 from tests import test_components
 from tests import test_insertion
+from tests import test_mechanisms
 
 # turn on stack traces from panics
 import os
@@ -20,8 +21,8 @@ os.environ['RUST_BACKTRACE'] = 'full'
 
 # test_components.test_dp_mean()
 # test_histogram()
-test_partitioning.test_map_4()
-
+# test_partitioning.test_map_4()
+test_mechanisms.test_mechanism("Gaussian")
 # test_components.test_dp_median()
 #
 #
