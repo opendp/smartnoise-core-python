@@ -154,7 +154,7 @@ class Component(object):
         The true value differs from the estimate by at most "accuracy amount" with (1 - alpha)100% confidence.
         """
         self.analysis.update_properties(
-            component_ids=[arg.component_id for arg in self.arguments.values()])
+            component_ids=[arg.component_id for arg in self.arguments.values() if arg])
 
         properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
         response = core_library.privacy_usage_to_accuracy(
@@ -173,7 +173,8 @@ class Component(object):
         Retrieve the privacy usage necessary such that the true value differs from the estimate by at most "value amount" with (1 - alpha)100% confidence
         """
 
-        self.analysis.update_properties([arg.component_id for arg in self.arguments.values()])
+        self.analysis.update_properties(
+            component_ids=[arg.component_id for arg in self.arguments.values() if arg])
 
         if not issubclass(type(value), list):
             value = [value]
