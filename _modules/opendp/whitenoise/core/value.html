@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>opendp.whitenoise.core.value &mdash; opendp-whitenoise-core 0.1.3 documentation</title>
+  <title>opendp.whitenoise.core.value &mdash; opendp-whitenoise-core 0.2.0 documentation</title>
   
 
   
@@ -153,7 +153,6 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.variant_message_map</span> <span class="kn">import</span> <span class="n">variant_message_map</span>
-
 <span class="kn">from</span> <span class="nn">opendp.whitenoise.core</span> <span class="kn">import</span> <span class="n">base_pb2</span><span class="p">,</span> <span class="n">components_pb2</span><span class="p">,</span> <span class="n">value_pb2</span>
 
 
@@ -205,18 +204,37 @@
 
 <div class="viewcode-block" id="serialize_privacy_definition"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_privacy_definition">[docs]</a><span class="k">def</span> <span class="nf">serialize_privacy_definition</span><span class="p">(</span><span class="n">analysis</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">PrivacyDefinition</span><span class="p">(</span>
-        <span class="n">distance</span><span class="o">=</span><span class="n">base_pb2</span><span class="o">.</span><span class="n">PrivacyDefinition</span><span class="o">.</span><span class="n">Distance</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">upper</span><span class="p">()),</span>
-        <span class="n">neighboring</span><span class="o">=</span><span class="n">base_pb2</span><span class="o">.</span><span class="n">PrivacyDefinition</span><span class="o">.</span><span class="n">Neighboring</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">neighboring</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="n">group_size</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">group_size</span><span class="p">,</span>
+        <span class="n">neighboring</span><span class="o">=</span><span class="n">base_pb2</span><span class="o">.</span><span class="n">PrivacyDefinition</span><span class="o">.</span><span class="n">Neighboring</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">neighboring</span><span class="o">.</span><span class="n">upper</span><span class="p">()),</span>
+        <span class="n">strict_parameter_checks</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">strict_parameter_checks</span><span class="p">,</span>
+        <span class="n">protect_overflow</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">protect_overflow</span><span class="p">,</span>
+        <span class="n">protect_elapsed_time</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">protect_elapsed_time</span><span class="p">,</span>
+        <span class="n">protect_memory_utilization</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">protect_memory_utilization</span><span class="p">,</span>
+        <span class="n">protect_floating_point</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">protect_floating_point</span>
     <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="serialize_index_key"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_index_key">[docs]</a><span class="k">def</span> <span class="nf">serialize_index_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tuple&quot;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">IndexKey</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_index_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">])}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{{</span><span class="nb">str</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">:</span> <span class="s1">&#39;i64&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">:</span> <span class="s1">&#39;bool&#39;</span><span class="p">}[</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)]:</span> <span class="n">key</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">IndexKey</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="serialize_component"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_component">[docs]</a><span class="k">def</span> <span class="nf">serialize_component</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
+    <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">component_child</span><span class="o">.</span><span class="n">component_id</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">component_child</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">component_child</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">}</span>
     <span class="k">return</span> <span class="n">components_pb2</span><span class="o">.</span><span class="n">Component</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-        <span class="s1">&#39;arguments&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="n">name</span><span class="p">:</span> <span class="n">component_child</span><span class="o">.</span><span class="n">component_id</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">component_child</span> <span class="ow">in</span> <span class="n">component</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">component_child</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="p">},</span>
+        <span class="s1">&#39;arguments&#39;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">ArgumentNodeIds</span><span class="p">(</span>
+            <span class="n">keys</span><span class="o">=</span><span class="nb">map</span><span class="p">(</span><span class="n">serialize_index_key</span><span class="p">,</span> <span class="n">arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+            <span class="n">values</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">arguments</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;submission&#39;</span><span class="p">:</span> <span class="n">component</span><span class="o">.</span><span class="n">submission_id</span><span class="p">,</span>
         <span class="n">variant_message_map</span><span class="p">[</span><span class="n">component</span><span class="o">.</span><span class="n">name</span><span class="p">]:</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="n">components_pb2</span><span class="p">,</span> <span class="n">component</span><span class="o">.</span><span class="n">name</span><span class="p">)(</span><span class="o">**</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">options</span> <span class="ow">or</span> <span class="p">{}))</span>
     <span class="p">})</span></div>
@@ -270,52 +288,67 @@
     <span class="p">})</span></div>
 
 
-<div class="viewcode-block" id="serialize_hashmap"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_hashmap">[docs]</a><span class="k">def</span> <span class="nf">serialize_hashmap</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">serialize_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-    <span class="k">return</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">Hashmap</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-        <span class="nb">str</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;string&#39;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">HashmapStr</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)},</span>
-        <span class="nb">bool</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;bool&#39;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">HashmapBool</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)},</span>
-        <span class="nb">int</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;i64&#39;</span><span class="p">:</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">HashmapI64</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)}</span>
-    <span class="p">}[</span><span class="nb">type</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">())))]())</span></div>
+<div class="viewcode-block" id="serialize_partitions"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_partitions">[docs]</a><span class="k">def</span> <span class="nf">serialize_partitions</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">Partitions</span><span class="p">(</span>
+        <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_index_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">()],</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="serialize_dataframe"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_dataframe">[docs]</a><span class="k">def</span> <span class="nf">serialize_dataframe</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">Dataframe</span><span class="p">(</span>
+        <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_index_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">()],</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="serialize_argument_properties"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_argument_properties">[docs]</a><span class="k">def</span> <span class="nf">serialize_argument_properties</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">ArgumentProperties</span><span class="p">(</span>
+        <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_index_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">()],</span>
+        <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="serialize_value"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.serialize_value">[docs]</a><span class="k">def</span> <span class="nf">serialize_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-    <span class="k">if</span> <span class="n">value_format</span> <span class="o">==</span> <span class="s1">&#39;hashmap&#39;</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span>
-            <span class="n">hashmap</span><span class="o">=</span><span class="n">serialize_hashmap</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value_format</span> <span class="o">==</span> <span class="s1">&#39;partitions&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span>
+            <span class="n">partitions</span><span class="o">=</span><span class="n">serialize_partitions</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">value_format</span> <span class="o">==</span> <span class="s1">&#39;dataframe&#39;</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span>
+            <span class="n">dataframe</span><span class="o">=</span><span class="n">serialize_dataframe</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">value_format</span> <span class="o">==</span> <span class="s1">&#39;jagged&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">),</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">value</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
         <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span> <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">),</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">elem</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">jagged</span><span class="o">=</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">Array2dJagged</span><span class="p">(</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">Array1dOption</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">column</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">serialize_array1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">column</span><span class="p">)))</span> <span class="k">for</span>
-                  <span class="n">column</span> <span class="ow">in</span> <span class="n">value</span><span class="p">],</span>
-            <span class="n">data_type</span><span class="o">=</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">DataType</span>
-                <span class="o">.</span><span class="n">Value</span><span class="p">({</span>
-                           <span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">:</span> <span class="s2">&quot;BOOL&quot;</span><span class="p">,</span>
-                           <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">:</span> <span class="s2">&quot;I64&quot;</span><span class="p">,</span>
-                           <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span> <span class="s2">&quot;F64&quot;</span><span class="p">,</span>
-                           <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span> <span class="s2">&quot;BOOL&quot;</span><span class="p">,</span>
-                           <span class="n">np</span><span class="o">.</span><span class="n">string_</span><span class="p">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
-                           <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">:</span> <span class="s2">&quot;STRING&quot;</span>
-                       <span class="p">}[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">jagged</span><span class="o">=</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">Jagged</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">serialize_array1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">column</span><span class="p">))</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">value</span><span class="p">],</span>
+            <span class="n">data_type</span><span class="o">=</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">Value</span><span class="p">({</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">:</span> <span class="s2">&quot;BOOL&quot;</span><span class="p">,</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">:</span> <span class="s2">&quot;I64&quot;</span><span class="p">,</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span> <span class="s2">&quot;F64&quot;</span><span class="p">,</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span> <span class="s2">&quot;BOOL&quot;</span><span class="p">,</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">string_</span><span class="p">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
+                                                   <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">:</span> <span class="s2">&quot;STRING&quot;</span>
+                                               <span class="p">}[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">])</span>
         <span class="p">))</span>
 
     <span class="k">if</span> <span class="n">value_format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value_format</span> <span class="o">!=</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;format must be either &quot;array&quot;, &quot;jagged&quot;, &quot;hashmap&quot; or None&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;format must be either &quot;array&quot;, &quot;jagged&quot;, &quot;dataframe&quot;, &quot;partitions&quot; or None&#39;</span><span class="p">)</span>
 
     <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">value_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span>
-        <span class="n">array</span><span class="o">=</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">ArrayNd</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">base_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span>
+        <span class="n">array</span><span class="o">=</span><span class="n">value_pb2</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span>
             <span class="n">shape</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
-            <span class="n">order</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">ndim</span><span class="p">)),</span>
             <span class="n">flattened</span><span class="o">=</span><span class="n">serialize_array1d</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
         <span class="p">))</span></div>
 
@@ -335,13 +368,21 @@
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">usage</span>
 
-    <span class="k">if</span> <span class="n">usage</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;pure&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;epsilon&quot;</span><span class="p">:</span> <span class="n">usage</span><span class="o">.</span><span class="n">pure</span><span class="o">.</span><span class="n">epsilon</span><span class="p">}</span>
-
     <span class="k">if</span> <span class="n">usage</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;approximate&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;epsilon&quot;</span><span class="p">:</span> <span class="n">usage</span><span class="o">.</span><span class="n">approximate</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span> <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">usage</span><span class="o">.</span><span class="n">approximate</span><span class="o">.</span><span class="n">delta</span><span class="p">}</span>
 
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unsupported privacy variant&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parse_index_key"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_index_key">[docs]</a><span class="k">def</span> <span class="nf">parse_index_key</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">variant</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">WhichOneof</span><span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">variant</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;index key may not be empty&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">variant</span> <span class="o">==</span> <span class="s2">&quot;tuple&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">parse_index_key</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">tuple</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">variant</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parse_array1d_null"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_array1d_null">[docs]</a><span class="k">def</span> <span class="nf">parse_array1d_null</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
@@ -358,41 +399,38 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">data_type</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse_array1d_option"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_array1d_option">[docs]</a><span class="k">def</span> <span class="nf">parse_array1d_option</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">parse_array1d</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">option</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="parse_jagged"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_jagged">[docs]</a><span class="k">def</span> <span class="nf">parse_jagged</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span>
-        <span class="n">parse_array1d_option</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">jagged</span><span class="o">.</span><span class="n">data</span>
-    <span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="n">parse_array1d</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">data</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="parse_array"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_array">[docs]</a><span class="k">def</span> <span class="nf">parse_array</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">parse_array1d</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">flattened</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">parse_array1d</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">flattened</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="parse_hashmap"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_hashmap">[docs]</a><span class="k">def</span> <span class="nf">parse_hashmap</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="n">data_type</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">hashmap</span><span class="o">.</span><span class="n">WhichOneof</span><span class="p">(</span><span class="s2">&quot;variant&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">data_type</span><span class="p">:</span>
-        <span class="k">return</span>
-    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">parse_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">hashmap</span><span class="p">,</span> <span class="n">data_type</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+<div class="viewcode-block" id="parse_dataframe"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_dataframe">[docs]</a><span class="k">def</span> <span class="nf">parse_dataframe</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">parse_index_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">parse_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="parse_partitions"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_partitions">[docs]</a><span class="k">def</span> <span class="nf">parse_partitions</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">parse_index_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">parse_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span></div>
 
 
 <div class="viewcode-block" id="parse_value"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_value">[docs]</a><span class="k">def</span> <span class="nf">parse_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;array&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">parse_array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parse_array</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;hashmap&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">parse_hashmap</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;partitions&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">parse_partitions</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">partitions</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;dataframe&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">parse_dataframe</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dataframe</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;jagged&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">parse_jagged</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">parse_jagged</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">jagged</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parse_release"><a class="viewcode-back" href="../../../../opendp.whitenoise.core.value.html#opendp.whitenoise.core.value.parse_release">[docs]</a><span class="k">def</span> <span class="nf">parse_release</span><span class="p">(</span><span class="n">release</span><span class="p">):</span>

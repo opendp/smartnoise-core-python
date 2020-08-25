@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>opendp.whitenoise.core.api module &mdash; opendp-whitenoise-core 0.1.3 documentation</title>
+  <title>opendp.whitenoise.core.api module &mdash; opendp-whitenoise-core 0.2.0 documentation</title>
   
 
   
@@ -218,6 +218,11 @@ This function touches private data. It calls the runtime rust FFI with protobuf 
 </dd></dl>
 
 <dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.gaussian_mechanism">
+<code class="sig-name descname">gaussian_mechanism</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">epsilon</span></em>, <em class="sig-param"><span class="n">delta</span></em>, <em class="sig-param"><span class="n">sensitivity</span></em>, <em class="sig-param"><span class="n">enforce_constant_time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.gaussian_mechanism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.gaussian_mechanism" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.generate_report">
 <code class="sig-name descname">generate_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.generate_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.generate_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Generate a json string with a summary/report of the Analysis and Release
@@ -237,7 +242,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.get_properties">
-<code class="sig-name descname">get_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.get_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.get_properties" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">analysis</span></em>, <em class="sig-param"><span class="n">release</span></em>, <em class="sig-param"><span class="n">node_ids</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.get_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.get_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>FFI Helper. Derive static properties for all components in the graph.
 This function is data agnostic. It calls the validator rust FFI with protobuf objects.</p>
 <dl class="field-list simple">
@@ -245,6 +250,7 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>analysis</strong> – A description of computation</p></li>
 <li><p><strong>release</strong> – A collection of public values</p></li>
+<li><p><strong>node_ids</strong> – An optional list of node ids to derive properties for</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -252,6 +258,11 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.laplace_mechanism">
+<code class="sig-name descname">laplace_mechanism</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">epsilon</span></em>, <em class="sig-param"><span class="n">sensitivity</span></em>, <em class="sig-param"><span class="n">enforce_constant_time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.laplace_mechanism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.laplace_mechanism" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.privacy_usage_to_accuracy">
@@ -272,6 +283,11 @@ This function is data agnostic. It calls the validator rust FFI with protobuf ob
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt id="opendp.whitenoise.core.api.LibraryWrapper.simple_geometric_mechanism">
+<code class="sig-name descname">simple_geometric_mechanism</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">epsilon</span></em>, <em class="sig-param"><span class="n">sensitivity</span></em>, <em class="sig-param"><span class="n">min</span></em>, <em class="sig-param"><span class="n">max</span></em>, <em class="sig-param"><span class="n">enforce_constant_time</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/opendp/whitenoise/core/api.html#LibraryWrapper.simple_geometric_mechanism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#opendp.whitenoise.core.api.LibraryWrapper.simple_geometric_mechanism" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="opendp.whitenoise.core.api.LibraryWrapper.validate_analysis">
