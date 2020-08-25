@@ -4,8 +4,11 @@ set -e
 # enables full stack traces
 export RUST_BACKTRACE=1
 
+# turns on debug symbols, unoptimized compilation
+export WN_DEBUG=1
+
 # reset all the files
-bash scripts/clean.sh
+#bash scripts/clean.sh
 
 # regenerate the sources for the package
 python3 scripts/code_generation.py | tee scripts/debug_build.log

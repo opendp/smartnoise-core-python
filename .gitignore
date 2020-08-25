@@ -10,10 +10,12 @@ docs/**
 docs_temp/
 wheelhouse/
 opendp/whitenoise/core/lib/
+tmp_binaries/
 
 opendp/_native*
 opendp_whitenoise_core.egg-info
 .eggs/
+scripts/reformat_json.py
 #opendp/whitenoise/core/components.py
 #opendp/whitenoise/core/variant_message_map.py
 
@@ -22,3 +24,5 @@ scripts/debug_app.log
 scripts/debug_tests.log
 opendp_whitenoise_core_demo.egg-info/
 opendp_whitenoise_core_python.egg-info/
+
+.idea/

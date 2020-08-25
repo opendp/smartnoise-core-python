@@ -99,7 +99,9 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
    ```
 
 4. Generate code (rerun anytime the Core changes)
+    Refer to [troubleshooting.md](https://github.com/opendifferentialprivacy/whitenoise-core/blob/develop/troubleshooting.md) if necessary.
     ```shell script
+    export WN_DEBUG=true # optional- for faster compilation and slower execution
     python3 scripts/code_generation.py
     ```
 
