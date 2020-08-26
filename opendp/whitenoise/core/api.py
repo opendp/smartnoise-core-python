@@ -82,6 +82,12 @@ class LibraryWrapper(object):
                 ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
             ]
 
+            self.lib_whitenoise.snapping_mechanism_binding.restype = ctypes.c_double
+            self.lib_whitenoise.snapping_mechanism_binding.argtypes = [
+                ctypes.c_double, ctypes.c_double, ctypes.c_double,
+                ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+            ]
+
         except AttributeError:
             pass
 
@@ -222,7 +228,7 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.laplace_mechanism(
+        return self.lib_whitenoise.gaussian_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
             ctypes.c_double(delta),
@@ -231,7 +237,7 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def analytic_gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.laplace_mechanism(
+        return self.lib_whitenoise.gaussian_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
             ctypes.c_double(delta),
@@ -248,14 +254,24 @@ class LibraryWrapper(object):
             ctypes.c_int64(max),
             ctypes.c_bool(enforce_constant_time))
 
-    def snapping_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):
-        return self.lib_whitenoise.snapping_mechanism(
-            ctypes.c_double(value),
-            ctypes.c_double(epsilon),
-            ctypes.c_double(sensitivity),
-            ctypes.c_double(min),
-            ctypes.c_double(max),
-            ctypes.c_bool(enforce_constant_time))
+    def snapping_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time, binding_probability=None):
+        if binding_probability is None:
+            return self.lib_whitenoise.snapping_mechanism(
+                ctypes.c_double(value),
+                ctypes.c_double(epsilon),
+                ctypes.c_double(sensitivity),
+                ctypes.c_double(min),
+                ctypes.c_double(max),
+                ctypes.c_bool(enforce_constant_time))
+        else:
+            return self.lib_whitenoise.snapping_mechanism_binding(
+                ctypes.c_double(value),
+                ctypes.c_double(epsilon),
+                ctypes.c_double(sensitivity),
+                ctypes.c_double(min),
+                ctypes.c_double(max),
+                ctypes.c_double(binding_probability),
+                ctypes.c_bool(enforce_constant_time))
 
 
 def _communicate(function, destroy, argument, response_type):

@@ -22,8 +22,8 @@ def dp_all(numeric, categorical, args):
 
 def dp_all_snapping(numeric, categorical, args):
     return {
-        # "covariance": wn.dp_covariance(left=numeric, right=numeric, **args),
-        # "histogram": wn.dp_histogram(categorical, **args),
+        "covariance": wn.dp_covariance(left=numeric, right=numeric, **args),
+        "histogram": wn.dp_histogram(categorical, **args),
         "maximum": wn.dp_maximum(numeric, **args),
         "mean": wn.dp_mean(numeric, **args),
         "median": wn.dp_median(numeric, **args),
@@ -142,3 +142,21 @@ def test_mechanism(args, constructor):
 
         for value in all_values.values():
             assert value is not None
+
+
+def test_snapping():
+    with wn.Analysis():
+        PUMS = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+
+        statistic = wn.mean(
+            wn.to_float(PUMS['age']),
+            data_lower=0.,
+            data_upper=100.,
+            data_rows=1000)
+
+        print(wn.snapping_mechanism(
+            statistic,
+            lower=30.,
+            upper=70.,
+            binding_probability=0.4,
+            privacy_usage={"epsilon": 0.1}).value)
