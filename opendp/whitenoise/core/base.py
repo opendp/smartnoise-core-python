@@ -161,6 +161,10 @@ class Component(object):
             privacy_definition=serialize_privacy_definition(self.analysis),
             component=serialize_component(self),
             properties=serialize_argument_properties(properties),
+            public_arguments=serialize_indexmap_release_node({
+                name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
+                if arg
+            }),
             alpha=alpha)
 
         value = [accuracy.value for accuracy in response.values]
@@ -190,7 +194,11 @@ class Component(object):
             }),
             accuracies=base_pb2.Accuracies(values=[
                 base_pb2.Accuracy(value=value, alpha=alpha) for value, alpha in zip(value, alpha)
-            ]))
+            ]),
+            public_arguments=serialize_indexmap_release_node({
+                name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
+                if arg
+            }))
 
         return [parse_privacy_usage(usage) for usage in privacy_usages.values]
 

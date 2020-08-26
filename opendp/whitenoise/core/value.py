@@ -102,14 +102,26 @@ def serialize_analysis(analysis):
 def serialize_release(release_values):
     return base_pb2.Release(
         values={
-            component_id: base_pb2.ReleaseNode(
-                value=serialize_value(
-                    release_values[component_id]['value'],
-                    release_values[component_id].get("value_format")),
-                privacy_usages=release_values[component_id].get("privacy_usages"),
-                public=release_values[component_id]['public'])
-            for component_id in release_values
+            component_id: serialize_release_node(release_node)
+            for component_id, release_node in release_values.items()
         })
+
+
+def serialize_release_node(release_node):
+    return base_pb2.ReleaseNode(
+        value=serialize_value(
+            release_node['value'],
+            release_node.get("value_format")),
+        privacy_usages=release_node.get("privacy_usages"),
+        public=release_node['public'])
+
+
+def serialize_indexmap_release_node(release_values):
+    release_values = {k: v for k, v in release_values.items() if v is not None}
+    return base_pb2.IndexmapReleaseNode(
+        keys=[serialize_index_key(key) for key in release_values],
+        values=[serialize_release_node(value) for value in release_values.values()]
+    )
 
 
 def serialize_array1d(array):

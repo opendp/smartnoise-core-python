@@ -77,6 +77,11 @@ class LibraryWrapper(object):
                 ctypes.c_int64, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_int64, ctypes.c_bool
             ]
 
+            self.lib_whitenoise.snapping_mechanism.restype = ctypes.c_double
+            self.lib_whitenoise.snapping_mechanism.argtypes = [
+                ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+            ]
+
         except AttributeError:
             pass
 
@@ -126,7 +131,7 @@ class LibraryWrapper(object):
             response_type=api_pb2.ResponseGenerateReport,
             destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
 
-    def accuracy_to_privacy_usage(self, privacy_definition, component, properties, accuracies):
+    def accuracy_to_privacy_usage(self, privacy_definition, component, properties, accuracies, public_arguments):
         """
         FFI Helper. Estimate the privacy usage necessary to bound accuracy to a given value.
         This function is data agnostic. It calls the validator rust FFI with protobuf objects.
@@ -135,6 +140,7 @@ class LibraryWrapper(object):
         :param component: The component to compute accuracy for
         :param properties: Properties about all of the arguments to the component
         :param accuracies: A value and alpha to convert to privacy usage for each column
+        :param public_arguments: Public inputs to the component (like lower/upper for snapping)
         :return: A privacy usage response
         """
         return _communicate(
@@ -142,12 +148,13 @@ class LibraryWrapper(object):
                 privacy_definition=privacy_definition,
                 component=component,
                 properties=properties,
-                accuracies=accuracies),
+                accuracies=accuracies,
+                public_arguments=public_arguments),
             function=self.lib_whitenoise.accuracy_to_privacy_usage,
             response_type=api_pb2.ResponseAccuracyToPrivacyUsage,
             destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
 
-    def privacy_usage_to_accuracy(self, privacy_definition, component, properties, alpha):
+    def privacy_usage_to_accuracy(self, privacy_definition, component, properties, public_arguments, alpha):
         """
         FFI Helper. Estimate the accuracy of the release of a component, based on a privacy usage.
         This function is data agnostic. It calls the validator rust FFI with protobuf objects.
@@ -155,6 +162,7 @@ class LibraryWrapper(object):
         :param privacy_definition: A descriptive object defining neighboring, distance definitions
         :param component: The component to compute accuracy for
         :param properties: Properties about all of the arguments to the component
+        :param public_arguments: Public inputs to the component (like lower/upper for snapping)
         :param alpha: Used to set the confidence level for the accuracy
         :return: Accuracy estimates
         """
@@ -163,6 +171,7 @@ class LibraryWrapper(object):
                 privacy_definition=privacy_definition,
                 component=component,
                 properties=properties,
+                public_arguments=public_arguments,
                 alpha=alpha),
             function=self.lib_whitenoise.privacy_usage_to_accuracy,
             response_type=api_pb2.ResponsePrivacyUsageToAccuracy,
@@ -237,6 +246,15 @@ class LibraryWrapper(object):
             ctypes.c_double(sensitivity),
             ctypes.c_int64(min),
             ctypes.c_int64(max),
+            ctypes.c_bool(enforce_constant_time))
+
+    def snapping_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):
+        return self.lib_whitenoise.snapping_mechanism(
+            ctypes.c_double(value),
+            ctypes.c_double(epsilon),
+            ctypes.c_double(sensitivity),
+            ctypes.c_double(min),
+            ctypes.c_double(max),
             ctypes.c_bool(enforce_constant_time))
 
 
