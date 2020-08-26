@@ -154,9 +154,22 @@ def test_snapping():
             data_upper=100.,
             data_rows=1000)
 
-        print(wn.snapping_mechanism(
+        privatized = wn.snapping_mechanism(
             statistic,
             lower=30.,
             upper=70.,
             binding_probability=0.4,
-            privacy_usage={"epsilon": 0.1}).value)
+            privacy_usage={"epsilon": 0.1})
+
+        print(privatized.value)
+        print(privatized.get_accuracy(0.5))
+        print(privatized.from_accuracy(2., 0.5))
+
+        privatized_from_accuracy = wn.snapping_mechanism(
+            statistic,
+            lower=30.,
+            upper=70.,
+            binding_probability=0.4,
+            accuracy={"value": 2., "alpha": 0.5})
+
+        print(privatized_from_accuracy.value)
