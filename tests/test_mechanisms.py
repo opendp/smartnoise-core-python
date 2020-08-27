@@ -163,13 +163,6 @@ def test_snapping():
 
         print(privatized.value)
         print(privatized.get_accuracy(0.5))
-        print(privatized.from_accuracy(2., 0.5))
-
-        privatized_from_accuracy = wn.snapping_mechanism(
-            statistic,
-            lower=30.,
-            upper=70.,
-            binding_probability=0.4,
-            accuracy={"value": 2., "alpha": 0.5})
-
-        print(privatized_from_accuracy.value)
+        necessary_usage = privatized.from_accuracy(4., 0.5)
+        print("usage: ", necessary_usage)
+        print("accuracy: ", privatized.get_accuracy(0.5, necessary_usage))

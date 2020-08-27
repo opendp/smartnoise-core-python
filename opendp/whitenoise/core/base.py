@@ -148,7 +148,7 @@ class Component(object):
         return {parent: next(k for k, v in parent.arguments.items()
                              if id(self) == id(v)) for parent in parents}
 
-    def get_accuracy(self, alpha):
+    def get_accuracy(self, alpha, privacy_usage=None):
         """
         Retrieve the accuracy for the values released by the component.
         The true value differs from the estimate by at most "accuracy amount" with (1 - alpha)100% confidence.
@@ -156,10 +156,17 @@ class Component(object):
         self.analysis.update_properties(
             component_ids=[arg.component_id for arg in self.arguments.values() if arg])
 
+        if privacy_usage is None:
+            serialized_component = serialize_component(self)
+        else:
+            cache, self.options['privacy_usage'] = self.options['privacy_usage'], serialize_privacy_usage(privacy_usage)
+            serialized_component = serialize_component(self)
+            self.options['privacy_usage'] = cache
+
         properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
         response = core_library.privacy_usage_to_accuracy(
             privacy_definition=serialize_privacy_definition(self.analysis),
-            component=serialize_component(self),
+            component=serialized_component,
             properties=serialize_argument_properties(properties),
             public_arguments=serialize_indexmap_release_node({
                 name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
