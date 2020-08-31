@@ -2,7 +2,7 @@
 ## Development Workflow
 
 ### A. Choose an issue to work on 
-1. Choose an issue from the "Ready" column 
+1. Choose an issue from the "Ready" column (or, if needed, create an issue)
     - https://github.com/orgs/opendifferentialprivacy/projects/1
 2. Add yourself as the Assignee
 3. Move the Issue to the Ready Column
