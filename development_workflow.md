@@ -2,34 +2,34 @@
 ## Development Workflow
 
 ### A. Choose an issue to work on 
-1. Choose an issue from the "Ready" column (or, if needed, create an issue)
+1. Choose an issue from the **Ready** column (or, if needed, create an issue)
     - https://github.com/orgs/opendifferentialprivacy/projects/1
 2. Add yourself as the Assignee
-3. Move the Issue to the Ready Column
-    - Note the issue number, e.g. Issue `#1`
+3. Move the issue to the **Ready** Column
+    - Note the issue number, e.g. issue `3`
 
 
 ### B. Create a new branch from the develop branch
 1. Name the new branch starting with the issue number and description of your choice
-    - e.g. "1_" + "impute" ->
-      - `1_impute`
+    - e.g. "3_" + "resize" ->
+      - `3_resize`
 
 ### C. Switch your development machine to the new branch
 
-- e.g. `git checkout 1_impute`
+- e.g. `git checkout 3_resize`
 
 ### D. Upate your branch with any changes on develop
 
-1. Check in your changes to the new  branch, `1_impute`
+1. Check in your changes to the new  branch, `3_resize`
 1. Checkout the develop branch and retrieve any changes
     ```
     git checkout develop
     git pull
     ```
-1. Checkout the dev branch (`1_impute`)
+1. Switch back to your "issue" branch (`3_resize`)
     ```
-    # git checkout [dev branch]
-    git checkout 1_impute
+    # git checkout [issue branch]
+    git checkout 3_resize
     ```
 1. Merge and fix any conflicts
     ```
