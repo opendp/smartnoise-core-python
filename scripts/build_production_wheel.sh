@@ -30,17 +30,24 @@ mkdir tmp_binaries
 rm -f tmp_binaries/libwhitenoise_ffi.so
 cp whitenoise-core/target/release/libwhitenoise_ffi.so tmp_binaries/libwhitenoise_ffi.so
 
-# # check check for GLIBC_ <= ~2.3. Typically memcpy is an example that links to GLIBC ~2.15
-# docker run --rm -v `pwd`:/io $DOCKER_IMAGE objdump -T /io/opendp/whitenoise/core/lib/libwhitenoise_ffi.so | grep GLIBC_
-# # check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
+# (1) check check for GLIBC_ <= ~2.3. Typically memcpy is an example that links to GLIBC ~2.15
+#  - Outputs several versions. Look at versions <= 2.3
+#  - Dump out link table to see if it's linking against older versions of GLIBC
+#  - In the past, have uploaded libs not mentioned in the install
+#
+#  docker run --rm -v `pwd`:/io $DOCKER_IMAGE objdump -T /io/opendp/whitenoise/core/lib/libwhitenoise_ffi.so | grep GLIBC_
+#  
+# (2) Check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
+#
 # docker run --rm -v `pwd`:/io $DOCKER_IMAGE ldd /io/opendp/whitenoise/core/lib/libwhitenoise_ffi.so
+#
 
 echo "(E) mac binaries/packaging";
 python3 scripts/code_generation.py
 
-# # check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
+# (3) check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
 # otool -L opendp/whitenoise/core/lib/libwhitenoise_ffi.dylib
-
+#
 
 echo "(F) move prior manylinux binary into the library";
 cp tmp_binaries/libwhitenoise_ffi.so opendp/whitenoise/core/lib
