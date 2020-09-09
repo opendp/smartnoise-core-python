@@ -1,6 +1,6 @@
 # Notes about scripts
 
-## Creating a PyPi package
+## Creating a PyPI package
 
 This process takes several steps which involve changes in both this repository as well as the `whitenoise-core` submodule. 
 
@@ -9,7 +9,7 @@ Notes:
       ``` 
       pip install -r requirements/dev.txt
       ```
-  - For publishing to PyPi, you'll need pypi credentials which allow uploading to: https://pypi.org/project/opendp-whitenoise-core/
+  - For publishing to PyPI, you'll need PyPI credentials which allow uploading to: https://pypi.org/project/opendp-whitenoise-core/
   - All example commands run from the Terminal and start within the `whitenoise-core-python` directory--the top of this repository.
 
 ---
@@ -91,7 +91,7 @@ Notes:
     rm -rf /tmp/opendp
     rm -rf opendp_whitenoise_core*
     ```
-1. Upload the wheel to PyPi!
+1. Upload the wheel to PyPI!
     ```
     # You will be prompted for your credentials (unless they're set by env. variables, etc)
     #
