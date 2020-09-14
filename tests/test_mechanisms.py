@@ -105,10 +105,10 @@ def snapping_similarity():
             "mechanism": "Laplace",
             "privacy_usage": {"epsilon": 2.0, "delta": 1E-6}
         }, dp_all, id="Laplace"),
-        pytest.param({
-            "mechanism": "Snapping",
-            "privacy_usage": {"epsilon": 2.0, "delta": 1E-6}
-        }, dp_all_snapping, id="Snapping"),
+        # pytest.param({
+        #     "mechanism": "Snapping",
+        #     "privacy_usage": {"epsilon": 2.0, "delta": 1E-6}
+        # }, dp_all_snapping, id="Snapping"),
 
         pytest.param(
             {
