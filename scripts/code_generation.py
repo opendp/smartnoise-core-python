@@ -61,7 +61,7 @@ def build_rust_binaries():
     os.makedirs(lib_dir, exist_ok=True)
 
     for filename in os.listdir(rust_build_path):
-        if filename.startswith("libwhitenoise_ffi"):
+        if filename.startswith("libwhitenoise_ffi") and os.path.isfile(os.path.join(rust_build_path, filename)):
             shutil.copy(os.path.join(rust_build_path, filename), lib_dir)
 
 
