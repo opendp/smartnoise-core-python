@@ -13,5 +13,9 @@ if ! [ -x "$(command -v cargo)" ]; then
 	export PATH="${HOME}/.cargo/bin:${PATH}"
 fi
 
+export WN_USE_SYSTEM_LIBS=0;
+export WN_DEBUG=0;
+export WN_USE_VULNERABLE_NOISE=0;
+
 echo ">>> build the binaries";
 cargo +stable build --features use-direct-api --release --manifest-path=io/whitenoise-core/ffi-rust/Cargo.toml

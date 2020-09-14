@@ -148,19 +148,30 @@ class Component(object):
         return {parent: next(k for k, v in parent.arguments.items()
                              if id(self) == id(v)) for parent in parents}
 
-    def get_accuracy(self, alpha):
+    def get_accuracy(self, alpha, privacy_usage=None):
         """
         Retrieve the accuracy for the values released by the component.
         The true value differs from the estimate by at most "accuracy amount" with (1 - alpha)100% confidence.
         """
         self.analysis.update_properties(
-            component_ids=[arg.component_id for arg in self.arguments.values()])
+            component_ids=[arg.component_id for arg in self.arguments.values() if arg])
+
+        if privacy_usage is None:
+            serialized_component = serialize_component(self)
+        else:
+            cache, self.options['privacy_usage'] = self.options['privacy_usage'], serialize_privacy_usage(privacy_usage)
+            serialized_component = serialize_component(self)
+            self.options['privacy_usage'] = cache
 
         properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
         response = core_library.privacy_usage_to_accuracy(
             privacy_definition=serialize_privacy_definition(self.analysis),
-            component=serialize_component(self),
+            component=serialized_component,
             properties=serialize_argument_properties(properties),
+            public_arguments=serialize_indexmap_release_node({
+                name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
+                if arg
+            }),
             alpha=alpha)
 
         value = [accuracy.value for accuracy in response.values]
@@ -173,7 +184,8 @@ class Component(object):
         Retrieve the privacy usage necessary such that the true value differs from the estimate by at most "value amount" with (1 - alpha)100% confidence
         """
 
-        self.analysis.update_properties([arg.component_id for arg in self.arguments.values()])
+        self.analysis.update_properties(
+            component_ids=[arg.component_id for arg in self.arguments.values() if arg])
 
         if not issubclass(type(value), list):
             value = [value]
@@ -189,7 +201,11 @@ class Component(object):
             }),
             accuracies=base_pb2.Accuracies(values=[
                 base_pb2.Accuracy(value=value, alpha=alpha) for value, alpha in zip(value, alpha)
-            ]))
+            ]),
+            public_arguments=serialize_indexmap_release_node({
+                name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
+                if arg
+            }))
 
         return [parse_privacy_usage(usage) for usage in privacy_usages.values]
 
