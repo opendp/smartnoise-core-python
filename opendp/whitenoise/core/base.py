@@ -119,7 +119,7 @@ class Component(object):
     def value(self):
         """
         Retrieve the released values from the analysis' release.
-        If this returns None, then either analysis.release() has not yet been called, or this node is not releasable.
+        If this returns None, then this node is not releasable.
 
         :return: The value stored in the release corresponding to this node
         """
