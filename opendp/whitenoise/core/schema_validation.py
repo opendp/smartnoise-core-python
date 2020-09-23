@@ -12,6 +12,8 @@ def validate_report(instance):
 
 
 if __name__ == '__main__':
+
+    # This does not pass validation
     report = {
         'accuracy': None,
         'algorithmInfo': {'argument': {'constraint': {'lowerbound': 0.0,
@@ -30,4 +32,48 @@ if __name__ == '__main__':
         'submission': 0,
         'variables': 'age'
     }
-    print(validate_report({'self': 1}))
+
+    # This does pass validation
+    passing_report = {
+        'self': {
+            'schema_version': "0",
+            'created': "2020-1-1",
+            'description': 'test'
+        },
+        'dataset': {
+            'description': 'test',
+            'unitOfAnalysis': 'unit',
+            'structure': 'wide',
+            'rowCount': 0,
+            'variableCount': 1
+        },
+        'dp-releases': [
+            {
+                'statistic': 'mean',
+                'submission': 0,
+                'variables': ['age'],
+                'releaseInfo': {
+                    'mechanism': 'Laplace',
+                },
+                'description': 'DP release information',
+                'nodeID': 11,
+                'postprocess': False,
+                'accuracy': {
+                    'accuracyValue': 100.0
+                },
+                'batch': 0,
+                'privacyLoss': {'delta': 0.0, 'epsilon': 0.65, 'name': 'approx dp'},
+                'algorithmInfo': {'argument': {'constraint': {'lowerbound': 0.0,
+                                                              'upperbound': 100.0},
+                                               'implementation': 'resize',
+                                               'n': 1000},
+                                  'cite': '',
+                                  'name': ''},
+
+            }
+
+        ],
+    }
+
+    validate_report(passing_report)
+    print("Validation succeeded")
