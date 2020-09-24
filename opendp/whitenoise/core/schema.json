@@ -116,7 +116,6 @@
         "description",
         "unitOfAnalysis",
         "structure",
-        "rowCount",
         "variableCount"
       ]
     },
@@ -198,33 +197,11 @@
         }
       }
     },
-    "releaseInfo":{
-      "type":"object",
-      "additionalProperties":false,
-      "properties":{
-        "mechanism":{
-          "enum":[
-            "Laplace",
-            "Gaussian",
-            "Bootstrap"
-          ],
-          "type":"string"
-        },
-        "releaseValue":{
-
-        }
-      }
-    },
     "release":{
       "type":"object",
       "properties":{
         "batch":{
           "type":"integer"
-        },
-        "nodeId":{
-          "type":"integer",
-          "minimum":0,
-          "description":"Determins which node the relase come from"
         },
         "accuracy":{
           "additionalProperties":false,
@@ -240,13 +217,22 @@
             }
           }
         },
-        "algorithmInfo":{
+        "algorithm":{
           "type":"object",
           "description":"Information about the algorithm",
           "additionalProperties":false,
           "properties":{
-            "name":{
+            "mechanism":{
+              "enum":[
+                "Laplace",
+                "Gaussian",
+                "Bootstrap",
+                "Automatic"
+              ],
               "type":"string"
+            },
+            "releaseValue":{
+
             },
             "cite":{
               "type":"string"
@@ -289,8 +275,7 @@
             }
           },
           "required":[
-            "argument",
-            "name"
+            "argument"
           ]
         },
         "privacyLoss":{
@@ -308,9 +293,6 @@
             }
           ]
         },
-        "releaseInfo":{
-          "$ref":"#/definitions/releaseInfo"
-        },
         "statistic":{
           "enum":[
             "mean",
@@ -325,15 +307,13 @@
           "items":{
             "type":"string"
           },
-          "type":"array"
+          "type":"object"
         }
       },
       "required":[
         "statistic",
         "variables",
-        "releaseInfo",
-        "postprocess",
-        "algorithmInfo",
+        "algorithm",
         "accuracy",
         "batch",
         "privacyLoss"
