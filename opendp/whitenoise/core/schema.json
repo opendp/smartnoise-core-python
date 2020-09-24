@@ -14,9 +14,6 @@
         "created":{
           "type":"string",
           "format":"date-time"
-        },
-        "description":{
-          "type":"string"
         }
       },
       "required":[
@@ -29,9 +26,6 @@
       "title":"Dataset Level Metadata",
       "type":"object",
       "properties":{
-        "description":{
-          "type":"string"
-        },
         "unitOfAnalysis":{
           "type":"string"
         },
@@ -113,7 +107,6 @@
         }
       },
       "required":[
-        "description",
         "unitOfAnalysis",
         "structure",
         "variableCount"
@@ -220,7 +213,7 @@
         "algorithm":{
           "type":"object",
           "description":"Information about the algorithm",
-          "additionalProperties":false,
+          "additionalProperties":true,
           "properties":{
             "mechanism":{
               "enum":[
@@ -275,7 +268,7 @@
             }
           },
           "required":[
-            "argument"
+
           ]
         },
         "privacyLoss":{

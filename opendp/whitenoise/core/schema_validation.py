@@ -38,10 +38,8 @@ if __name__ == '__main__':
         'self': {
             'schema_version': "0",
             'created': "2020-1-1",
-            'description': 'test'
         },
         'dataset': {
-            'description': 'test',
             'unitOfAnalysis': 'unit',
             'structure': 'wide',
             'rowCount': 0,
@@ -51,11 +49,12 @@ if __name__ == '__main__':
             {
                 'statistic': 'mean',
                 'submission': 0,
-                'variables': ['age'],
+                'variables': {
+                    'arbitrary-key': 'age'
+                },
                 'releaseInfo': {
                     'mechanism': 'Laplace',
                 },
-                'description': 'DP release information',
                 'nodeID': 11,
                 'postprocess': False,
                 'accuracy': {
@@ -63,13 +62,12 @@ if __name__ == '__main__':
                 },
                 'batch': 0,
                 'privacyLoss': {'delta': 0.0, 'epsilon': 0.65, 'name': 'approx dp'},
-                'algorithmInfo': {'argument': {'constraint': {'lowerbound': 0.0,
-                                                              'upperbound': 100.0},
-                                               'implementation': 'resize',
-                                               'n': 1000},
-                                  'cite': '',
-                                  'name': ''},
-
+                'algorithm': {'lowerbound': 0.0,
+                              'upperbound': 100.0,
+                              'implementation': 'resize',
+                              'n': 1000,
+                              'cite': '',
+                              'name': ''},
             }
 
         ],
