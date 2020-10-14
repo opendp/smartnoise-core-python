@@ -6,7 +6,7 @@ from .value import *
 
 import typing
 
-from opendp.whitenoise.core import api_pb2, value_pb2, base_pb2
+from opendp.smartnoise.core import api_pb2, value_pb2, base_pb2
 
 core_library = LibraryWrapper()
 
@@ -66,7 +66,7 @@ class Component(object):
 
     Many components are linked together to form an analysis graph.
 
-    :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html
+    :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/smartnoise-core/doc/smartnoise_validator/docs/components/index.html
     :param arguments: Inputs to the component that come from prior nodes on the graph.
     :param options: Inputs to the component that are passed directly via protobuf.
     :param constraints: Additional modifiers on data inputs, like data_lower, or left_categories.
@@ -108,7 +108,7 @@ class Component(object):
         if context:
             context.add_component(self, value=value, value_format=value_format, value_public=value_public)
         else:
-            raise ValueError("all Whitenoise components must be created within the context of an analysis")
+            raise ValueError("all SmartNoise components must be created within the context of an analysis")
 
         if accuracy:
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])

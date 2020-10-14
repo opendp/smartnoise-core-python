@@ -18,4 +18,4 @@ export WN_DEBUG=0;
 export WN_USE_VULNERABLE_NOISE=0;
 
 echo ">>> build the binaries";
-cargo +stable build --features use-direct-api --release --manifest-path=io/whitenoise-core/ffi-rust/Cargo.toml
+cargo +stable build --features use-direct-api --release --manifest-path=io/smartnoise-core/ffi-rust/Cargo.toml

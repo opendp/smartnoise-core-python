@@ -19,13 +19,13 @@ class LibraryWrapper(object):
         }.get(sys.platform)
 
         if not extension:
-            raise Exception(f"whitenoise-core does not support {sys.platform}")
+            raise Exception(f"smartnoise-core does not support {sys.platform}")
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
         lib_dir = os.path.join(script_dir, "lib")
-        lib_whitenoise_path = os.path.join(lib_dir, "libwhitenoise_ffi" + extension)
+        lib_smartnoise_path = os.path.join(lib_dir, "libsmartnoise_ffi" + extension)
 
-        self.lib_whitenoise = ctypes.cdll.LoadLibrary(lib_whitenoise_path)
+        self.lib_smartnoise = ctypes.cdll.LoadLibrary(lib_smartnoise_path)
 
         proto_argtypes = [ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int32]
 
@@ -35,55 +35,55 @@ class LibraryWrapper(object):
                 ('data', ctypes.POINTER(ctypes.c_uint8))]
 
         # validator
-        self.lib_whitenoise.accuracy_to_privacy_usage.argtypes = proto_argtypes
-        self.lib_whitenoise.compute_privacy_usage.argtypes = proto_argtypes
-        self.lib_whitenoise.expand_component.argtypes = proto_argtypes
-        self.lib_whitenoise.get_properties.argtypes = proto_argtypes
-        self.lib_whitenoise.generate_report.argtypes = proto_argtypes
-        self.lib_whitenoise.privacy_usage_to_accuracy.argtypes = proto_argtypes
-        self.lib_whitenoise.validate_analysis.argtypes = proto_argtypes
+        self.lib_smartnoise.accuracy_to_privacy_usage.argtypes = proto_argtypes
+        self.lib_smartnoise.compute_privacy_usage.argtypes = proto_argtypes
+        self.lib_smartnoise.expand_component.argtypes = proto_argtypes
+        self.lib_smartnoise.get_properties.argtypes = proto_argtypes
+        self.lib_smartnoise.generate_report.argtypes = proto_argtypes
+        self.lib_smartnoise.privacy_usage_to_accuracy.argtypes = proto_argtypes
+        self.lib_smartnoise.validate_analysis.argtypes = proto_argtypes
 
-        self.lib_whitenoise.accuracy_to_privacy_usage.restype = ByteBuffer
-        self.lib_whitenoise.compute_privacy_usage.restype = ByteBuffer
-        self.lib_whitenoise.expand_component.restype = ByteBuffer
-        self.lib_whitenoise.get_properties.restype = ByteBuffer
-        self.lib_whitenoise.generate_report.restype = ByteBuffer
-        self.lib_whitenoise.privacy_usage_to_accuracy.restype = ByteBuffer
-        self.lib_whitenoise.validate_analysis.restype = ByteBuffer
+        self.lib_smartnoise.accuracy_to_privacy_usage.restype = ByteBuffer
+        self.lib_smartnoise.compute_privacy_usage.restype = ByteBuffer
+        self.lib_smartnoise.expand_component.restype = ByteBuffer
+        self.lib_smartnoise.get_properties.restype = ByteBuffer
+        self.lib_smartnoise.generate_report.restype = ByteBuffer
+        self.lib_smartnoise.privacy_usage_to_accuracy.restype = ByteBuffer
+        self.lib_smartnoise.validate_analysis.restype = ByteBuffer
 
         # runtime
-        self.lib_whitenoise.release.restype = ByteBuffer
-        self.lib_whitenoise.release.argtypes = proto_argtypes
+        self.lib_smartnoise.release.restype = ByteBuffer
+        self.lib_smartnoise.release.argtypes = proto_argtypes
 
         # ffi
-        self.lib_whitenoise.whitenoise_destroy_bytebuffer.restype = ctypes.c_void_p
-        self.lib_whitenoise.whitenoise_destroy_bytebuffer.argtypes = [ByteBuffer]
+        self.lib_smartnoise.smartnoise_destroy_bytebuffer.restype = ctypes.c_void_p
+        self.lib_smartnoise.smartnoise_destroy_bytebuffer.argtypes = [ByteBuffer]
 
         # direct mechanism access
         # library must be compiled with these endpoints to use them
         try:
-            self.lib_whitenoise.laplace_mechanism.restype = ctypes.c_double
-            self.lib_whitenoise.laplace_mechanism.argtypes = [
+            self.lib_smartnoise.laplace_mechanism.restype = ctypes.c_double
+            self.lib_smartnoise.laplace_mechanism.argtypes = [
                 ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
             ]
 
-            self.lib_whitenoise.gaussian_mechanism.restype = ctypes.c_double
-            self.lib_whitenoise.gaussian_mechanism.argtypes = [
+            self.lib_smartnoise.gaussian_mechanism.restype = ctypes.c_double
+            self.lib_smartnoise.gaussian_mechanism.argtypes = [
                 ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
             ]
 
-            self.lib_whitenoise.simple_geometric_mechanism.restype = ctypes.c_int64
-            self.lib_whitenoise.simple_geometric_mechanism.argtypes = [
+            self.lib_smartnoise.simple_geometric_mechanism.restype = ctypes.c_int64
+            self.lib_smartnoise.simple_geometric_mechanism.argtypes = [
                 ctypes.c_int64, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_int64, ctypes.c_bool
             ]
 
-            self.lib_whitenoise.snapping_mechanism.restype = ctypes.c_double
-            self.lib_whitenoise.snapping_mechanism.argtypes = [
+            self.lib_smartnoise.snapping_mechanism.restype = ctypes.c_double
+            self.lib_smartnoise.snapping_mechanism.argtypes = [
                 ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
             ]
 
-            self.lib_whitenoise.snapping_mechanism_binding.restype = ctypes.c_double
-            self.lib_whitenoise.snapping_mechanism_binding.argtypes = [
+            self.lib_smartnoise.snapping_mechanism_binding.restype = ctypes.c_double
+            self.lib_smartnoise.snapping_mechanism_binding.argtypes = [
                 ctypes.c_double, ctypes.c_double, ctypes.c_double,
                 ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
             ]
@@ -102,9 +102,9 @@ class LibraryWrapper(object):
         """
         return _communicate(
             argument=api_pb2.RequestValidateAnalysis(analysis=analysis, release=release),
-            function=self.lib_whitenoise.validate_analysis,
+            function=self.lib_smartnoise.validate_analysis,
             response_type=api_pb2.ResponseValidateAnalysis,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def compute_privacy_usage(self, analysis, release):
         """
@@ -117,9 +117,9 @@ class LibraryWrapper(object):
         """
         return _communicate(
             argument=api_pb2.RequestComputePrivacyUsage(analysis=analysis, release=release),
-            function=self.lib_whitenoise.compute_privacy_usage,
+            function=self.lib_smartnoise.compute_privacy_usage,
             response_type=api_pb2.ResponseComputePrivacyUsage,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def generate_report(self, analysis, release):
         """
@@ -133,9 +133,9 @@ class LibraryWrapper(object):
 
         return _communicate(
             argument=api_pb2.RequestGenerateReport(analysis=analysis, release=release),
-            function=self.lib_whitenoise.generate_report,
+            function=self.lib_smartnoise.generate_report,
             response_type=api_pb2.ResponseGenerateReport,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def accuracy_to_privacy_usage(self, privacy_definition, component, properties, accuracies, public_arguments):
         """
@@ -156,9 +156,9 @@ class LibraryWrapper(object):
                 properties=properties,
                 accuracies=accuracies,
                 public_arguments=public_arguments),
-            function=self.lib_whitenoise.accuracy_to_privacy_usage,
+            function=self.lib_smartnoise.accuracy_to_privacy_usage,
             response_type=api_pb2.ResponseAccuracyToPrivacyUsage,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def privacy_usage_to_accuracy(self, privacy_definition, component, properties, public_arguments, alpha):
         """
@@ -179,9 +179,9 @@ class LibraryWrapper(object):
                 properties=properties,
                 public_arguments=public_arguments,
                 alpha=alpha),
-            function=self.lib_whitenoise.privacy_usage_to_accuracy,
+            function=self.lib_smartnoise.privacy_usage_to_accuracy,
             response_type=api_pb2.ResponsePrivacyUsageToAccuracy,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def get_properties(self, analysis, release, node_ids=None):
         """
@@ -195,9 +195,9 @@ class LibraryWrapper(object):
         """
         return _communicate(
             argument=api_pb2.RequestGetProperties(analysis=analysis, release=release, node_ids=node_ids),
-            function=self.lib_whitenoise.get_properties,
+            function=self.lib_smartnoise.get_properties,
             response_type=api_pb2.ResponseGetProperties,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def compute_release(self, analysis, release, stack_trace, filter_level):
         """
@@ -216,19 +216,19 @@ class LibraryWrapper(object):
                 release=release,
                 stack_trace=stack_trace,
                 filter_level=filter_level),
-            function=self.lib_whitenoise.release,
+            function=self.lib_smartnoise.release,
             response_type=api_pb2.ResponseRelease,
-            destroy=self.lib_whitenoise.whitenoise_destroy_bytebuffer)
+            destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def laplace_mechanism(self, value, epsilon, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.laplace_mechanism(
+        return self.lib_smartnoise.laplace_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
             ctypes.c_double(sensitivity),
             ctypes.c_bool(enforce_constant_time))
 
     def gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.gaussian_mechanism(
+        return self.lib_smartnoise.gaussian_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
             ctypes.c_double(delta),
@@ -237,7 +237,7 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def analytic_gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
-        return self.lib_whitenoise.gaussian_mechanism(
+        return self.lib_smartnoise.gaussian_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
             ctypes.c_double(delta),
@@ -246,7 +246,7 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def simple_geometric_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):
-        return self.lib_whitenoise.simple_geometric_mechanism(
+        return self.lib_smartnoise.simple_geometric_mechanism(
             ctypes.c_int64(value),
             ctypes.c_double(epsilon),
             ctypes.c_double(sensitivity),
@@ -256,7 +256,7 @@ class LibraryWrapper(object):
 
     def snapping_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time, binding_probability=None):
         if binding_probability is None:
-            return self.lib_whitenoise.snapping_mechanism(
+            return self.lib_smartnoise.snapping_mechanism(
                 ctypes.c_double(value),
                 ctypes.c_double(epsilon),
                 ctypes.c_double(sensitivity),
@@ -264,7 +264,7 @@ class LibraryWrapper(object):
                 ctypes.c_double(max),
                 ctypes.c_bool(enforce_constant_time))
         else:
-            return self.lib_whitenoise.snapping_mechanism_binding(
+            return self.lib_smartnoise.snapping_mechanism_binding(
                 ctypes.c_double(value),
                 ctypes.c_double(epsilon),
                 ctypes.c_double(sensitivity),
@@ -314,8 +314,8 @@ def format_error(error):
         if platform.system() == "Linux":
             message, *frames = re.split("\n +[0-9]+: ", library_traceback)
             library_traceback = '\n'.join(reversed(["  " + frame.replace("         at", "at") for frame in frames
-                                                    if ("at src/" in frame or "whitenoise_validator" in frame)
-                                                    and "whitenoise_validator::errors::Error" not in frame])) \
+                                                    if ("at src/" in frame or "smartnoise_validator" in frame)
+                                                    and "smartnoise_validator::errors::Error" not in frame])) \
                                 + "\n  " + message
     except Exception:
         pass
