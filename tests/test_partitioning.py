@@ -2,13 +2,13 @@
 
 import pytest
 import opendp.whitenoise.core as wn
-from tests import TEST_CSV_PATH, test_csv_names
+from tests import TEST_PUMS_PATH, TEST_PUMS_NAMES
 
 
 def test_groupby_1():
 
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         partitioned = wn.partition(data[['educ', 'income']], by=is_male)
@@ -23,7 +23,7 @@ def test_groupby_1():
 
 def test_groupby_2():
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         partitioned = wn.partition(wn.to_float(data[['educ', 'income']]), by=is_male)
@@ -45,7 +45,7 @@ def test_groupby_2():
 def test_groupby_3():
     # now union the released output
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
@@ -71,7 +71,7 @@ def test_groupby_3():
 def test_groupby_4():
     # now union private data, and apply mechanism after
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
@@ -96,7 +96,7 @@ def test_groupby_4():
 
 def test_fail_groupby():
     with wn.Analysis() as analysis, pytest.raises(RuntimeError):
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
@@ -118,7 +118,7 @@ def test_fail_groupby():
 def test_groupby_c_stab():
     # use the same partition multiple times in union
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
@@ -146,7 +146,7 @@ def test_groupby_c_stab():
 def test_multilayer_partition_1():
     # multilayer partition with mechanisms applied inside partitions
     with wn.Analysis(eager=False) as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
@@ -197,7 +197,7 @@ def test_multilayer_partition_2():
     #
     # multilayer partition with mechanisms applied after union
     with wn.Analysis(eager=False) as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
@@ -246,7 +246,7 @@ def test_dataframe_partitioning_1():
 
     # dataframe partition
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = wn.to_bool(data['sex'], true_label="1")
         partitioned = wn.partition(data, by=is_male)
@@ -263,7 +263,7 @@ def test_dataframe_partitioning_1():
 def test_dataframe_partitioning_2():
     # dataframe partition with multi-index grouping
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         grouper = wn.clamp(
             data[['sex', 'educ']],
@@ -292,7 +292,7 @@ def test_dataframe_partitioning_2():
 def test_map_1():
     # map a count over all dataframe partitions
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         partitioned = wn.partition(
             data,
@@ -309,7 +309,7 @@ def test_map_1():
 def test_map_2():
     # map a count over a large number of tuple partitions of dataframes
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         grouper = wn.clamp(
             data[['sex', 'educ']],
@@ -329,7 +329,7 @@ def test_map_2():
 def test_map_3():
     # chain multiple maps over an array partition with implicit preprocessing
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         partitioned = wn.partition(
             wn.to_float(data['age']),
@@ -348,7 +348,7 @@ def test_map_3():
 def test_map_4():
     # chain multiple mapped releases over a partition with implicit preprocessing
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         partitioned = wn.partition(
             wn.to_float(data['age']),

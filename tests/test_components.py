@@ -3,7 +3,8 @@ import random
 import string
 import numpy as np
 
-from tests.test_base import TEST_CSV_PATH, test_csv_names
+from tests import (TEST_PUMS_PATH, TEST_PUMS_NAMES,
+                   TEST_EDUC_PATH, TEST_EDUC_NAMES)
 
 
 def generate_bools():
@@ -64,7 +65,8 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
         bool: 'bool', float: 'float', int: 'int', str: 'str'
     }[var_type], true_label=True, lower=0, upper=10)
     resized = wn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
-    return wn.column_bind(resized, names=names)
+    return wn.to_dataframe(resized, names=names)
+
 
 def test_dp_covariance():
 
@@ -72,9 +74,9 @@ def test_dp_covariance():
     var_names = ["age", "sex", "educ", "race", "income", "married"]
 
     with wn.Analysis() as analysis:
-        wn_data = wn.Dataset(path=TEST_CSV_PATH, column_names=var_names)
+        wn_data = wn.Dataset(path=TEST_PUMS_PATH, column_names=var_names)
 
-        # # get scalar covariance
+        # get scalar covariance
         age_income_cov_scalar = wn.dp_covariance(
             left=wn.to_float(wn_data['age']),
             right=wn.to_float(wn_data['income']),
@@ -113,6 +115,27 @@ def test_dp_covariance():
     print('cross-covariance matrix:\n{0}'.format(cross_covar.value))
 
 
+def test_dp_linear_regression():
+
+    with wn.Analysis():
+        wn_data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        wn_data = wn.resize(
+            wn.to_float(wn_data[["age", "income"]]),
+            number_rows=1000,
+            lower=[0., 0.],
+            upper=[100., 500_000.])
+
+        dp_linear_regression = wn.dp_linear_regression(
+            data_x=wn.index(wn_data, indices=0),
+            data_y=wn.index(wn_data, indices=1),
+            privacy_usage={'epsilon': 10.},
+            lower_slope=0., upper_slope=1000.,
+            lower_intercept=0., upper_intercept=1000.
+        )
+
+        print(dp_linear_regression.value)
+
+
 def test_divide():
     with wn.Analysis():
         data_A = generate_synthetic(float, variants=['Random'])
@@ -135,33 +158,25 @@ def test_divide():
 
 
 def test_dp_mean():
-    with wn.Analysis():
+    with wn.Analysis() as analysis:
         data = generate_synthetic(float, variants=['Random'])
         mean = wn.dp_mean(
             data['F_Random'],
-            # privacy_usage={'epsilon': 0.1},
-            accuracy={'value': .2, 'alpha': .05},
+            privacy_usage={'epsilon': 0.1},
             data_lower=0.,
             data_upper=10.,
             data_rows=10)
 
-        print("accuracy", mean.get_accuracy(0.05))
-        print(mean.from_accuracy(2.3, .05))
-
-    with wn.Analysis():
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
-        print(wn.dp_mean(wn.to_float(data['income']),
-                         implementation="plug-in",
-                         data_lower=0., data_upper=200_000.,
-                         privacy_usage={"epsilon": 0.5}).value)
+        analysis.release()
+        print(mean.value)
+        print(analysis.report())
 
 
 def test_dp_median():
-    with wn.Analysis(eager=True, dynamic=False, filter_level='all') as analysis:
+    with wn.Analysis():
         data = generate_synthetic(float, variants=['Random'])
-        print(data.value)
 
-        candidates = wn.Component.of([-10., -2., 2., 3., 4., 7., 10., 12.], value_format='jagged')
+        candidates = wn.Component.of([-10., -2., 2., 3., 4., 7., 10., 12.])
 
         median_scores = wn.median(
             data['F_Random'],
@@ -173,6 +188,33 @@ def test_dp_median():
         dp_median = wn.exponential_mechanism(median_scores, candidates=candidates, privacy_usage={"epsilon": 1.})
 
         print(dp_median.value)
+
+        assert wn.dp_median(
+            data['F_Random'],
+            privacy_usage={"epsilon": 1.},
+            candidates=candidates,
+            data_lower=0.,
+            data_upper=10.).value is not None
+
+
+def test_median_education():
+    # import pandas as pd
+    # print(pd.read_csv(data_path)['value'].median())
+    with wn.Analysis(filter_level="all") as analysis:
+        data = wn.Dataset(path=TEST_EDUC_PATH, column_names=TEST_EDUC_NAMES)
+        candidates = list(map(float, range(1, 200, 2)))
+        median_scores = wn.median(
+            wn.impute(wn.to_float(data['value']), 100., 200.),
+            candidates=candidates)
+
+        # print(list(zip(candidates, median_scores.value[0])))
+
+        dp_median = wn.exponential_mechanism(
+            median_scores,
+            candidates=candidates,
+            privacy_usage={"epsilon": 100.})
+        print(dp_median.value)
+    analysis.release()
 
 
 def test_equal():

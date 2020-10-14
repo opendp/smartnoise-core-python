@@ -1,7 +1,7 @@
 import os
 from distutils.util import strtobool
 import opendp.whitenoise.core as wn
-from tests import TEST_CSV_PATH, test_csv_names
+from tests import TEST_PUMS_PATH, TEST_PUMS_NAMES
 
 # Used to skip showing plots, etc.
 #
@@ -10,7 +10,7 @@ IS_CI_BUILD = strtobool(os.environ.get('IS_CI_BUILD', 'False'))
 
 def test_multilayer_analysis(run=True):
     with wn.Analysis() as analysis:
-        PUMS = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        PUMS = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         age = wn.to_float(PUMS['age'])
         sex = wn.to_bool(PUMS['sex'], true_label="TRUE")
@@ -77,7 +77,7 @@ def test_multilayer_analysis(run=True):
 
 def test_dp_linear_stats(run=True):
     with wn.Analysis() as analysis:
-        dataset_pums = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        dataset_pums = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         age = dataset_pums['age']
         analysis.release()
@@ -223,7 +223,7 @@ def test_dp_linear_stats(run=True):
 
 def test_dp_count(run=True):
     with wn.Analysis() as analysis:
-        dataset_pums = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        dataset_pums = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         count = wn.dp_count(
             dataset_pums['sex'] == '1',
@@ -256,7 +256,7 @@ def test_raw_dataset(run=True):
 
 def test_everything(run=True):
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         age_int = wn.to_int(data['age'], 0, 150)
         sex = wn.to_bool(data['sex'], "1")
@@ -354,7 +354,7 @@ def test_histogram():
 
     # establish data information
 
-    data = np.genfromtxt(TEST_CSV_PATH, delimiter=',', names=True)
+    data = np.genfromtxt(TEST_PUMS_PATH, delimiter=',', names=True)
     education_categories = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
 
     income = list(data[:]['income'])
@@ -363,7 +363,7 @@ def test_histogram():
     print('actual', np.histogram(income, bins=income_edges)[0])
 
     with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
         income = wn.to_int(data['income'], lower=0, upper=0)
         sex = wn.to_bool(data['sex'], true_label="1")
 
@@ -383,10 +383,10 @@ def test_covariance():
     import pandas as pd
     import matplotlib.pyplot as plt
 
-    data = np.genfromtxt(TEST_CSV_PATH, delimiter=',', names=True)
+    data = np.genfromtxt(TEST_PUMS_PATH, delimiter=',', names=True)
 
     with wn.Analysis() as analysis:
-        wn_data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        wn_data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
         # get full covariance matrix
         cov = wn.dp_covariance(data=wn.to_float(wn_data['age', 'sex', 'educ', 'income', 'married']),
                                privacy_usage={'epsilon': 10},
@@ -425,7 +425,7 @@ def test_covariance():
 def test_properties():
     with wn.Analysis():
         # load data
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         # establish data
         age_dt = wn.cast(data['age'], 'FLOAT')
@@ -448,3 +448,21 @@ def test_properties():
         print("data_type", clamped.data_type)
         print("categories", clamped.categories)
 
+
+def test_reports():
+    with wn.Analysis() as analysis:
+        # load data
+        data = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        # get mean of age
+        age_mean = wn.dp_mean(
+            data=wn.to_float(data['age']),
+            privacy_usage={'epsilon': .65},
+            data_lower=0.,
+            data_upper=100.,
+            data_rows=1000)
+        print("Pre-Release\n")
+        print("DP mean of age: {0}".format(age_mean.value))
+        print("Privacy usage: {0}\n\n".format(analysis.privacy_usage))
+
+        # TODO: uncomment when reports fix is merged
+        # assert len(analysis.report()) == 1

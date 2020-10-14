@@ -3,7 +3,7 @@ from pprint import pprint
 import pytest
 
 import opendp.whitenoise.core as wn
-from tests import TEST_CSV_PATH, test_csv_names
+from tests import TEST_PUMS_PATH, TEST_PUMS_NAMES
 
 
 def dp_all(numeric, categorical, args):
@@ -39,7 +39,7 @@ def analytic_gaussian_similarity():
     analytic_gauss_estimates = []
     gauss_estimates = []
     with wn.Analysis(strict_parameter_checks=False):
-        PUMS = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        PUMS = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         age = wn.impute(
             wn.to_float(PUMS['age']),
@@ -67,7 +67,7 @@ def snapping_similarity():
     snapping_estimates = []
     laplace_estimates = []
     with wn.Analysis(strict_parameter_checks=False):
-        PUMS = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        PUMS = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         age = wn.impute(
             wn.to_float(PUMS['age']),
@@ -122,7 +122,7 @@ def snapping_similarity():
 )
 def test_mechanism(args, constructor):
     with wn.Analysis() as analysis:
-        PUMS = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        PUMS = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
         categorical = wn.resize(
             wn.clamp(PUMS['sex'], categories=["0", "1"], null_value="0"),
             number_rows=1000)
@@ -146,7 +146,7 @@ def test_mechanism(args, constructor):
 
 def test_snapping():
     with wn.Analysis():
-        PUMS = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+        PUMS = wn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         statistic = wn.mean(
             wn.to_float(PUMS['age']),
