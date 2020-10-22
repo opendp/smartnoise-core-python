@@ -73,9 +73,9 @@ jobs:
       - chmod +x scripts/build_manylinux_binaries.sh
     script:
       - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_manylinux_binaries.sh
-      - cp whitenoise-core/target/release/libwhitenoise_ffi.so tmp_binaries
+      - cp smartnoise-core/target/release/libsmartnoise_ffi.so tmp_binaries
       - python3 scripts/code_generation.py
-      - cp tmp_binaries/libwhitenoise_ffi.so opendp/whitenoise/core/lib
+      - cp tmp_binaries/libsmartnoise_ffi.so opendp/smartnoise/core/lib
       - python3 setup.py bdist_wheel -d ./wheelhouse
     deploy:
       skip_cleanup: true

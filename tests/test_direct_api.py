@@ -1,5 +1,5 @@
 
-from opendp.whitenoise.core import core_library
+from opendp.smartnoise.core import core_library
 
 
 def test_laplace_mechanism():

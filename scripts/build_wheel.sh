@@ -5,7 +5,7 @@ echo "(1) Clean, delete all temporary directories";
 bash scripts/clean.sh
 
 #echo "(1a) Build validator, to have .protos generated before next step";
-#cd whitenoise-core;
+#cd smartnoise-core;
 #cargo build --manifest-path=validator-rust/Cargo.toml
 #cd ..;
 

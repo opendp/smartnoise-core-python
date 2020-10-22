@@ -1,6 +1,6 @@
 """
-Script to build out the python package opendp.whitenoise.core in 3 steps
-(a) Build the whitenoise-core Rust validator and runtime
+Script to build out the python package opendp.smartnoise.core in 3 steps
+(a) Build the smartnoise-core Rust validator and runtime
 (b) Create the Python classes from Protobuf definitions
 (c) Build the python components.py and variant_message_map.py file
 """
@@ -24,8 +24,8 @@ os.environ['RUSTFLAGS'] = ""
 
 # protoc must be installed and on path
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-package_dir = os.path.join(root_dir, 'opendp', 'whitenoise', 'core')
-rust_dir = os.path.join(root_dir, 'whitenoise-core')
+package_dir = os.path.join(root_dir, 'opendp', 'smartnoise', 'core')
+rust_dir = os.path.join(root_dir, 'smartnoise-core')
 prototypes_dir = os.path.join(rust_dir, "validator-rust", "prototypes")
 lib_dir = os.path.join(package_dir, "lib")
 
@@ -33,7 +33,7 @@ if not os.path.exists(rust_dir):
     # when the repository is cloned, the --recurse-submodules inits and updates the core submodule
     # if this argument is not passed, you can still init and update the core submodule
     raise Exception(
-        "whitenoise-core submodule is not initiated. "
+        "smartnoise-core submodule is not initiated. "
         "Read the setup instructions, then run `git submodule init`, `git submodule update`.")
 
 
@@ -61,7 +61,7 @@ def build_rust_binaries():
     os.makedirs(lib_dir, exist_ok=True)
 
     for filename in os.listdir(rust_build_path):
-        if filename.startswith("libwhitenoise_ffi") and os.path.isfile(os.path.join(rust_build_path, filename)):
+        if filename.startswith("libsmartnoise_ffi") and os.path.isfile(os.path.join(rust_build_path, filename)):
             shutil.copy(os.path.join(rust_build_path, filename), lib_dir)
 
 
