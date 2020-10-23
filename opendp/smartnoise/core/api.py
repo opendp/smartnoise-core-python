@@ -18,12 +18,14 @@ class LibraryWrapper(object):
             "darwin": ".dylib"
         }.get(sys.platform)
 
+        prefix = "" if sys.platform == "win32" else "lib"
+
         if not extension:
             raise Exception(f"smartnoise-core does not support {sys.platform}")
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
         lib_dir = os.path.join(script_dir, "lib")
-        lib_smartnoise_path = os.path.join(lib_dir, "libsmartnoise_ffi" + extension)
+        lib_smartnoise_path = os.path.join(lib_dir, f"{prefix}smartnoise_ffi{extension}")
 
         self.lib_smartnoise = ctypes.cdll.LoadLibrary(lib_smartnoise_path)
 

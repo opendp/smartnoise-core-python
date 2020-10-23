@@ -178,10 +178,10 @@ def test_dp_mean():
 
 
 def test_dp_median():
-    with sn.Analysis(eager=True, dynamic=False, filter_level='all'):
+    with sn.Analysis():
         data = generate_synthetic(float, variants=['Random'])
 
-        candidates = sn.Component.of([-10., -2., 2., 3., 4., 7., 10., 12.])
+        candidates = [-10., -2., 2., 3., 4., 7., 10., 12.]
 
         median_scores = sn.median(
             data['F_Random'],
@@ -193,13 +193,30 @@ def test_dp_median():
         dp_median = sn.exponential_mechanism(median_scores, candidates=candidates, privacy_usage={"epsilon": 1.})
 
         print(dp_median.value)
-
         assert sn.dp_median(
             data['F_Random'],
             privacy_usage={"epsilon": 1.},
             candidates=candidates,
             data_lower=0.,
             data_upper=10.).value is not None
+
+
+def test_dp_median_raw():
+    with sn.Analysis() as analysis:
+        # create a literal data vector, and tag it as private
+        data = sn.Component.of([float(i) for i in range(20)], public=False)
+
+        dp_median = sn.dp_median(
+            sn.to_float(data),
+            privacy_usage={"epsilon": 1.},
+            candidates=[-10., -2., 2., 3., 4., 7., 10., 12.],
+            data_lower=0.,
+            data_upper=10.,
+            data_columns=1).value
+        print(dp_median)
+
+        # analysis.plot()
+        assert dp_median is not None
 
 
 def test_median_education():
