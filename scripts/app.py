@@ -1,4 +1,4 @@
-import opendp.whitenoise.core as wn
+import opendp.smartnoise.core as sn
 # turn on stack traces from panics
 import os
 os.environ['RUST_BACKTRACE'] = 'full'
@@ -15,7 +15,7 @@ from tests import test_base
 # var_names = ["age", "sex", "educ", "race", "income", "married", "pid"]
 
 # ~~~ SCRAP AREA FOR TESTING ~~~
-test_components.test_dp_median()
+test_components.test_dp_median_raw()
 # test_components.test_dp_linear_regression()
 # test_components.test_dp_covariance()
 # test_median()
