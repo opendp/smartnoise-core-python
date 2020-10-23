@@ -6,7 +6,7 @@ if [[ ! -d "opendp/smartnoise/core/lib" ]]; then
   python3 scripts/code_generation.py
 fi
 
-WN_VERSION=0.2.1
+WN_VERSION=0.1.0
 
 sphinx-apidoc -fFe -H opendp-smartnoise-core -A "Consequences of Data" -V $WN_VERSION -o docs_temp/source/ opendp opendp/smartnoise/core/*_pb2.py --templatedir templates/
 
