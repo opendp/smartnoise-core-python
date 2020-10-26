@@ -15,7 +15,7 @@ setup(
     package_data={
         "opendp.smartnoise": [
             os.path.join("core", "lib", filename) for filename in [
-                "libsmartnoise_ffi.dll",
+                "smartnoise_ffi.dll",
                 "libsmartnoise_ffi.so",
                 "libsmartnoise_ffi.dylib",
             ]
