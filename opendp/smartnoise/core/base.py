@@ -6,7 +6,7 @@ from .value import *
 
 import typing
 
-from opendp.whitenoise.core import api_pb2, value_pb2, base_pb2
+from opendp.smartnoise.core import api_pb2, value_pb2, base_pb2
 
 core_library = LibraryWrapper()
 
@@ -66,7 +66,7 @@ class Component(object):
 
     Many components are linked together to form an analysis graph.
 
-    :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/whitenoise-core/doc/whitenoise_validator/docs/components/index.html
+    :param name: The id of the component. A list of component id is here: https://opendifferentialprivacy.github.io/smartnoise-core/doc/smartnoise_validator/docs/components/index.html
     :param arguments: Inputs to the component that come from prior nodes on the graph.
     :param options: Inputs to the component that are passed directly via protobuf.
     :param constraints: Additional modifiers on data inputs, like data_lower, or left_categories.
@@ -108,7 +108,7 @@ class Component(object):
         if context:
             context.add_component(self, value=value, value_format=value_format, value_public=value_public)
         else:
-            raise ValueError("all Whitenoise components must be created within the context of an analysis")
+            raise ValueError("all SmartNoise components must be created within the context of an analysis")
 
         if accuracy:
             privacy_usages = self.from_accuracy(accuracy['value'], accuracy['alpha'])
@@ -119,7 +119,7 @@ class Component(object):
     def value(self):
         """
         Retrieve the released values from the analysis' release.
-        If this returns None, then either analysis.release() has not yet been called, or this node is not releasable.
+        If this returns None, then this node is not releasable.
 
         :return: The value stored in the release corresponding to this node
         """
@@ -148,19 +148,30 @@ class Component(object):
         return {parent: next(k for k, v in parent.arguments.items()
                              if id(self) == id(v)) for parent in parents}
 
-    def get_accuracy(self, alpha):
+    def get_accuracy(self, alpha, privacy_usage=None):
         """
         Retrieve the accuracy for the values released by the component.
         The true value differs from the estimate by at most "accuracy amount" with (1 - alpha)100% confidence.
         """
         self.analysis.update_properties(
-            component_ids=[arg.component_id for arg in self.arguments.values()])
+            component_ids=[arg.component_id for arg in self.arguments.values() if arg])
+
+        if privacy_usage is None:
+            serialized_component = serialize_component(self)
+        else:
+            cache, self.options['privacy_usage'] = self.options['privacy_usage'], serialize_privacy_usage(privacy_usage)
+            serialized_component = serialize_component(self)
+            self.options['privacy_usage'] = cache
 
         properties = {name: self.analysis.properties.get(arg.component_id) for name, arg in self.arguments.items() if arg}
         response = core_library.privacy_usage_to_accuracy(
             privacy_definition=serialize_privacy_definition(self.analysis),
-            component=serialize_component(self),
+            component=serialized_component,
             properties=serialize_argument_properties(properties),
+            public_arguments=serialize_indexmap_release_node({
+                name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
+                if arg
+            }),
             alpha=alpha)
 
         value = [accuracy.value for accuracy in response.values]
@@ -173,7 +184,8 @@ class Component(object):
         Retrieve the privacy usage necessary such that the true value differs from the estimate by at most "value amount" with (1 - alpha)100% confidence
         """
 
-        self.analysis.update_properties([arg.component_id for arg in self.arguments.values()])
+        self.analysis.update_properties(
+            component_ids=[arg.component_id for arg in self.arguments.values() if arg])
 
         if not issubclass(type(value), list):
             value = [value]
@@ -189,7 +201,11 @@ class Component(object):
             }),
             accuracies=base_pb2.Accuracies(values=[
                 base_pb2.Accuracy(value=value, alpha=alpha) for value, alpha in zip(value, alpha)
-            ]))
+            ]),
+            public_arguments=serialize_indexmap_release_node({
+                name: self.analysis.release_values.get(arg.component_id) for name, arg in self.arguments.items()
+                if arg
+            }))
 
         return [parse_privacy_usage(usage) for usage in privacy_usages.values]
 

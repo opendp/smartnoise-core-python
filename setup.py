@@ -13,11 +13,11 @@ setup(
         ]
     },
     package_data={
-        "opendp.whitenoise": [
+        "opendp.smartnoise": [
             os.path.join("core", "lib", filename) for filename in [
-                "libwhitenoise_ffi.dll",
-                "libwhitenoise_ffi.so",
-                "libwhitenoise_ffi.dylib",
+                "smartnoise_ffi.dll",
+                "libsmartnoise_ffi.so",
+                "libsmartnoise_ffi.dylib",
             ]
         ]
     }

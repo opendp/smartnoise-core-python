@@ -11,7 +11,7 @@ done
 (( i )) && printf '\n'
 
 # be sure to update paths within the adjacent .toml if you choose to run this
-# python ./whitenoise-core/scripts/update_version.py
+# python ./smartnoise-core/scripts/update_version.py
 
 echo "(A) clean, delete all temporary directories";
 bash scripts/clean.sh
@@ -27,30 +27,33 @@ docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_manylinux_binaries.
 
 echo "(D) store binary in temp directory";
 mkdir tmp_binaries
-rm -f tmp_binaries/libwhitenoise_ffi.so
-cp whitenoise-core/target/release/libwhitenoise_ffi.so tmp_binaries/libwhitenoise_ffi.so
+rm -f tmp_binaries/libsmartnoise_ffi.so
+cp smartnoise-core/target/release/libsmartnoise_ffi.so tmp_binaries/libsmartnoise_ffi.so
 
 # (1) check check for GLIBC_ <= ~2.3. Typically memcpy is an example that links to GLIBC ~2.15
 #  - Outputs several versions. Look at versions <= 2.3
 #  - Dump out link table to see if it's linking against older versions of GLIBC
 #  - In the past, have uploaded libs not mentioned in the install
 #
-#  docker run --rm -v `pwd`:/io $DOCKER_IMAGE objdump -T /io/opendp/whitenoise/core/lib/libwhitenoise_ffi.so | grep GLIBC_
+#  docker run --rm -v `pwd`:/io $DOCKER_IMAGE objdump -T /io/opendp/smartnoise/core/lib/libsmartnoise_ffi.so | grep GLIBC_
 #  
 # (2) Check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
 #
-# docker run --rm -v `pwd`:/io $DOCKER_IMAGE ldd /io/opendp/whitenoise/core/lib/libwhitenoise_ffi.so
+# docker run --rm -v `pwd`:/io $DOCKER_IMAGE ldd /io/opendp/smartnoise/core/lib/libsmartnoise_ffi.so
 #
 
 echo "(E) mac binaries/packaging";
+export WN_USE_SYSTEM_LIBS=false;
+export WN_DEBUG=false;
+export WN_USE_VULNERABLE_NOISE=false;
 python3 scripts/code_generation.py
 
 # (3) check that all necessary libraries are statically linked (look for non-existence of gmp/mpfr/mpc/openssl)
-# otool -L opendp/whitenoise/core/lib/libwhitenoise_ffi.dylib
+# otool -L opendp/smartnoise/core/lib/libsmartnoise_ffi.dylib
 #
 
 echo "(F) move prior manylinux binary into the library";
-cp tmp_binaries/libwhitenoise_ffi.so opendp/whitenoise/core/lib
+cp tmp_binaries/libsmartnoise_ffi.so opendp/smartnoise/core/lib
 
 echo "(G) package into wheel";
 #workon psi

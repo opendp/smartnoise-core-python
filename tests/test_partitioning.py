@@ -1,26 +1,19 @@
-from os.path import abspath, dirname, isfile, join
+
 
 import pytest
-import opendp.whitenoise.core as wn
-
-# Path to the test csv file
-#
-TEST_CSV_PATH = join(dirname(abspath(__file__)), '..', 'data',
-                     'PUMS_california_demographics_1000', 'data.csv')
-assert isfile(TEST_CSV_PATH), f'Error: file not found: {TEST_CSV_PATH}'
-
-test_csv_names = ["age", "sex", "educ", "race", "income", "married"]
+import opendp.smartnoise.core as sn
+from tests import TEST_PUMS_PATH, TEST_PUMS_NAMES
 
 
 def test_groupby_1():
 
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        partitioned = wn.partition(data[['educ', 'income']], by=is_male)
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        partitioned = sn.partition(data[['educ', 'income']], by=is_male)
 
-        counts = {cat: wn.dp_count(partitioned[cat], privacy_usage={'epsilon': 0.1}) for cat in is_male.categories}
+        counts = {cat: sn.dp_count(partitioned[cat], privacy_usage={'epsilon': 0.1}) for cat in is_male.categories}
 
     # analysis.plot()
     analysis.release()
@@ -29,15 +22,15 @@ def test_groupby_1():
 
 
 def test_groupby_2():
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        partitioned = wn.partition(wn.to_float(data[['educ', 'income']]), by=is_male)
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        partitioned = sn.partition(sn.to_float(data[['educ', 'income']]), by=is_male)
 
         counts = {
-            True: wn.dp_count(partitioned[True], privacy_usage={'epsilon': 0.1}),
-            False: wn.dp_mean(partitioned[False],
+            True: sn.dp_count(partitioned[True], privacy_usage={'epsilon': 0.1}),
+            False: sn.dp_mean(partitioned[False],
                               privacy_usage={'epsilon': 0.1},
                               data_rows=500,
                               data_lower=[0., 0.], data_upper=[15., 200_000.])
@@ -51,23 +44,24 @@ def test_groupby_2():
 
 def test_groupby_3():
     # now union the released output
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
 
-        partitioned = wn.partition(educ_inc, by=is_male)
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        educ_inc = sn.impute(sn.clamp(sn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+
+        partitioned = sn.partition(educ_inc, by=is_male)
 
         means = {}
         for cat in is_male.categories:
             part = partitioned[cat]
-            part = wn.resize(part, number_rows=500)
-            part = wn.dp_mean(part, privacy_usage={"epsilon": 1.0})
+            part = sn.resize(part, number_rows=500)
+            part = sn.dp_mean(part, privacy_usage={"epsilon": 1.0})
             # print("mean: ", part.properties)
             means[cat] = part
 
-        union = wn.union(means)
+        union = sn.union(means)
 
     # analysis.plot()
     analysis.release()
@@ -77,23 +71,24 @@ def test_groupby_3():
 
 def test_groupby_4():
     # now union private data, and apply mechanism after
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
 
-        partitioned = wn.partition(educ_inc, by=is_male)
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        educ_inc = sn.impute(sn.clamp(sn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+
+        partitioned = sn.partition(educ_inc, by=is_male)
 
         means = {}
         for cat in is_male.categories:
             part = partitioned[cat]
-            part = wn.resize(part, number_rows=500)
-            part = wn.mean(part)
+            part = sn.resize(part, number_rows=500)
+            part = sn.mean(part)
             means[cat] = part
 
-        union = wn.union(means)
-        noised = wn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
+        union = sn.union(means)
+        noised = sn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
 
     # analysis.plot()
     analysis.release()
@@ -101,39 +96,40 @@ def test_groupby_4():
     print(noised.value)
 
 
+@pytest.mark.xfail
 def test_fail_groupby():
-    with wn.Analysis() as analysis, pytest.raises(RuntimeError):
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        educ_inc = sn.impute(sn.clamp(sn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
 
-        partitioned = wn.partition(educ_inc, by=is_male)
+        partitioned = sn.partition(educ_inc, by=is_male)
 
         bounds = {"data_lower": [0., 0.], "data_upper": [15., 200_000.], "data_rows": 500}
 
-        union = wn.union({
-            True: wn.dp_mean(partitioned[True], privacy_usage={"epsilon": 0.1}, **bounds),
-            False: wn.mean(partitioned[False], **bounds),
+        union = sn.union({
+            True: sn.mean(partitioned[True], privacy_usage={"epsilon": 0.1}, **bounds),
+            False: sn.mean(partitioned[False], **bounds),
         })
 
-        wn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
+        sn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
 
         print(analysis.privacy_usage)
 
 
 def test_groupby_c_stab():
     # use the same partition multiple times in union
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        educ_inc = sn.impute(sn.clamp(sn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
 
-        partitioned = wn.partition(educ_inc, by=is_male)
+        partitioned = sn.partition(educ_inc, by=is_male)
 
         def analyze(data):
-            return wn.mean(wn.resize(data, number_rows=500))
+            return sn.mean(sn.resize(data, number_rows=500))
 
         means = {
             True: analyze(partitioned[True]),
@@ -141,8 +137,8 @@ def test_groupby_c_stab():
             "duplicate_that_inflates_c_stab": analyze(partitioned[True]),
         }
 
-        union = wn.union(means)
-        noised = wn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
+        union = sn.union(means)
+        noised = sn.laplace_mechanism(union, privacy_usage={"epsilon": 1.0})
 
         # analysis.plot()
     analysis.release()
@@ -152,31 +148,31 @@ def test_groupby_c_stab():
 
 def test_multilayer_partition_1():
     # multilayer partition with mechanisms applied inside partitions
-    with wn.Analysis(eager=False) as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        educ_inc = sn.impute(sn.clamp(sn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
 
-        partitioned = wn.partition(educ_inc, by=is_male)
+        partitioned = sn.partition(educ_inc, by=is_male)
 
         def analyze(data):
-            educ = wn.clamp(wn.to_int(wn.index(data, indices=0), lower=0, upper=15), categories=list(range(15)), null_value=-1)
-            income = wn.index(data, indices=1)
-            repartitioned = wn.partition(income, by=educ)
+            educ = sn.clamp(sn.to_int(sn.index(data, indices=0), lower=0, upper=15), categories=list(range(15)), null_value=-1)
+            income = sn.index(data, indices=1)
+            repartitioned = sn.partition(income, by=educ)
 
             inner_count = {}
             inner_means = {}
             for key in [5, 8, 12]:
                 educ_level_part = repartitioned[key]
 
-                inner_count[key] = wn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
-                inner_means[key] = wn.dp_mean(
+                inner_count[key] = sn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
+                inner_means[key] = sn.dp_mean(
                     educ_level_part,
                     privacy_usage={"epsilon": 0.6},
-                    data_rows=wn.row_max(1, inner_count[key]))
+                    data_rows=sn.row_max(1, inner_count[key]))
 
-            return wn.union(inner_means, flatten=False), wn.union(inner_count, flatten=False)
+            return sn.union(inner_means, flatten=False), sn.union(inner_count, flatten=False)
 
         means = {}
         counts = {}
@@ -185,8 +181,8 @@ def test_multilayer_partition_1():
             means[key] = part_means
             counts[key] = part_counts
 
-        means = wn.union(means, flatten=False)
-        counts = wn.union(counts, flatten=False)
+        means = sn.union(means, flatten=False)
+        counts = sn.union(counts, flatten=False)
 
         # analysis.plot()
     print("releasing")
@@ -203,30 +199,30 @@ def test_multilayer_partition_1():
 def test_multilayer_partition_2():
     #
     # multilayer partition with mechanisms applied after union
-    with wn.Analysis(eager=False) as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        educ_inc = wn.impute(wn.clamp(wn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        educ_inc = sn.impute(sn.clamp(sn.to_float(data[['educ', 'income']]), lower=[0., 0.], upper=[15., 200_000.]))
 
-        partitioned = wn.partition(educ_inc, by=is_male)
+        partitioned = sn.partition(educ_inc, by=is_male)
 
         def analyze(data):
-            educ = wn.clamp(wn.to_int(wn.index(data, indices=0), lower=0, upper=15), categories=list(range(15)), null_value=-1)
-            income = wn.index(data, indices=1)
-            repartitioned = wn.partition(income, by=educ)
+            educ = sn.clamp(sn.to_int(sn.index(data, indices=0), lower=0, upper=15), categories=list(range(15)), null_value=-1)
+            income = sn.index(data, indices=1)
+            repartitioned = sn.partition(income, by=educ)
 
             inner_count = {}
             inner_means = {}
             for key in [5, 8, 12]:
                 educ_level_part = repartitioned[key]
 
-                inner_count[key] = wn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
-                inner_means[key] = wn.mean(wn.resize(
+                inner_count[key] = sn.dp_count(educ_level_part, privacy_usage={"epsilon": 0.4})
+                inner_means[key] = sn.mean(sn.resize(
                     educ_level_part,
-                    number_rows=wn.row_min(1, inner_count[key] * 4 // 5)))
+                    number_rows=sn.row_min(1, inner_count[key] * 4 // 5)))
 
-            return wn.union(inner_means), wn.union(inner_count)
+            return sn.union(inner_means), sn.union(inner_count)
 
         means = {}
         counts = {}
@@ -235,8 +231,8 @@ def test_multilayer_partition_2():
             means[key] = part_means
             counts[key] = part_counts
 
-        means = wn.laplace_mechanism(wn.union(means), privacy_usage={"epsilon": 0.6})
-        counts = wn.union(counts)
+        means = sn.laplace_mechanism(sn.union(means), privacy_usage={"epsilon": 0.6})
+        counts = sn.union(counts)
 
     # analysis.plot()
     analysis.release()
@@ -252,14 +248,14 @@ def test_multilayer_partition_2():
 def test_dataframe_partitioning_1():
 
     # dataframe partition
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        is_male = wn.to_bool(data['sex'], true_label="1")
-        partitioned = wn.partition(data, by=is_male)
+        is_male = sn.to_bool(data['sex'], true_label="1")
+        partitioned = sn.partition(data, by=is_male)
 
-        print(wn.union({
-            key: wn.dp_mean(wn.impute(wn.clamp(wn.to_float(partitioned[key]['income']), 0., 200_000.)),
+        print(sn.union({
+            key: sn.dp_mean(sn.impute(sn.clamp(sn.to_float(partitioned[key]['income']), 0., 200_000.)),
                             implementation="plug-in",
                             privacy_usage={"epsilon": 0.5})
             for key in partitioned.partition_keys
@@ -269,24 +265,24 @@ def test_dataframe_partitioning_1():
 
 def test_dataframe_partitioning_2():
     # dataframe partition with multi-index grouping
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        grouper = wn.clamp(
+        grouper = sn.clamp(
             data[['sex', 'educ']],
             categories=[['0', '1'],
                         [str(i) for i in range(14)]],
             null_value='-1')
-        partitioned = wn.partition(data, by=grouper)
+        partitioned = sn.partition(data, by=grouper)
 
-        wn.union({
-            key: wn.dp_count(partitioned[key],
+        sn.union({
+            key: sn.dp_count(partitioned[key],
                              privacy_usage={"epsilon": 0.5})
             for key in partitioned.partition_keys
         }, flatten=False)
 
-        print(wn.union({
-            key: wn.dp_mean(wn.to_float(partitioned[key]['income']),
+        print(sn.union({
+            key: sn.dp_mean(sn.to_float(partitioned[key]['income']),
                             implementation="plug-in",
                             # data_rows=100,
                             data_lower=0., data_upper=200_000.,
@@ -298,14 +294,14 @@ def test_dataframe_partitioning_2():
 
 def test_map_1():
     # map a count over all dataframe partitions
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        partitioned = wn.partition(
+        partitioned = sn.partition(
             data,
-            by=wn.to_bool(data['sex'], true_label="1"))
+            by=sn.to_bool(data['sex'], true_label="1"))
 
-        counts = wn.dp_count(
+        counts = sn.dp_count(
             partitioned,
             privacy_usage={"epsilon": 0.5})
 
@@ -315,17 +311,17 @@ def test_map_1():
 
 def test_map_2():
     # map a count over a large number of tuple partitions of dataframes
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        grouper = wn.clamp(
+        grouper = sn.clamp(
             data[['sex', 'educ']],
             categories=[['0', '1'],
                         [str(i) for i in range(14)]],
             null_value='-1')
-        partitioned = wn.partition(data, by=grouper)
+        partitioned = sn.partition(data, by=grouper)
 
-        counts = wn.dp_count(
+        counts = sn.dp_count(
             partitioned,
             privacy_usage={"epsilon": 0.5})
 
@@ -335,14 +331,14 @@ def test_map_2():
 
 def test_map_3():
     # chain multiple maps over an array partition with implicit preprocessing
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        partitioned = wn.partition(
-            wn.to_float(data['age']),
-            by=wn.to_bool(data['sex'], true_label="1"))
+        partitioned = sn.partition(
+            sn.to_float(data['age']),
+            by=sn.to_bool(data['sex'], true_label="1"))
 
-        means = wn.dp_mean(
+        means = sn.dp_mean(
             partitioned,
             privacy_usage={'epsilon': 0.1},
             data_rows=500,
@@ -354,17 +350,17 @@ def test_map_3():
 
 def test_map_4():
     # chain multiple mapped releases over a partition with implicit preprocessing
-    with wn.Analysis() as analysis:
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
+    with sn.Analysis() as analysis:
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
-        partitioned = wn.partition(
-            wn.to_float(data['age']),
-            by=wn.to_bool(data['sex'], true_label="1"))
+        partitioned = sn.partition(
+            sn.to_float(data['age']),
+            by=sn.to_bool(data['sex'], true_label="1"))
 
-        counts = wn.row_max(
-            1, wn.dp_count(partitioned, privacy_usage={'epsilon': 0.5}))
+        counts = sn.row_max(
+            1, sn.dp_count(partitioned, privacy_usage={'epsilon': 0.5}))
 
-        means = wn.dp_mean(
+        means = sn.dp_mean(
             partitioned,
             privacy_usage={'epsilon': 0.7},
             data_rows=counts,

@@ -1,7 +1,7 @@
 import numpy as np
 
 from .variant_message_map import variant_message_map
-from opendp.whitenoise.core import base_pb2, components_pb2, value_pb2
+from opendp.smartnoise.core import base_pb2, components_pb2, value_pb2
 
 
 def serialize_privacy_usage(usage):
@@ -102,34 +102,49 @@ def serialize_analysis(analysis):
 def serialize_release(release_values):
     return base_pb2.Release(
         values={
-            component_id: base_pb2.ReleaseNode(
-                value=serialize_value(
-                    release_values[component_id]['value'],
-                    release_values[component_id].get("value_format")),
-                privacy_usages=release_values[component_id].get("privacy_usages"),
-                public=release_values[component_id]['public'])
-            for component_id in release_values
+            component_id: serialize_release_node(release_node)
+            for component_id, release_node in release_values.items()
         })
 
 
+def serialize_release_node(release_node):
+    return base_pb2.ReleaseNode(
+        value=serialize_value(
+            release_node['value'],
+            release_node.get("value_format")),
+        privacy_usages=release_node.get("privacy_usages"),
+        public=release_node['public'])
+
+
+def serialize_indexmap_release_node(release_values):
+    release_values = {k: v for k, v in release_values.items() if v is not None}
+    return base_pb2.IndexmapReleaseNode(
+        keys=[serialize_index_key(key) for key in release_values],
+        values=[serialize_release_node(value) for value in release_values.values()]
+    )
+
+
+def detect_atomic_type(dtype):
+    if np.issubdtype(dtype, np.integer):
+        return "i64"
+    if np.issubdtype(dtype, np.floating):
+        return "f64"
+    if dtype == np.bool_:
+        return "bool"
+    if np.issubdtype(dtype, np.character):
+        return "string"
+    raise ValueError(f"Unrecognized atomic type: {dtype}")
+
+
 def serialize_array1d(array):
-    data_type = {
-        np.bool: "bool",
-        np.int64: "i64",
-        np.float64: "f64",
-        np.bool_: "bool",
-        np.string_: "string",
-        np.str_: "string"
-    }[array.dtype.type]
+    data_type = detect_atomic_type(array.dtype.type)
 
     container_type = {
-        np.bool: value_pb2.Array1dBool,
-        np.int64: value_pb2.Array1dI64,
-        np.float64: value_pb2.Array1dF64,
-        np.bool_: value_pb2.Array1dBool,
-        np.string_: value_pb2.Array1dStr,
-        np.str_: value_pb2.Array1dStr
-    }[array.dtype.type]
+        "bool": value_pb2.Array1dBool,
+        "i64": value_pb2.Array1dI64,
+        "f64": value_pb2.Array1dF64,
+        "string": value_pb2.Array1dStr,
+    }[data_type]
 
     return value_pb2.Array1d(**{
         data_type: container_type(data=list(array))
@@ -179,14 +194,7 @@ def serialize_value(value, value_format=None):
 
         return base_pb2.Value(jagged=value_pb2.Jagged(
             data=[serialize_array1d(np.array(column)) for column in value],
-            data_type=value_pb2.DataType.Value({
-                                                   np.bool: "BOOL",
-                                                   np.int64: "I64",
-                                                   np.float64: "F64",
-                                                   np.bool_: "BOOL",
-                                                   np.string_: "STRING",
-                                                   np.str_: "STRING"
-                                               }[np.array(value[0]).dtype.type])
+            data_type=value_pb2.DataType.Value(detect_atomic_type(np.array(value[0]).dtype.type).upper())
         ))
 
     if value_format is not None and value_format != 'array':

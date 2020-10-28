@@ -1,17 +1,18 @@
-import opendp.whitenoise.core as wn
+import opendp.smartnoise.core as sn
 import random
 import string
 import numpy as np
 
-from tests.test_base import TEST_CSV_PATH, test_csv_names
+from tests import (TEST_PUMS_PATH, TEST_PUMS_NAMES,
+                   TEST_EDUC_PATH, TEST_EDUC_NAMES)
 
 
 def generate_bools():
     private_data = [[True, True], [True, False], [False, True], [False, False]]
 
-    dataset = wn.literal(value=private_data, value_public=False)
-    typed = wn.to_bool(dataset, true_label=True)
-    return wn.resize(typed, number_columns=2, categories=[True, False])
+    dataset = sn.literal(value=private_data, value_public=False)
+    typed = sn.to_bool(dataset, true_label=True)
+    return sn.resize(typed, number_columns=2, categories=[True, False])
 
 
 def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, cats_num=None, variants=None):
@@ -59,25 +60,25 @@ def generate_synthetic(var_type, n=10, rand_min=0, rand_max=10, cats_str=None, c
 
     data = list(zip(*data))
 
-    dataset = wn.literal(value=data, value_public=False)
-    typed = wn.cast(dataset, atomic_type={
+    dataset = sn.literal(value=data, value_public=False)
+    typed = sn.cast(dataset, atomic_type={
         bool: 'bool', float: 'float', int: 'int', str: 'str'
     }[var_type], true_label=True, lower=0, upper=10)
-    resized = wn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
-    return wn.column_bind(resized, names=names)
+    resized = sn.resize(typed, number_columns=len(variants), lower=0., upper=10.)
+    return sn.to_dataframe(resized, names=names)
 
 def test_dp_covariance():
 
     # establish data information
     var_names = ["age", "sex", "educ", "race", "income", "married"]
 
-    with wn.Analysis() as analysis:
-        wn_data = wn.Dataset(path=TEST_CSV_PATH, column_names=var_names)
+    with sn.Analysis() as analysis:
+        wn_data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         # # get scalar covariance
-        age_income_cov_scalar = wn.dp_covariance(
-            left=wn.to_float(wn_data['age']),
-            right=wn.to_float(wn_data['income']),
+        age_income_cov_scalar = sn.dp_covariance(
+            left=sn.to_float(wn_data['age']),
+            right=sn.to_float(wn_data['income']),
             privacy_usage={'epsilon': 5000},
             left_lower=0.,
             left_upper=100.,
@@ -86,9 +87,9 @@ def test_dp_covariance():
             right_upper=500_000.,
             right_rows=1000)
 
-        data = wn.to_float(wn_data['age', 'income'])
+        data = sn.to_float(wn_data['age', 'income'])
         # get full covariance matrix
-        age_income_cov_matrix = wn.dp_covariance(
+        age_income_cov_matrix = sn.dp_covariance(
             data=data,
             privacy_usage={'epsilon': 5000},
             data_lower=[0., 0.],
@@ -96,7 +97,7 @@ def test_dp_covariance():
             data_rows=1000)
 
         # get cross-covariance matrix
-        cross_covar = wn.dp_covariance(
+        cross_covar = sn.dp_covariance(
             left=data,
             right=data,
             privacy_usage={'epsilon': 5000},
@@ -113,14 +114,35 @@ def test_dp_covariance():
     print('cross-covariance matrix:\n{0}'.format(cross_covar.value))
 
 
+def test_dp_linear_regression():
+
+    with sn.Analysis():
+        wn_data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        wn_data = sn.resize(
+            sn.to_float(wn_data[["age", "income"]]),
+            number_rows=1000,
+            lower=[0., 0.],
+            upper=[100., 500_000.])
+
+        dp_linear_regression = sn.dp_linear_regression(
+            data_x=sn.index(wn_data, indices=0),
+            data_y=sn.index(wn_data, indices=1),
+            privacy_usage={'epsilon': 10.},
+            lower_slope=0., upper_slope=1000.,
+            lower_intercept=0., upper_intercept=1000.
+        )
+
+        print(dp_linear_regression.value)
+
+
 def test_divide():
-    with wn.Analysis():
+    with sn.Analysis():
         data_A = generate_synthetic(float, variants=['Random'])
 
         f_random = data_A['F_Random']
-        imputed = wn.impute(f_random, lower=0., upper=10.)
-        clamped_nonzero = wn.clamp(imputed, lower=1., upper=10.)
-        clamped_zero = wn.clamp(imputed, lower=0., upper=10.)
+        imputed = sn.impute(f_random, lower=0., upper=10.)
+        clamped_nonzero = sn.clamp(imputed, lower=1., upper=10.)
+        clamped_zero = sn.clamp(imputed, lower=0., upper=10.)
 
         # test properties
         assert f_random.nullity
@@ -135,12 +157,11 @@ def test_divide():
 
 
 def test_dp_mean():
-    with wn.Analysis():
+    with sn.Analysis():
         data = generate_synthetic(float, variants=['Random'])
-        mean = wn.dp_mean(
+        mean = sn.dp_mean(
             data['F_Random'],
-            # privacy_usage={'epsilon': 0.1},
-            accuracy={'value': .2, 'alpha': .05},
+            privacy_usage={'epsilon': 0.1},
             data_lower=0.,
             data_upper=10.,
             data_rows=10)
@@ -148,48 +169,91 @@ def test_dp_mean():
         print("accuracy", mean.get_accuracy(0.05))
         print(mean.from_accuracy(2.3, .05))
 
-    with wn.Analysis():
-        data = wn.Dataset(path=TEST_CSV_PATH, column_names=test_csv_names)
-        print(wn.dp_mean(wn.to_float(data['income']),
+    with sn.Analysis():
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        print(sn.dp_mean(sn.to_float(data['income']),
                          implementation="plug-in",
                          data_lower=0., data_upper=200_000.,
                          privacy_usage={"epsilon": 0.5}).value)
 
 
 def test_dp_median():
-    with wn.Analysis(eager=True, dynamic=False, filter_level='all') as analysis:
+    with sn.Analysis():
         data = generate_synthetic(float, variants=['Random'])
-        print(data.value)
 
-        candidates = wn.Component.of([-10., -2., 2., 3., 4., 7., 10., 12.], value_format='jagged')
+        candidates = [-10., -2., 2., 3., 4., 7., 10., 12.]
 
-        median_scores = wn.median(
+        median_scores = sn.median(
             data['F_Random'],
             candidates=candidates,
             data_rows=10,
             data_lower=0.,
             data_upper=10.)
 
-        dp_median = wn.exponential_mechanism(median_scores, candidates=candidates, privacy_usage={"epsilon": 1.})
+        dp_median = sn.exponential_mechanism(median_scores, candidates=candidates, privacy_usage={"epsilon": 1.})
 
         print(dp_median.value)
+        assert sn.dp_median(
+            data['F_Random'],
+            privacy_usage={"epsilon": 1.},
+            candidates=candidates,
+            data_lower=0.,
+            data_upper=10.).value is not None
+
+
+def test_dp_median_raw():
+    with sn.Analysis() as analysis:
+        # create a literal data vector, and tag it as private
+        data = sn.Component.of([float(i) for i in range(20)], public=False)
+
+        dp_median = sn.dp_median(
+            sn.to_float(data),
+            privacy_usage={"epsilon": 1.},
+            candidates=[-10., -2., 2., 3., 4., 7., 10., 12.],
+            data_lower=0.,
+            data_upper=10.,
+            data_columns=1).value
+        print(dp_median)
+
+        # analysis.plot()
+        assert dp_median is not None
+
+
+def test_median_education():
+    # import pandas as pd
+    # print(pd.read_csv(data_path)['value'].median())
+    with sn.Analysis(filter_level="all") as analysis:
+        data = sn.Dataset(path=TEST_EDUC_PATH, column_names=TEST_EDUC_NAMES)
+        candidates = list(map(float, range(1, 200, 2)))
+        median_scores = sn.median(
+            sn.impute(sn.to_float(data['value']), 100., 200.),
+            candidates=candidates)
+
+        # print(list(zip(candidates, median_scores.value[0])))
+
+        dp_median = sn.exponential_mechanism(
+            median_scores,
+            candidates=candidates,
+            privacy_usage={"epsilon": 100.})
+        print(dp_median.value)
+    analysis.release()
 
 
 def test_equal():
-    with wn.Analysis(filter_level='all') as analysis:
+    with sn.Analysis(filter_level='all') as analysis:
         data = generate_bools()
 
-        equality = wn.index(data, indices=0) == wn.index(data, indices=1)
+        equality = sn.index(data, indices=0) == sn.index(data, indices=1)
 
         analysis.release()
         assert np.array_equal(equality.value, np.array([True, False, False, True]))
 
 
 def test_partition():
-    with wn.Analysis(filter_level='all') as analysis:
+    with sn.Analysis(filter_level='all') as analysis:
         data = generate_bools()
 
-        partitioned = wn.partition(data, num_partitions=3)
+        partitioned = sn.partition(data, num_partitions=3)
         analysis.release()
         # print(partitioned.value)
 
@@ -211,22 +275,22 @@ def test_histogram():
     sd = np.std(data)
     data = pd.DataFrame([(elem - mean) / sd for elem in data])
 
-    with wn.Analysis(), tempfile.TemporaryDirectory() as temp_dir:
+    with sn.Analysis(), tempfile.TemporaryDirectory() as temp_dir:
         data_path = os.path.join(temp_dir, 'temp_data.csv')
         data.to_csv(data_path)
 
-        print(wn.dp_histogram(
-            wn.to_float(wn.Dataset(path=data_path, column_names=['d'])['d']),
+        print(sn.dp_histogram(
+            sn.to_float(sn.Dataset(path=data_path, column_names=['d'])['d']),
             edges=np.linspace(-3., 3., 1000),
             privacy_usage={'epsilon': 0.1}
         ).value)
 
 
 def test_index():
-    with wn.Analysis(filter_level='all') as analysis:
+    with sn.Analysis(filter_level='all') as analysis:
         data = generate_bools()
 
-        index_0 = wn.index(data, indices=0)
+        index_0 = sn.index(data, indices=0)
 
         analysis.release()
         assert all(a == b for a, b in zip(index_0.value, [True, True, False, False]))

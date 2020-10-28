@@ -3,7 +3,7 @@ import os
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-components_dir = os.path.join(script_dir, "..", "whitenoise-core", "validator-rust", "prototypes", "components")
+components_dir = os.path.join(script_dir, "..", "smartnoise-core", "validator-rust", "prototypes", "components")
 for idx, filename in enumerate(sorted(os.listdir(components_dir))):
     if not filename.endswith(".json"):
         continue
