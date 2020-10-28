@@ -1,4 +1,5 @@
 import opendp.smartnoise.core as sn
+import numpy as np
 
 
 def test_insertion_simple():
