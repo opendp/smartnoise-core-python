@@ -4,8 +4,8 @@
 
 <a href="https://opendifferentialprivacy.github.io"><img src="https://github.com/opendifferentialprivacy/smartnoise-core/blob/develop/images/SmartNoise_Logos/SVG/LogoMark_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
 
-## SmartNoise Core Differential Privacy Library Python Bindings <br/>
-
+## SmartNoise Core Differential Privacy Library Python Bindings \
+\
 This repository contains python bindings to the [SmartNoise Core library](https://github.com/opendifferentialprivacy/smartnoise-core) and its underlying Rust binaries.
 
 - For examples of this library in action, please see the Python notebooks in the [Samples repository](https://github.com/opendifferentialprivacy/smartnoise-samples).
