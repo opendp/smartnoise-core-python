@@ -9,7 +9,7 @@
 This repository contains python bindings to the [SmartNoise Core library](https://github.com/opendifferentialprivacy/smartnoise-core) and its underlying Rust binaries.
 
 - For examples of this library in action, please see the Python notebooks in the [Samples repository](https://github.com/opendifferentialprivacy/smartnoise-samples).
-- In addition, see the accompanying [System repository](https://github.com/opendifferentialprivacy/smartnoise-system) repository which includes tools for differential privacy.
+- In addition, see the accompanying [SmartNoise SDK repository](https://github.com/opendifferentialprivacy/smartnoise-sdk) which includes tools for differential privacy.
 
 ---
 
