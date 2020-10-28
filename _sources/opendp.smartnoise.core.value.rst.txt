@@ -1,7 +1,7 @@
-opendp.whitenoise.core.value module
+opendp.smartnoise.core.value module
 ===================================
 
-.. automodule:: opendp.whitenoise.core.value
+.. automodule:: opendp.smartnoise.core.value
    :members:
    :undoc-members:
    :show-inheritance:

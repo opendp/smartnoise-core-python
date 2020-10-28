@@ -1,4 +1,4 @@
-opendp.whitenoise package
+opendp.smartnoise package
 =========================
 
 Subpackages
@@ -7,12 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   opendp.whitenoise.core
+   opendp.smartnoise.core
 
 Module contents
 ---------------
 
-.. automodule:: opendp.whitenoise
+.. automodule:: opendp.smartnoise
    :members:
    :undoc-members:
    :show-inheritance:

@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   opendp.whitenoise
+   opendp.smartnoise
 
 Module contents
 ---------------

@@ -1,7 +1,7 @@
-opendp.whitenoise.core.api module
+opendp.smartnoise.core.api module
 =================================
 
-.. automodule:: opendp.whitenoise.core.api
+.. automodule:: opendp.smartnoise.core.api
    :members:
    :undoc-members:
    :show-inheritance:
