@@ -124,24 +124,27 @@ def serialize_indexmap_release_node(release_values):
     )
 
 
+def detect_atomic_type(dtype):
+    if np.issubdtype(dtype, np.integer):
+        return "i64"
+    if np.issubdtype(dtype, np.floating):
+        return "f64"
+    if dtype == np.bool_:
+        return "bool"
+    if np.issubdtype(dtype, np.character):
+        return "string"
+    raise ValueError(f"Unrecognized atomic type: {dtype}")
+
+
 def serialize_array1d(array):
-    data_type = {
-        np.bool: "bool",
-        np.int64: "i64",
-        np.float64: "f64",
-        np.bool_: "bool",
-        np.string_: "string",
-        np.str_: "string"
-    }[array.dtype.type]
+    data_type = detect_atomic_type(array.dtype.type)
 
     container_type = {
-        np.bool: value_pb2.Array1dBool,
-        np.int64: value_pb2.Array1dI64,
-        np.float64: value_pb2.Array1dF64,
-        np.bool_: value_pb2.Array1dBool,
-        np.string_: value_pb2.Array1dStr,
-        np.str_: value_pb2.Array1dStr
-    }[array.dtype.type]
+        "bool": value_pb2.Array1dBool,
+        "i64": value_pb2.Array1dI64,
+        "f64": value_pb2.Array1dF64,
+        "string": value_pb2.Array1dStr,
+    }[data_type]
 
     return value_pb2.Array1d(**{
         data_type: container_type(data=list(array))
@@ -191,14 +194,7 @@ def serialize_value(value, value_format=None):
 
         return base_pb2.Value(jagged=value_pb2.Jagged(
             data=[serialize_array1d(np.array(column)) for column in value],
-            data_type=value_pb2.DataType.Value({
-                                                   np.bool: "BOOL",
-                                                   np.int64: "I64",
-                                                   np.float64: "F64",
-                                                   np.bool_: "BOOL",
-                                                   np.string_: "STRING",
-                                                   np.str_: "STRING"
-                                               }[np.array(value[0]).dtype.type])
+            data_type=value_pb2.DataType.Value(detect_atomic_type(np.array(value[0]).dtype.type).upper())
         ))
 
     if value_format is not None and value_format != 'array':
