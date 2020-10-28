@@ -53,7 +53,7 @@ The actual execution of the components in the analysis is handled by a native Ru
 
 Initial Linux and OS X binaries are available on [pypi](https://pypi.org/project/opendp-smartnoise-core/) for Python 3.6+:
   - https://pypi.org/project/opendp-smartnoise-core/
-  - ```pip3 install opendp-smartnoise```
+  - ```pip3 install opendp-smartnoise-core```
 
 The binaries have been used on OS X and Ubuntu and are in the process of additional testing.
 
