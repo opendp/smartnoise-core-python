@@ -1,21 +1,25 @@
-import opendp.smartnoise.core as sn
 # turn on stack traces from panics
 import os
+
+import opendp.smartnoise.core as sn
+
 os.environ['RUST_BACKTRACE'] = 'full'
 
-from tests import test_partitioning
-from tests import test_components
-from tests import test_insertion
-from tests import test_mechanisms
-from tests import test_base
+# from tests import test_partitioning
+# from tests import test_components
+# from tests import test_insertion
+# from tests import test_mechanisms
+# from tests import test_base
+from tests import test_sgd
 
+test_sgd.test_sgd()
 
 # establish data information
 # data_path = os.path.join('.', 'data', 'PUMS_california_demographics_1000', 'data.csv')
 # var_names = ["age", "sex", "educ", "race", "income", "married", "pid"]
 
 # ~~~ SCRAP AREA FOR TESTING ~~~
-test_components.test_dp_median_raw()
+# test_components.test_dp_median_raw()
 # test_components.test_dp_linear_regression()
 # test_components.test_dp_covariance()
 # test_median()

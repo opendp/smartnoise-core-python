@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='smartnoise',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x10\x63omponents.proto\x12\nsmartnoise\x1a\x0bvalue.proto\"\xa1\x17\n\tComponent\x12.\n\targuments\x18\x01 \x01(\x0b\x32\x1b.smartnoise.ArgumentNodeIds\x12\x0c\n\x04omit\x18\x02 \x01(\x08\x12\x12\n\nsubmission\x18\x03 \x01(\r\x12\x1e\n\x03\x61\x62s\x18\x64 \x01(\x0b\x32\x0f.smartnoise.AbsH\x00\x12\x1e\n\x03\x61\x64\x64\x18\x65 \x01(\x0b\x32\x0f.smartnoise.AddH\x00\x12 \n\x04\x63\x61st\x18h \x01(\x0b\x32\x10.smartnoise.CastH\x00\x12\"\n\x05\x63lamp\x18i \x01(\x0b\x32\x11.smartnoise.ClampH\x00\x12.\n\x0b\x63olumn_bind\x18\xa8\x01 \x01(\x0b\x32\x16.smartnoise.ColumnBindH\x00\x12\"\n\x05\x63ount\x18j \x01(\x0b\x32\x11.smartnoise.CountH\x00\x12,\n\ncovariance\x18k \x01(\x0b\x32\x16.smartnoise.CovarianceH\x00\x12(\n\x08\x64igitize\x18w \x01(\x0b\x32\x14.smartnoise.DigitizeH\x00\x12$\n\x06\x64ivide\x18x \x01(\x0b\x32\x12.smartnoise.DivideH\x00\x12\'\n\x08\x64p_count\x18l \x01(\x0b\x32\x13.smartnoise.DPCountH\x00\x12\x31\n\rdp_covariance\x18m \x01(\x0b\x32\x18.smartnoise.DPCovarianceH\x00\x12\x37\n\x10\x64p_gumbel_median\x18\xa6\x01 \x01(\x0b\x32\x1a.smartnoise.DPGumbelMedianH\x00\x12/\n\x0c\x64p_histogram\x18n \x01(\x0b\x32\x17.smartnoise.DPHistogramH\x00\x12?\n\x14\x64p_linear_regression\x18\xa7\x01 \x01(\x0b\x32\x1e.smartnoise.DPLinearRegressionH\x00\x12+\n\ndp_maximum\x18o \x01(\x0b\x32\x15.smartnoise.DPMaximumH\x00\x12%\n\x07\x64p_mean\x18p \x01(\x0b\x32\x12.smartnoise.DPMeanH\x00\x12)\n\tdp_median\x18q \x01(\x0b\x32\x14.smartnoise.DPMedianH\x00\x12+\n\ndp_minimum\x18r \x01(\x0b\x32\x15.smartnoise.DPMinimumH\x00\x12-\n\x0b\x64p_quantile\x18t \x01(\x0b\x32\x16.smartnoise.DPQuantileH\x00\x12\x30\n\rdp_raw_moment\x18s \x01(\x0b\x32\x17.smartnoise.DPRawMomentH\x00\x12#\n\x06\x64p_sum\x18u \x01(\x0b\x32\x11.smartnoise.DPSumH\x00\x12-\n\x0b\x64p_variance\x18v \x01(\x0b\x32\x16.smartnoise.DPVarianceH\x00\x12\"\n\x05\x65qual\x18y \x01(\x0b\x32\x11.smartnoise.EqualH\x00\x12\x41\n\x15\x65xponential_mechanism\x18z \x01(\x0b\x32 .smartnoise.ExponentialMechanismH\x00\x12$\n\x06\x66ilter\x18{ \x01(\x0b\x32\x12.smartnoise.FilterH\x00\x12;\n\x12gaussian_mechanism\x18| \x01(\x0b\x32\x1d.smartnoise.GaussianMechanismH\x00\x12/\n\x0cgreater_than\x18} \x01(\x0b\x32\x17.smartnoise.GreaterThanH\x00\x12*\n\thistogram\x18~ \x01(\x0b\x32\x15.smartnoise.HistogramH\x00\x12$\n\x06impute\x18\x7f \x01(\x0b\x32\x12.smartnoise.ImputeH\x00\x12#\n\x05index\x18\x80\x01 \x01(\x0b\x32\x11.smartnoise.IndexH\x00\x12:\n\x11laplace_mechanism\x18\x82\x01 \x01(\x0b\x32\x1c.smartnoise.LaplaceMechanismH\x00\x12*\n\tless_than\x18\x83\x01 \x01(\x0b\x32\x14.smartnoise.LessThanH\x00\x12\'\n\x07literal\x18\x84\x01 \x01(\x0b\x32\x13.smartnoise.LiteralH\x00\x12\x1f\n\x03log\x18\x85\x01 \x01(\x0b\x32\x0f.smartnoise.LogH\x00\x12&\n\x0blogical_and\x18\x66 \x01(\x0b\x32\x0f.smartnoise.AndH\x00\x12%\n\nlogical_or\x18\x90\x01 \x01(\x0b\x32\x0e.smartnoise.OrH\x00\x12\x1f\n\x03map\x18\x86\x01 \x01(\x0b\x32\x0f.smartnoise.MapH\x00\x12/\n\x0bmaterialize\x18\x87\x01 \x01(\x0b\x32\x17.smartnoise.MaterializeH\x00\x12\'\n\x07maximum\x18\x88\x01 \x01(\x0b\x32\x13.smartnoise.MaximumH\x00\x12!\n\x04mean\x18\x89\x01 \x01(\x0b\x32\x10.smartnoise.MeanH\x00\x12%\n\x06median\x18\xa3\x01 \x01(\x0b\x32\x12.smartnoise.MedianH\x00\x12\'\n\x07minimum\x18\x8b\x01 \x01(\x0b\x32\x13.smartnoise.MinimumH\x00\x12%\n\x06modulo\x18\x8c\x01 \x01(\x0b\x32\x12.smartnoise.ModuloH\x00\x12)\n\x08multiply\x18\x8d\x01 \x01(\x0b\x32\x14.smartnoise.MultiplyH\x00\x12%\n\x06negate\x18\x8e\x01 \x01(\x0b\x32\x12.smartnoise.NegateH\x00\x12)\n\x08negative\x18\x8f\x01 \x01(\x0b\x32\x14.smartnoise.NegativeH\x00\x12+\n\tpartition\x18\x91\x01 \x01(\x0b\x32\x15.smartnoise.PartitionH\x00\x12#\n\x05power\x18\x92\x01 \x01(\x0b\x32\x11.smartnoise.PowerH\x00\x12)\n\x08quantile\x18\x93\x01 \x01(\x0b\x32\x14.smartnoise.QuantileH\x00\x12,\n\nraw_moment\x18\x81\x01 \x01(\x0b\x32\x15.smartnoise.RawMomentH\x00\x12\'\n\x07reshape\x18\x95\x01 \x01(\x0b\x32\x13.smartnoise.ReshapeH\x00\x12%\n\x06resize\x18\x96\x01 \x01(\x0b\x32\x12.smartnoise.ResizeH\x00\x12&\n\x07row_max\x18\x97\x01 \x01(\x0b\x32\x12.smartnoise.RowMaxH\x00\x12&\n\x07row_min\x18\x98\x01 \x01(\x0b\x32\x12.smartnoise.RowMinH\x00\x12K\n\x1asimple_geometric_mechanism\x18\x99\x01 \x01(\x0b\x32$.smartnoise.SimpleGeometricMechanismH\x00\x12<\n\x12snapping_mechanism\x18\xa4\x01 \x01(\x0b\x32\x1d.smartnoise.SnappingMechanismH\x00\x12)\n\x08subtract\x18\x9b\x01 \x01(\x0b\x32\x14.smartnoise.SubtractH\x00\x12\x1f\n\x03sum\x18\x9c\x01 \x01(\x0b\x32\x0f.smartnoise.SumH\x00\x12*\n\ttheil_sen\x18\xa5\x01 \x01(\x0b\x32\x14.smartnoise.TheilSenH\x00\x12&\n\x07to_bool\x18\x9d\x01 \x01(\x0b\x32\x12.smartnoise.ToBoolH\x00\x12\x30\n\x0cto_dataframe\x18\x94\x01 \x01(\x0b\x32\x17.smartnoise.ToDataframeH\x00\x12(\n\x08to_float\x18\x9e\x01 \x01(\x0b\x32\x13.smartnoise.ToFloatH\x00\x12$\n\x06to_int\x18\x9f\x01 \x01(\x0b\x32\x11.smartnoise.ToIntH\x00\x12*\n\tto_string\x18\xa0\x01 \x01(\x0b\x32\x14.smartnoise.ToStringH\x00\x12#\n\x05union\x18\xa2\x01 \x01(\x0b\x32\x11.smartnoise.UnionH\x00\x12)\n\x08variance\x18\xa1\x01 \x01(\x0b\x32\x14.smartnoise.VarianceH\x00\x42\t\n\x07variant\"\x05\n\x03\x41\x62s\"\x05\n\x03\x41\x64\x64\"\x1b\n\x04\x43\x61st\x12\x13\n\x0b\x61tomic_type\x18\x01 \x01(\t\"\x07\n\x05\x43lamp\"\x0c\n\nColumnBind\"\x19\n\x05\x43ount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\".\n\nCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\"\n\n\x08\x44igitize\"\x08\n\x06\x44ivide\"_\n\x07\x44PCount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"t\n\x0c\x44PCovariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"A\n\x0e\x44PGumbelMedian\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"Q\n\x0b\x44PHistogram\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"]\n\x12\x44PLinearRegression\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"O\n\tDPMaximum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"d\n\x06\x44PMean\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"e\n\x08\x44PMedian\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x03 \x01(\t\"O\n\tDPMinimum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"v\n\nDPQuantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x04 \x01(\t\"`\n\x0b\x44PRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"K\n\x05\x44PSum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"r\n\nDPVariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"\x07\n\x05\x45qual\"G\n\x14\x45xponentialMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\x08\n\x06\x46ilter\"V\n\x11GaussianMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x10\n\x08\x61nalytic\x18\x02 \x01(\x08\"\r\n\x0bGreaterThan\"\x0b\n\tHistogram\"\x08\n\x06Impute\"\x07\n\x05Index\"C\n\x10LaplaceMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08LessThan\"\t\n\x07Literal\"\x05\n\x03Log\"\x05\n\x03\x41nd\"\x04\n\x02Or\"/\n\x03Map\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.smartnoise.Component\"B\n\x0bMaterialize\x12\x0e\n\x06public\x18\x01 \x01(\x08\x12\x10\n\x08skip_row\x18\x02 \x01(\x08\x12\x11\n\tfile_path\x18\x03 \x01(\t\"\t\n\x07Maximum\"\x06\n\x04Mean\"\x08\n\x06Median\"\t\n\x07Minimum\"\x08\n\x06Modulo\"\n\n\x08Multiply\"\x08\n\x06Negate\"\n\n\x08Negative\"\x0b\n\tPartition\"\x07\n\x05Power\"0\n\x08Quantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\"\x1a\n\tRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\";\n\x07Reshape\x12\x11\n\tsymmetric\x18\x01 \x01(\x08\x12\x0e\n\x06layout\x18\x02 \x01(\t\x12\r\n\x05shape\x18\x03 \x03(\r\"\x08\n\x06Resize\"\x08\n\x06RowMax\"\x08\n\x06RowMin\"K\n\x18SimpleGeometricMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"D\n\x11SnappingMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08Subtract\"\x05\n\x03Sum\"-\n\x08TheilSen\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\t\n\x01k\x18\x02 \x01(\r\"\x08\n\x06ToBool\"\r\n\x0bToDataframe\"\t\n\x07ToFloat\"\x07\n\x05ToInt\"\n\n\x08ToString\"\x18\n\x05Union\x12\x0f\n\x07\x66latten\x18\x01 \x01(\x08\",\n\x08Variance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x62\x06proto3')
+  serialized_pb=_b('\n\x10\x63omponents.proto\x12\nsmartnoise\x1a\x0bvalue.proto\"\xc7\x17\n\tComponent\x12.\n\targuments\x18\x01 \x01(\x0b\x32\x1b.smartnoise.ArgumentNodeIds\x12\x0c\n\x04omit\x18\x02 \x01(\x08\x12\x12\n\nsubmission\x18\x03 \x01(\r\x12\x1e\n\x03\x61\x62s\x18\x64 \x01(\x0b\x32\x0f.smartnoise.AbsH\x00\x12\x1e\n\x03\x61\x64\x64\x18\x65 \x01(\x0b\x32\x0f.smartnoise.AddH\x00\x12 \n\x04\x63\x61st\x18h \x01(\x0b\x32\x10.smartnoise.CastH\x00\x12\"\n\x05\x63lamp\x18i \x01(\x0b\x32\x11.smartnoise.ClampH\x00\x12.\n\x0b\x63olumn_bind\x18\xa8\x01 \x01(\x0b\x32\x16.smartnoise.ColumnBindH\x00\x12\"\n\x05\x63ount\x18j \x01(\x0b\x32\x11.smartnoise.CountH\x00\x12,\n\ncovariance\x18k \x01(\x0b\x32\x16.smartnoise.CovarianceH\x00\x12(\n\x08\x64igitize\x18w \x01(\x0b\x32\x14.smartnoise.DigitizeH\x00\x12$\n\x06\x64ivide\x18x \x01(\x0b\x32\x12.smartnoise.DivideH\x00\x12\'\n\x08\x64p_count\x18l \x01(\x0b\x32\x13.smartnoise.DPCountH\x00\x12\x31\n\rdp_covariance\x18m \x01(\x0b\x32\x18.smartnoise.DPCovarianceH\x00\x12\x37\n\x10\x64p_gumbel_median\x18\xa6\x01 \x01(\x0b\x32\x1a.smartnoise.DPGumbelMedianH\x00\x12/\n\x0c\x64p_histogram\x18n \x01(\x0b\x32\x17.smartnoise.DPHistogramH\x00\x12?\n\x14\x64p_linear_regression\x18\xa7\x01 \x01(\x0b\x32\x1e.smartnoise.DPLinearRegressionH\x00\x12+\n\ndp_maximum\x18o \x01(\x0b\x32\x15.smartnoise.DPMaximumH\x00\x12%\n\x07\x64p_mean\x18p \x01(\x0b\x32\x12.smartnoise.DPMeanH\x00\x12)\n\tdp_median\x18q \x01(\x0b\x32\x14.smartnoise.DPMedianH\x00\x12+\n\ndp_minimum\x18r \x01(\x0b\x32\x15.smartnoise.DPMinimumH\x00\x12-\n\x0b\x64p_quantile\x18t \x01(\x0b\x32\x16.smartnoise.DPQuantileH\x00\x12\x30\n\rdp_raw_moment\x18s \x01(\x0b\x32\x17.smartnoise.DPRawMomentH\x00\x12$\n\x06\x64p_sgd\x18\xa9\x01 \x01(\x0b\x32\x11.smartnoise.DPSGDH\x00\x12#\n\x06\x64p_sum\x18u \x01(\x0b\x32\x11.smartnoise.DPSumH\x00\x12-\n\x0b\x64p_variance\x18v \x01(\x0b\x32\x16.smartnoise.DPVarianceH\x00\x12\"\n\x05\x65qual\x18y \x01(\x0b\x32\x11.smartnoise.EqualH\x00\x12\x41\n\x15\x65xponential_mechanism\x18z \x01(\x0b\x32 .smartnoise.ExponentialMechanismH\x00\x12$\n\x06\x66ilter\x18{ \x01(\x0b\x32\x12.smartnoise.FilterH\x00\x12;\n\x12gaussian_mechanism\x18| \x01(\x0b\x32\x1d.smartnoise.GaussianMechanismH\x00\x12/\n\x0cgreater_than\x18} \x01(\x0b\x32\x17.smartnoise.GreaterThanH\x00\x12*\n\thistogram\x18~ \x01(\x0b\x32\x15.smartnoise.HistogramH\x00\x12$\n\x06impute\x18\x7f \x01(\x0b\x32\x12.smartnoise.ImputeH\x00\x12#\n\x05index\x18\x80\x01 \x01(\x0b\x32\x11.smartnoise.IndexH\x00\x12:\n\x11laplace_mechanism\x18\x82\x01 \x01(\x0b\x32\x1c.smartnoise.LaplaceMechanismH\x00\x12*\n\tless_than\x18\x83\x01 \x01(\x0b\x32\x14.smartnoise.LessThanH\x00\x12\'\n\x07literal\x18\x84\x01 \x01(\x0b\x32\x13.smartnoise.LiteralH\x00\x12\x1f\n\x03log\x18\x85\x01 \x01(\x0b\x32\x0f.smartnoise.LogH\x00\x12&\n\x0blogical_and\x18\x66 \x01(\x0b\x32\x0f.smartnoise.AndH\x00\x12%\n\nlogical_or\x18\x90\x01 \x01(\x0b\x32\x0e.smartnoise.OrH\x00\x12\x1f\n\x03map\x18\x86\x01 \x01(\x0b\x32\x0f.smartnoise.MapH\x00\x12/\n\x0bmaterialize\x18\x87\x01 \x01(\x0b\x32\x17.smartnoise.MaterializeH\x00\x12\'\n\x07maximum\x18\x88\x01 \x01(\x0b\x32\x13.smartnoise.MaximumH\x00\x12!\n\x04mean\x18\x89\x01 \x01(\x0b\x32\x10.smartnoise.MeanH\x00\x12%\n\x06median\x18\xa3\x01 \x01(\x0b\x32\x12.smartnoise.MedianH\x00\x12\'\n\x07minimum\x18\x8b\x01 \x01(\x0b\x32\x13.smartnoise.MinimumH\x00\x12%\n\x06modulo\x18\x8c\x01 \x01(\x0b\x32\x12.smartnoise.ModuloH\x00\x12)\n\x08multiply\x18\x8d\x01 \x01(\x0b\x32\x14.smartnoise.MultiplyH\x00\x12%\n\x06negate\x18\x8e\x01 \x01(\x0b\x32\x12.smartnoise.NegateH\x00\x12)\n\x08negative\x18\x8f\x01 \x01(\x0b\x32\x14.smartnoise.NegativeH\x00\x12+\n\tpartition\x18\x91\x01 \x01(\x0b\x32\x15.smartnoise.PartitionH\x00\x12#\n\x05power\x18\x92\x01 \x01(\x0b\x32\x11.smartnoise.PowerH\x00\x12)\n\x08quantile\x18\x93\x01 \x01(\x0b\x32\x14.smartnoise.QuantileH\x00\x12,\n\nraw_moment\x18\x81\x01 \x01(\x0b\x32\x15.smartnoise.RawMomentH\x00\x12\'\n\x07reshape\x18\x95\x01 \x01(\x0b\x32\x13.smartnoise.ReshapeH\x00\x12%\n\x06resize\x18\x96\x01 \x01(\x0b\x32\x12.smartnoise.ResizeH\x00\x12&\n\x07row_max\x18\x97\x01 \x01(\x0b\x32\x12.smartnoise.RowMaxH\x00\x12&\n\x07row_min\x18\x98\x01 \x01(\x0b\x32\x12.smartnoise.RowMinH\x00\x12K\n\x1asimple_geometric_mechanism\x18\x99\x01 \x01(\x0b\x32$.smartnoise.SimpleGeometricMechanismH\x00\x12<\n\x12snapping_mechanism\x18\xa4\x01 \x01(\x0b\x32\x1d.smartnoise.SnappingMechanismH\x00\x12)\n\x08subtract\x18\x9b\x01 \x01(\x0b\x32\x14.smartnoise.SubtractH\x00\x12\x1f\n\x03sum\x18\x9c\x01 \x01(\x0b\x32\x0f.smartnoise.SumH\x00\x12*\n\ttheil_sen\x18\xa5\x01 \x01(\x0b\x32\x14.smartnoise.TheilSenH\x00\x12&\n\x07to_bool\x18\x9d\x01 \x01(\x0b\x32\x12.smartnoise.ToBoolH\x00\x12\x30\n\x0cto_dataframe\x18\x94\x01 \x01(\x0b\x32\x17.smartnoise.ToDataframeH\x00\x12(\n\x08to_float\x18\x9e\x01 \x01(\x0b\x32\x13.smartnoise.ToFloatH\x00\x12$\n\x06to_int\x18\x9f\x01 \x01(\x0b\x32\x11.smartnoise.ToIntH\x00\x12*\n\tto_string\x18\xa0\x01 \x01(\x0b\x32\x14.smartnoise.ToStringH\x00\x12#\n\x05union\x18\xa2\x01 \x01(\x0b\x32\x11.smartnoise.UnionH\x00\x12)\n\x08variance\x18\xa1\x01 \x01(\x0b\x32\x14.smartnoise.VarianceH\x00\x42\t\n\x07variant\"\x05\n\x03\x41\x62s\"\x05\n\x03\x41\x64\x64\"\x1b\n\x04\x43\x61st\x12\x13\n\x0b\x61tomic_type\x18\x01 \x01(\t\"\x07\n\x05\x43lamp\"\x0c\n\nColumnBind\"\x19\n\x05\x43ount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\".\n\nCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\"\n\n\x08\x44igitize\"\x08\n\x06\x44ivide\"_\n\x07\x44PCount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"t\n\x0c\x44PCovariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"A\n\x0e\x44PGumbelMedian\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"Q\n\x0b\x44PHistogram\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"]\n\x12\x44PLinearRegression\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"O\n\tDPMaximum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"d\n\x06\x44PMean\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"e\n\x08\x44PMedian\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x03 \x01(\t\"O\n\tDPMinimum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"v\n\nDPQuantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x04 \x01(\t\"`\n\x0b\x44PRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\xa4\x01\n\x05\x44PSGD\x12\x15\n\rlearning_rate\x18\x01 \x01(\x01\x12\x13\n\x0bnoise_scale\x18\x02 \x01(\x01\x12\x12\n\ngroup_size\x18\x03 \x01(\r\x12\x1b\n\x13gradient_norm_bound\x18\x04 \x01(\x01\x12\x11\n\tmax_iters\x18\x05 \x01(\r\x12\x16\n\x0e\x63lipping_value\x18\x06 \x01(\x01\x12\x13\n\x0bsample_size\x18\x07 \x01(\r\"K\n\x05\x44PSum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"r\n\nDPVariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"\x07\n\x05\x45qual\"G\n\x14\x45xponentialMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\x08\n\x06\x46ilter\"V\n\x11GaussianMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x10\n\x08\x61nalytic\x18\x02 \x01(\x08\"\r\n\x0bGreaterThan\"\x0b\n\tHistogram\"\x08\n\x06Impute\"\x07\n\x05Index\"C\n\x10LaplaceMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08LessThan\"\t\n\x07Literal\"\x05\n\x03Log\"\x05\n\x03\x41nd\"\x04\n\x02Or\"/\n\x03Map\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.smartnoise.Component\"B\n\x0bMaterialize\x12\x0e\n\x06public\x18\x01 \x01(\x08\x12\x10\n\x08skip_row\x18\x02 \x01(\x08\x12\x11\n\tfile_path\x18\x03 \x01(\t\"\t\n\x07Maximum\"\x06\n\x04Mean\"\x08\n\x06Median\"\t\n\x07Minimum\"\x08\n\x06Modulo\"\n\n\x08Multiply\"\x08\n\x06Negate\"\n\n\x08Negative\"\x0b\n\tPartition\"\x07\n\x05Power\"0\n\x08Quantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\"\x1a\n\tRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\";\n\x07Reshape\x12\x11\n\tsymmetric\x18\x01 \x01(\x08\x12\x0e\n\x06layout\x18\x02 \x01(\t\x12\r\n\x05shape\x18\x03 \x03(\r\"\x08\n\x06Resize\"\x08\n\x06RowMax\"\x08\n\x06RowMin\"K\n\x18SimpleGeometricMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"D\n\x11SnappingMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08Subtract\"\x05\n\x03Sum\"-\n\x08TheilSen\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\t\n\x01k\x18\x02 \x01(\r\"\x08\n\x06ToBool\"\r\n\x0bToDataframe\"\t\n\x07ToFloat\"\x07\n\x05ToInt\"\n\n\x08ToString\"\x18\n\x05Union\x12\x0f\n\x07\x66latten\x18\x01 \x01(\x08\",\n\x08Variance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x62\x06proto3')
   ,
   dependencies=[value__pb2.DESCRIPTOR,])
 
@@ -197,322 +197,329 @@ _COMPONENT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dp_sum', full_name='smartnoise.Component.dp_sum', index=23,
+      name='dp_sgd', full_name='smartnoise.Component.dp_sgd', index=23,
+      number=169, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dp_sum', full_name='smartnoise.Component.dp_sum', index=24,
       number=117, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dp_variance', full_name='smartnoise.Component.dp_variance', index=24,
+      name='dp_variance', full_name='smartnoise.Component.dp_variance', index=25,
       number=118, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='equal', full_name='smartnoise.Component.equal', index=25,
+      name='equal', full_name='smartnoise.Component.equal', index=26,
       number=121, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='exponential_mechanism', full_name='smartnoise.Component.exponential_mechanism', index=26,
+      name='exponential_mechanism', full_name='smartnoise.Component.exponential_mechanism', index=27,
       number=122, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='filter', full_name='smartnoise.Component.filter', index=27,
+      name='filter', full_name='smartnoise.Component.filter', index=28,
       number=123, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='gaussian_mechanism', full_name='smartnoise.Component.gaussian_mechanism', index=28,
+      name='gaussian_mechanism', full_name='smartnoise.Component.gaussian_mechanism', index=29,
       number=124, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='greater_than', full_name='smartnoise.Component.greater_than', index=29,
+      name='greater_than', full_name='smartnoise.Component.greater_than', index=30,
       number=125, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='histogram', full_name='smartnoise.Component.histogram', index=30,
+      name='histogram', full_name='smartnoise.Component.histogram', index=31,
       number=126, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='impute', full_name='smartnoise.Component.impute', index=31,
+      name='impute', full_name='smartnoise.Component.impute', index=32,
       number=127, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='index', full_name='smartnoise.Component.index', index=32,
+      name='index', full_name='smartnoise.Component.index', index=33,
       number=128, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='laplace_mechanism', full_name='smartnoise.Component.laplace_mechanism', index=33,
+      name='laplace_mechanism', full_name='smartnoise.Component.laplace_mechanism', index=34,
       number=130, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='less_than', full_name='smartnoise.Component.less_than', index=34,
+      name='less_than', full_name='smartnoise.Component.less_than', index=35,
       number=131, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='literal', full_name='smartnoise.Component.literal', index=35,
+      name='literal', full_name='smartnoise.Component.literal', index=36,
       number=132, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='log', full_name='smartnoise.Component.log', index=36,
+      name='log', full_name='smartnoise.Component.log', index=37,
       number=133, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='logical_and', full_name='smartnoise.Component.logical_and', index=37,
+      name='logical_and', full_name='smartnoise.Component.logical_and', index=38,
       number=102, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='logical_or', full_name='smartnoise.Component.logical_or', index=38,
+      name='logical_or', full_name='smartnoise.Component.logical_or', index=39,
       number=144, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='map', full_name='smartnoise.Component.map', index=39,
+      name='map', full_name='smartnoise.Component.map', index=40,
       number=134, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='materialize', full_name='smartnoise.Component.materialize', index=40,
+      name='materialize', full_name='smartnoise.Component.materialize', index=41,
       number=135, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='maximum', full_name='smartnoise.Component.maximum', index=41,
+      name='maximum', full_name='smartnoise.Component.maximum', index=42,
       number=136, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='mean', full_name='smartnoise.Component.mean', index=42,
+      name='mean', full_name='smartnoise.Component.mean', index=43,
       number=137, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='median', full_name='smartnoise.Component.median', index=43,
+      name='median', full_name='smartnoise.Component.median', index=44,
       number=163, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='minimum', full_name='smartnoise.Component.minimum', index=44,
+      name='minimum', full_name='smartnoise.Component.minimum', index=45,
       number=139, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='modulo', full_name='smartnoise.Component.modulo', index=45,
+      name='modulo', full_name='smartnoise.Component.modulo', index=46,
       number=140, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='multiply', full_name='smartnoise.Component.multiply', index=46,
+      name='multiply', full_name='smartnoise.Component.multiply', index=47,
       number=141, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='negate', full_name='smartnoise.Component.negate', index=47,
+      name='negate', full_name='smartnoise.Component.negate', index=48,
       number=142, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='negative', full_name='smartnoise.Component.negative', index=48,
+      name='negative', full_name='smartnoise.Component.negative', index=49,
       number=143, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='partition', full_name='smartnoise.Component.partition', index=49,
+      name='partition', full_name='smartnoise.Component.partition', index=50,
       number=145, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='power', full_name='smartnoise.Component.power', index=50,
+      name='power', full_name='smartnoise.Component.power', index=51,
       number=146, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='quantile', full_name='smartnoise.Component.quantile', index=51,
+      name='quantile', full_name='smartnoise.Component.quantile', index=52,
       number=147, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='raw_moment', full_name='smartnoise.Component.raw_moment', index=52,
+      name='raw_moment', full_name='smartnoise.Component.raw_moment', index=53,
       number=129, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='reshape', full_name='smartnoise.Component.reshape', index=53,
+      name='reshape', full_name='smartnoise.Component.reshape', index=54,
       number=149, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='resize', full_name='smartnoise.Component.resize', index=54,
+      name='resize', full_name='smartnoise.Component.resize', index=55,
       number=150, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='row_max', full_name='smartnoise.Component.row_max', index=55,
+      name='row_max', full_name='smartnoise.Component.row_max', index=56,
       number=151, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='row_min', full_name='smartnoise.Component.row_min', index=56,
+      name='row_min', full_name='smartnoise.Component.row_min', index=57,
       number=152, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='simple_geometric_mechanism', full_name='smartnoise.Component.simple_geometric_mechanism', index=57,
+      name='simple_geometric_mechanism', full_name='smartnoise.Component.simple_geometric_mechanism', index=58,
       number=153, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='snapping_mechanism', full_name='smartnoise.Component.snapping_mechanism', index=58,
+      name='snapping_mechanism', full_name='smartnoise.Component.snapping_mechanism', index=59,
       number=164, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='subtract', full_name='smartnoise.Component.subtract', index=59,
+      name='subtract', full_name='smartnoise.Component.subtract', index=60,
       number=155, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='sum', full_name='smartnoise.Component.sum', index=60,
+      name='sum', full_name='smartnoise.Component.sum', index=61,
       number=156, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='theil_sen', full_name='smartnoise.Component.theil_sen', index=61,
+      name='theil_sen', full_name='smartnoise.Component.theil_sen', index=62,
       number=165, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_bool', full_name='smartnoise.Component.to_bool', index=62,
+      name='to_bool', full_name='smartnoise.Component.to_bool', index=63,
       number=157, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_dataframe', full_name='smartnoise.Component.to_dataframe', index=63,
+      name='to_dataframe', full_name='smartnoise.Component.to_dataframe', index=64,
       number=148, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_float', full_name='smartnoise.Component.to_float', index=64,
+      name='to_float', full_name='smartnoise.Component.to_float', index=65,
       number=158, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_int', full_name='smartnoise.Component.to_int', index=65,
+      name='to_int', full_name='smartnoise.Component.to_int', index=66,
       number=159, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='to_string', full_name='smartnoise.Component.to_string', index=66,
+      name='to_string', full_name='smartnoise.Component.to_string', index=67,
       number=160, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='union', full_name='smartnoise.Component.union', index=67,
+      name='union', full_name='smartnoise.Component.union', index=68,
       number=162, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='variance', full_name='smartnoise.Component.variance', index=68,
+      name='variance', full_name='smartnoise.Component.variance', index=69,
       number=161, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -534,7 +541,7 @@ _COMPONENT = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=46,
-  serialized_end=3023,
+  serialized_end=3061,
 )
 
 
@@ -557,8 +564,8 @@ _ABS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3025,
-  serialized_end=3030,
+  serialized_start=3063,
+  serialized_end=3068,
 )
 
 
@@ -581,8 +588,8 @@ _ADD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3032,
-  serialized_end=3037,
+  serialized_start=3070,
+  serialized_end=3075,
 )
 
 
@@ -612,8 +619,8 @@ _CAST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3039,
-  serialized_end=3066,
+  serialized_start=3077,
+  serialized_end=3104,
 )
 
 
@@ -636,8 +643,8 @@ _CLAMP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3068,
-  serialized_end=3075,
+  serialized_start=3106,
+  serialized_end=3113,
 )
 
 
@@ -660,8 +667,8 @@ _COLUMNBIND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3077,
-  serialized_end=3089,
+  serialized_start=3115,
+  serialized_end=3127,
 )
 
 
@@ -691,8 +698,8 @@ _COUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3091,
-  serialized_end=3116,
+  serialized_start=3129,
+  serialized_end=3154,
 )
 
 
@@ -722,8 +729,8 @@ _COVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3118,
-  serialized_end=3164,
+  serialized_start=3156,
+  serialized_end=3202,
 )
 
 
@@ -746,8 +753,8 @@ _DIGITIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3166,
-  serialized_end=3176,
+  serialized_start=3204,
+  serialized_end=3214,
 )
 
 
@@ -770,8 +777,8 @@ _DIVIDE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3178,
-  serialized_end=3186,
+  serialized_start=3216,
+  serialized_end=3224,
 )
 
 
@@ -815,8 +822,8 @@ _DPCOUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3188,
-  serialized_end=3283,
+  serialized_start=3226,
+  serialized_end=3321,
 )
 
 
@@ -860,8 +867,8 @@ _DPCOVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3285,
-  serialized_end=3401,
+  serialized_start=3323,
+  serialized_end=3439,
 )
 
 
@@ -891,8 +898,8 @@ _DPGUMBELMEDIAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3403,
-  serialized_end=3468,
+  serialized_start=3441,
+  serialized_end=3506,
 )
 
 
@@ -929,8 +936,8 @@ _DPHISTOGRAM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3470,
-  serialized_end=3551,
+  serialized_start=3508,
+  serialized_end=3589,
 )
 
 
@@ -967,8 +974,8 @@ _DPLINEARREGRESSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3553,
-  serialized_end=3646,
+  serialized_start=3591,
+  serialized_end=3684,
 )
 
 
@@ -1005,8 +1012,8 @@ _DPMAXIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3648,
-  serialized_end=3727,
+  serialized_start=3686,
+  serialized_end=3765,
 )
 
 
@@ -1050,8 +1057,8 @@ _DPMEAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3729,
-  serialized_end=3829,
+  serialized_start=3767,
+  serialized_end=3867,
 )
 
 
@@ -1095,8 +1102,8 @@ _DPMEDIAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3831,
-  serialized_end=3932,
+  serialized_start=3869,
+  serialized_end=3970,
 )
 
 
@@ -1133,8 +1140,8 @@ _DPMINIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3934,
-  serialized_end=4013,
+  serialized_start=3972,
+  serialized_end=4051,
 )
 
 
@@ -1185,8 +1192,8 @@ _DPQUANTILE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4015,
-  serialized_end=4133,
+  serialized_start=4053,
+  serialized_end=4171,
 )
 
 
@@ -1230,8 +1237,81 @@ _DPRAWMOMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4135,
-  serialized_end=4231,
+  serialized_start=4173,
+  serialized_end=4269,
+)
+
+
+_DPSGD = _descriptor.Descriptor(
+  name='DPSGD',
+  full_name='smartnoise.DPSGD',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='learning_rate', full_name='smartnoise.DPSGD.learning_rate', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='noise_scale', full_name='smartnoise.DPSGD.noise_scale', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='group_size', full_name='smartnoise.DPSGD.group_size', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gradient_norm_bound', full_name='smartnoise.DPSGD.gradient_norm_bound', index=3,
+      number=4, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='max_iters', full_name='smartnoise.DPSGD.max_iters', index=4,
+      number=5, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='clipping_value', full_name='smartnoise.DPSGD.clipping_value', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sample_size', full_name='smartnoise.DPSGD.sample_size', index=6,
+      number=7, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4272,
+  serialized_end=4436,
 )
 
 
@@ -1268,8 +1348,8 @@ _DPSUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4233,
-  serialized_end=4308,
+  serialized_start=4438,
+  serialized_end=4513,
 )
 
 
@@ -1313,8 +1393,8 @@ _DPVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4310,
-  serialized_end=4424,
+  serialized_start=4515,
+  serialized_end=4629,
 )
 
 
@@ -1337,8 +1417,8 @@ _EQUAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4426,
-  serialized_end=4433,
+  serialized_start=4631,
+  serialized_end=4638,
 )
 
 
@@ -1368,8 +1448,8 @@ _EXPONENTIALMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4435,
-  serialized_end=4506,
+  serialized_start=4640,
+  serialized_end=4711,
 )
 
 
@@ -1392,8 +1472,8 @@ _FILTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4508,
-  serialized_end=4516,
+  serialized_start=4713,
+  serialized_end=4721,
 )
 
 
@@ -1430,8 +1510,8 @@ _GAUSSIANMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4518,
-  serialized_end=4604,
+  serialized_start=4723,
+  serialized_end=4809,
 )
 
 
@@ -1454,8 +1534,8 @@ _GREATERTHAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4606,
-  serialized_end=4619,
+  serialized_start=4811,
+  serialized_end=4824,
 )
 
 
@@ -1478,8 +1558,8 @@ _HISTOGRAM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4621,
-  serialized_end=4632,
+  serialized_start=4826,
+  serialized_end=4837,
 )
 
 
@@ -1502,8 +1582,8 @@ _IMPUTE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4634,
-  serialized_end=4642,
+  serialized_start=4839,
+  serialized_end=4847,
 )
 
 
@@ -1526,8 +1606,8 @@ _INDEX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4644,
-  serialized_end=4651,
+  serialized_start=4849,
+  serialized_end=4856,
 )
 
 
@@ -1557,8 +1637,8 @@ _LAPLACEMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4653,
-  serialized_end=4720,
+  serialized_start=4858,
+  serialized_end=4925,
 )
 
 
@@ -1581,8 +1661,8 @@ _LESSTHAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4722,
-  serialized_end=4732,
+  serialized_start=4927,
+  serialized_end=4937,
 )
 
 
@@ -1605,8 +1685,8 @@ _LITERAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4734,
-  serialized_end=4743,
+  serialized_start=4939,
+  serialized_end=4948,
 )
 
 
@@ -1629,8 +1709,8 @@ _LOG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4745,
-  serialized_end=4750,
+  serialized_start=4950,
+  serialized_end=4955,
 )
 
 
@@ -1653,8 +1733,8 @@ _AND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4752,
-  serialized_end=4757,
+  serialized_start=4957,
+  serialized_end=4962,
 )
 
 
@@ -1677,8 +1757,8 @@ _OR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4759,
-  serialized_end=4763,
+  serialized_start=4964,
+  serialized_end=4968,
 )
 
 
@@ -1708,8 +1788,8 @@ _MAP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4765,
-  serialized_end=4812,
+  serialized_start=4970,
+  serialized_end=5017,
 )
 
 
@@ -1753,8 +1833,8 @@ _MATERIALIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4814,
-  serialized_end=4880,
+  serialized_start=5019,
+  serialized_end=5085,
 )
 
 
@@ -1777,8 +1857,8 @@ _MAXIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4882,
-  serialized_end=4891,
+  serialized_start=5087,
+  serialized_end=5096,
 )
 
 
@@ -1801,8 +1881,8 @@ _MEAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4893,
-  serialized_end=4899,
+  serialized_start=5098,
+  serialized_end=5104,
 )
 
 
@@ -1825,8 +1905,8 @@ _MEDIAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4901,
-  serialized_end=4909,
+  serialized_start=5106,
+  serialized_end=5114,
 )
 
 
@@ -1849,8 +1929,8 @@ _MINIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4911,
-  serialized_end=4920,
+  serialized_start=5116,
+  serialized_end=5125,
 )
 
 
@@ -1873,8 +1953,8 @@ _MODULO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4922,
-  serialized_end=4930,
+  serialized_start=5127,
+  serialized_end=5135,
 )
 
 
@@ -1897,8 +1977,8 @@ _MULTIPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4932,
-  serialized_end=4942,
+  serialized_start=5137,
+  serialized_end=5147,
 )
 
 
@@ -1921,8 +2001,8 @@ _NEGATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4944,
-  serialized_end=4952,
+  serialized_start=5149,
+  serialized_end=5157,
 )
 
 
@@ -1945,8 +2025,8 @@ _NEGATIVE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4954,
-  serialized_end=4964,
+  serialized_start=5159,
+  serialized_end=5169,
 )
 
 
@@ -1969,8 +2049,8 @@ _PARTITION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4966,
-  serialized_end=4977,
+  serialized_start=5171,
+  serialized_end=5182,
 )
 
 
@@ -1993,8 +2073,8 @@ _POWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4979,
-  serialized_end=4986,
+  serialized_start=5184,
+  serialized_end=5191,
 )
 
 
@@ -2031,8 +2111,8 @@ _QUANTILE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4988,
-  serialized_end=5036,
+  serialized_start=5193,
+  serialized_end=5241,
 )
 
 
@@ -2062,8 +2142,8 @@ _RAWMOMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5038,
-  serialized_end=5064,
+  serialized_start=5243,
+  serialized_end=5269,
 )
 
 
@@ -2107,8 +2187,8 @@ _RESHAPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5066,
-  serialized_end=5125,
+  serialized_start=5271,
+  serialized_end=5330,
 )
 
 
@@ -2131,8 +2211,8 @@ _RESIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5127,
-  serialized_end=5135,
+  serialized_start=5332,
+  serialized_end=5340,
 )
 
 
@@ -2155,8 +2235,8 @@ _ROWMAX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5137,
-  serialized_end=5145,
+  serialized_start=5342,
+  serialized_end=5350,
 )
 
 
@@ -2179,8 +2259,8 @@ _ROWMIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5147,
-  serialized_end=5155,
+  serialized_start=5352,
+  serialized_end=5360,
 )
 
 
@@ -2210,8 +2290,8 @@ _SIMPLEGEOMETRICMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5157,
-  serialized_end=5232,
+  serialized_start=5362,
+  serialized_end=5437,
 )
 
 
@@ -2241,8 +2321,8 @@ _SNAPPINGMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5234,
-  serialized_end=5302,
+  serialized_start=5439,
+  serialized_end=5507,
 )
 
 
@@ -2265,8 +2345,8 @@ _SUBTRACT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5304,
-  serialized_end=5314,
+  serialized_start=5509,
+  serialized_end=5519,
 )
 
 
@@ -2289,8 +2369,8 @@ _SUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5316,
-  serialized_end=5321,
+  serialized_start=5521,
+  serialized_end=5526,
 )
 
 
@@ -2327,8 +2407,8 @@ _THEILSEN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5323,
-  serialized_end=5368,
+  serialized_start=5528,
+  serialized_end=5573,
 )
 
 
@@ -2351,8 +2431,8 @@ _TOBOOL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5370,
-  serialized_end=5378,
+  serialized_start=5575,
+  serialized_end=5583,
 )
 
 
@@ -2375,8 +2455,8 @@ _TODATAFRAME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5380,
-  serialized_end=5393,
+  serialized_start=5585,
+  serialized_end=5598,
 )
 
 
@@ -2399,8 +2479,8 @@ _TOFLOAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5395,
-  serialized_end=5404,
+  serialized_start=5600,
+  serialized_end=5609,
 )
 
 
@@ -2423,8 +2503,8 @@ _TOINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5406,
-  serialized_end=5413,
+  serialized_start=5611,
+  serialized_end=5618,
 )
 
 
@@ -2447,8 +2527,8 @@ _TOSTRING = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5415,
-  serialized_end=5425,
+  serialized_start=5620,
+  serialized_end=5630,
 )
 
 
@@ -2478,8 +2558,8 @@ _UNION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5427,
-  serialized_end=5451,
+  serialized_start=5632,
+  serialized_end=5656,
 )
 
 
@@ -2509,8 +2589,8 @@ _VARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5453,
-  serialized_end=5497,
+  serialized_start=5658,
+  serialized_end=5702,
 )
 
 _COMPONENT.fields_by_name['arguments'].message_type = value__pb2._ARGUMENTNODEIDS
@@ -2534,6 +2614,7 @@ _COMPONENT.fields_by_name['dp_median'].message_type = _DPMEDIAN
 _COMPONENT.fields_by_name['dp_minimum'].message_type = _DPMINIMUM
 _COMPONENT.fields_by_name['dp_quantile'].message_type = _DPQUANTILE
 _COMPONENT.fields_by_name['dp_raw_moment'].message_type = _DPRAWMOMENT
+_COMPONENT.fields_by_name['dp_sgd'].message_type = _DPSGD
 _COMPONENT.fields_by_name['dp_sum'].message_type = _DPSUM
 _COMPONENT.fields_by_name['dp_variance'].message_type = _DPVARIANCE
 _COMPONENT.fields_by_name['equal'].message_type = _EQUAL
@@ -2640,6 +2721,9 @@ _COMPONENT.fields_by_name['dp_quantile'].containing_oneof = _COMPONENT.oneofs_by
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['dp_raw_moment'])
 _COMPONENT.fields_by_name['dp_raw_moment'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
+_COMPONENT.oneofs_by_name['variant'].fields.append(
+  _COMPONENT.fields_by_name['dp_sgd'])
+_COMPONENT.fields_by_name['dp_sgd'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
 _COMPONENT.oneofs_by_name['variant'].fields.append(
   _COMPONENT.fields_by_name['dp_sum'])
 _COMPONENT.fields_by_name['dp_sum'].containing_oneof = _COMPONENT.oneofs_by_name['variant']
@@ -2818,6 +2902,7 @@ DESCRIPTOR.message_types_by_name['DPMedian'] = _DPMEDIAN
 DESCRIPTOR.message_types_by_name['DPMinimum'] = _DPMINIMUM
 DESCRIPTOR.message_types_by_name['DPQuantile'] = _DPQUANTILE
 DESCRIPTOR.message_types_by_name['DPRawMoment'] = _DPRAWMOMENT
+DESCRIPTOR.message_types_by_name['DPSGD'] = _DPSGD
 DESCRIPTOR.message_types_by_name['DPSum'] = _DPSUM
 DESCRIPTOR.message_types_by_name['DPVariance'] = _DPVARIANCE
 DESCRIPTOR.message_types_by_name['Equal'] = _EQUAL
@@ -3012,6 +3097,13 @@ DPRawMoment = _reflection.GeneratedProtocolMessageType('DPRawMoment', (_message.
   # @@protoc_insertion_point(class_scope:smartnoise.DPRawMoment)
   })
 _sym_db.RegisterMessage(DPRawMoment)
+
+DPSGD = _reflection.GeneratedProtocolMessageType('DPSGD', (_message.Message,), {
+  'DESCRIPTOR' : _DPSGD,
+  '__module__' : 'components_pb2'
+  # @@protoc_insertion_point(class_scope:smartnoise.DPSGD)
+  })
+_sym_db.RegisterMessage(DPSGD)
 
 DPSum = _reflection.GeneratedProtocolMessageType('DPSum', (_message.Message,), {
   'DESCRIPTOR' : _DPSUM,
