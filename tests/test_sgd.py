@@ -8,8 +8,8 @@ def test_sgd():
         PUMS = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         sgd_process = sn.dp_sgd(
-            data=sn.to_float(PUMS[["age", "sex", "educ", "race", "income", "married"]]),
-            theta=np.random.uniform(-10, 10, size=(1, 6)),
+            data=sn.to_float(PUMS[["married", "sex", "educ"]]),
+            theta=np.random.uniform(-10, 10, size=(1, 3)),
             learning_rate=0.1,
             noise_scale=0.1,
             group_size=10,
