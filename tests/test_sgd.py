@@ -24,7 +24,7 @@ def plot(data, params):
     fig, axs = plt.subplots(nrows=num_plots, figsize=(scale, scale * num_plots))
 
     for i, coefficients in enumerate(params):
-        sns.lineplot(coefficients, range(len(coefficients)), ax=axs[i]).set_title(f"Parameter {i}")
+        sns.lineplot(y=coefficients, x=range(len(coefficients)), ax=axs[i]).set_title(f"Parameter {i}")
 
     loss = get_loss(data, params)
     sns.lineplot(x=range(params.shape[1]), y=loss, ax=axs[data.shape[1]]).set_title("SSE")
