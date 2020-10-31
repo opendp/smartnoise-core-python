@@ -13,6 +13,7 @@ os.environ['RUST_BACKTRACE'] = 'full'
 from tests import test_sgd
 
 test_sgd.test_sgd()
+test_sgd.test_sgd_2()
 
 # establish data information
 # data_path = os.path.join('.', 'data', 'PUMS_california_demographics_1000', 'data.csv')
