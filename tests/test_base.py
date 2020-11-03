@@ -523,3 +523,65 @@ def test_accuracies(mechanism):
             upper=float(num_rows),
             privacy_usage={"epsilon": 0.5, "delta": 1E-10})
               .get_accuracy(alpha=.05))
+
+
+@pytest.mark.parametrize(
+    "mechanism",
+    [
+        pytest.param("SimpleGeometric", id="SimpleGeometricAlpha"),
+        pytest.param("Laplace", id="LaplaceAlpha"),
+        pytest.param("Snapping", id="SnappingAlpha"),
+        pytest.param("Gaussian", id="GaussianAlpha"),
+        pytest.param("AnalyticGaussian", id="AnalyticGaussianAlpha"),
+    ],
+)
+def test_accuracy_empirical(mechanism):
+    alpha = 0.05
+    trials = 100
+    import numpy as np
+
+    with sn.Analysis(protect_floating_point=False):
+        num_rows = 1000
+        lower = 0
+        upper = 10
+        # raw_data = list(range(num_rows))
+
+        if mechanism.lower() == "simplegeometric":
+            raw_data = np.random.randint(lower, upper, size=num_rows)
+            data = sn.to_int(sn.Dataset(value=raw_data), lower, upper)
+            args = {'lower': num_rows * lower, 'upper': num_rows * upper}
+        else:
+            lower = float(lower)
+            upper = float(upper)
+            raw_data = np.random.uniform(lower, upper, size=num_rows)
+            data = sn.to_float(sn.Dataset(value=raw_data))
+            args = {}
+
+        data = sn.resize(data, lower=lower, upper=upper, number_columns=1, number_rows=num_rows)
+        data = sn.impute(sn.clamp(data, lower=lower, upper=upper))
+
+        estimators = [sn.dp_sum(
+            data,
+            mechanism=mechanism,
+            privacy_usage={"epsilon": 0.5, "delta": 1E-10},
+            **args) for _ in range(trials)]
+
+    accuracy = estimators[0].get_accuracy(alpha=alpha)[0]
+    lower = np.sum(raw_data) - accuracy
+    upper = np.sum(raw_data) + accuracy
+
+    hits = 0
+    for estimator in estimators:
+        if estimator.value < lower or estimator.value > upper:
+            hits += 1
+    empirical_alpha = hits / trials
+    print("Empirical sigma", np.std([i.value for i in estimators]))
+
+    print("Expected alpha:")
+    print(alpha)
+    print("Empirical alpha:")
+    print(empirical_alpha)
+
+    # print([i.value for i in estimators])
+    if abs(empirical_alpha - alpha) > .2:
+        raise ValueError("empirical alpha is too divergent")
