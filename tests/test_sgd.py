@@ -1,3 +1,6 @@
+import os
+from distutils.util import strtobool
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -5,6 +8,8 @@ import seaborn as sns
 
 import opendp.smartnoise.core as sn
 from tests import TEST_PUMS_PATH, TEST_PUMS_NAMES
+
+IS_CI_BUILD = strtobool(os.environ.get('IS_CI_BUILD', 'False'))
 
 
 def get_loss(data, params):
@@ -31,7 +36,8 @@ def plot(data, params):
     plt.show()
 
 
-def test_sgd():
+def test_sgd_pums():
+
     with sn.Analysis():
         PUMS = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
         columns = ["married", "sex", "educ"]
@@ -60,14 +66,17 @@ def test_sgd():
 
         data = np.array(pd.read_csv(TEST_PUMS_PATH)[columns])
 
-        plot(data, sgd_process.value)
+        sgd_process.analysis.release()
+
+        if IS_CI_BUILD:
+            plot(data, sgd_process.value)
 
 
-def test_sgd_2():
+def test_sgd_rust_test_case():
     # Build large test dataset, with n rows, x~uniform; y~binomial(pi); pi = 1/(1+exp(-1 - 1x))
     n = 1000
     m = 2
-    data = np.random.uniform(0, .01, size=(n, m))
+    data = np.random.uniform(-10, 10, size=(n, m))
 
     transform = 1.0 / (1.0 + np.exp(1.0 - 3.0 * data[:, 1]))
     data[:, 0] = np.random.binomial(1, transform)
@@ -88,4 +97,5 @@ def test_sgd_2():
 
     print("thetas", sgd_process.value)
 
-    plot(data, sgd_process.value)
+    if IS_CI_BUILD:
+        plot(data, sgd_process.value)
