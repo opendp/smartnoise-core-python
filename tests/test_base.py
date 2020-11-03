@@ -475,9 +475,11 @@ def test_reports():
 @pytest.mark.parametrize(
     "mechanism",
     [
-        pytest.param("Gaussian", id="GaussianAccuracy"),
+        pytest.param("SimpleGeometric", id="SimpleGeometricAccuracy"),
         pytest.param("Laplace", id="LaplaceAccuracy"),
-        pytest.param("Automatic", id="DefaultAccuracy"),
+        pytest.param("Snapping", id="SnappingAccuracy"),
+        pytest.param("Gaussian", id="GaussianAccuracy"),
+        pytest.param("AnalyticGaussian", id="AnalyticGaussianAccuracy"),
     ],
 )
 def test_accuracies(mechanism):
