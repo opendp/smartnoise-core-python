@@ -74,4 +74,13 @@ from tests import test_base
 #     return value
 
 # print(histogram_insertion_simple(range(1000), 100, .000001))
-
+print("Geometric")
+test_base.test_accuracies("SimpleGeometric")
+print("Laplace")
+test_base.test_accuracies("Laplace")
+print("Snapping")
+test_base.test_accuracies("Snapping")
+print("Analytic Gaussian")
+test_base.test_accuracies("AnalyticGaussian")
+print("Gaussian")
+test_base.test_accuracies("Gaussian")

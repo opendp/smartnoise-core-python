@@ -488,14 +488,15 @@ def test_accuracies(mechanism):
         # given some hypothetical dataset with four columns
         data = sn.Dataset(path="", column_names=["A", "B", "C", "D"])
         # compute what the accuracies would be for some common aggregations
-        print("mean accuracy:", sn.dp_mean(
-            sn.to_float(data['A']),
-            mechanism=mechanism,
-            data_rows=num_rows,
-            data_lower=0.,
-            data_upper=10.,
-            privacy_usage={"epsilon": 0.5, "delta": 1E-10})
-              .get_accuracy(alpha=.05))
+        if mechanism.lower() != "simplegeometric":
+            print("mean accuracy:", sn.dp_mean(
+                sn.to_float(data['A']),
+                mechanism=mechanism,
+                data_rows=num_rows,
+                data_lower=0.,
+                data_upper=10.,
+                privacy_usage={"epsilon": 0.5, "delta": 1E-10})
+                  .get_accuracy(alpha=.05))
 
         print("count accuracy:", sn.dp_count(
             data,
@@ -504,14 +505,15 @@ def test_accuracies(mechanism):
             privacy_usage={"epsilon": 0.5, "delta": 1E-10})
               .get_accuracy(alpha=.05))
 
-        print("variance accuracy:", sn.dp_variance(
-            sn.to_float(data['B']),
-            mechanism=mechanism,
-            data_rows=num_rows,
-            data_lower=10.,
-            data_upper=15.,
-            privacy_usage={"epsilon": 0.5, "delta": 1E-10})
-              .get_accuracy(alpha=.05))
+        if mechanism.lower() != "simplegeometric":
+            print("variance accuracy:", sn.dp_variance(
+                sn.to_float(data['B']),
+                mechanism=mechanism,
+                data_rows=num_rows,
+                data_lower=10.,
+                data_upper=15.,
+                privacy_usage={"epsilon": 0.5, "delta": 1E-10})
+                  .get_accuracy(alpha=.05))
 
         print("histogram accuracy:", sn.dp_histogram(
             sn.clamp(data['C'], categories=['CAT1', 'CAT2', 'CAT3'], null_value='NA'),
