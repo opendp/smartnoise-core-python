@@ -1,10 +1,11 @@
 import os
 from distutils.util import strtobool
-import opendp.smartnoise.core as sn
-from tests import (TEST_PUMS_PATH, TEST_PUMS_NAMES,
-                   TEST_EDUC_PATH, TEST_EDUC_NAMES)
+
+import numpy as np
 import pytest
 
+import opendp.smartnoise.core as sn
+from tests import (TEST_PUMS_PATH, TEST_PUMS_NAMES)
 
 # Used to skip showing plots, etc.
 #
@@ -585,3 +586,84 @@ def test_accuracy_empirical(mechanism):
     # print([i.value for i in estimators])
     if abs(empirical_alpha - alpha) > .2:
         raise ValueError("empirical alpha is too divergent")
+
+
+def test_accuracy_count():
+    with sn.Analysis():
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        release = sn.dp_count(data["sex"] == "1", privacy_usage={"epsilon": 1.0})
+    whitenoise_ci = release.get_accuracy(0.05)
+    assert whitenoise_ci > 0
+
+    print(whitenoise_ci)
+
+
+def test_zero_simple_geometric():
+
+    with sn.Analysis(protect_floating_point=False):
+        # given some hypothetical dataset with four columns
+        data = sn.Dataset(value=np.zeros(10))
+        # compute what the accuracies would be for some common aggregations
+        exact_sum = sn.histogram(
+            sn.to_int(data, lower=0, upper=100),
+            data_rows=10,
+            data_columns=1,
+            data_lower=0,
+            data_upper=100)
+        print()
+        print("sum:", sn.simple_geometric_mechanism(
+            exact_sum,
+            privacy_usage={"epsilon": 0.01}).value)
+
+
+def test_exponential_time():
+    import timeit
+    values = np.random.rand(5) * 10
+    trials = 10
+
+    def run_dp_median(lower, upper, n_candidates, eps):
+        with sn.Analysis() as analysis:
+            data = sn.Dataset(value=sorted(values))
+
+            pre = sn.to_float(data)
+            pre = sn.resize(pre, number_columns=1, lower=lower, upper=upper)
+            pre = sn.impute(pre, lower=lower, upper=upper)
+
+            candidates = np.linspace(lower, upper, n_candidates, dtype=float)
+
+            median = sn.median(pre, candidates=candidates)
+            sn.exponential_mechanism(median,
+                                     candidates=candidates,
+                                     privacy_usage={'epsilon': eps})
+        analysis.release()
+
+    def time_parameterized(n_candidates):
+        return timeit.timeit(lambda: run_dp_median(lower=0.0, upper=10.0, n_candidates=n_candidates, eps=1.0), number=trials) / trials
+
+    # check that exponential mechanism execution time scales linearly
+    assert time_parameterized(100) * 100 > time_parameterized(10000)
+
+@pytest.mark.parametrize(
+    "hist,total,privacy",
+    [
+        pytest.param(np.zeros(1000, dtype=int), 100, .001, id="HistogramInsertionSimple")
+    ],
+)
+def test_histogram_insertion_simple(hist, total, privacy):
+    """
+    Conduct a differentially private analysis with values inserted from other systems
+    :return:
+    """
+    with sn.Analysis() as analysis:
+        # construct a fake dataset that describes your actual data (will never be run)
+        data = sn.Dataset(path="", column_names=["A", "B", "C", "D"])
+        # run a fake aggregation
+        actual_histogram_b = sn.histogram(sn.clamp(data['B'], categories=list(range(len(hist) - 1)), null_value=-1))
+        actual_histogram_b.set(hist)
+        geo_histogram_b = sn.simple_geometric_mechanism(actual_histogram_b, 0, total,
+                                                        privacy_usage={"epsilon": privacy})
+        analysis.release()
+        # check if the analysis is permissible
+        analysis.validate()
+
+    assert sum(np.equal(geo_histogram_b.value, np.zeros(len(hist)))) < len(hist) * .1
