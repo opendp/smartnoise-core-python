@@ -636,7 +636,7 @@ class Analysis(object):
                  dynamic=True, eager=False,
                  neighboring='substitute', group_size=1,
                  stack_traces=True, filter_level='public',
-                 protect_floating_point=False,
+                 protect_floating_point=True,
                  protect_elapsed_time=False,
                  strict_parameter_checks=False):
 
