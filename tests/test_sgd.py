@@ -68,7 +68,7 @@ def test_sgd_pums():
 
         sgd_process.analysis.release()
 
-        if IS_CI_BUILD:
+        if not IS_CI_BUILD:
             plot(data, sgd_process.value)
 
 
@@ -76,7 +76,7 @@ def test_sgd_rust_test_case():
     # Build large test dataset, with n rows, x~uniform; y~binomial(pi); pi = 1/(1+exp(-1 - 1x))
     n = 1000
     m = 2
-    data = np.random.uniform(-10, 10, size=(n, m))
+    data = np.random.uniform(-1, 1, size=(n, m))
 
     transform = 1.0 / (1.0 + np.exp(1.0 - 3.0 * data[:, 1]))
     data[:, 0] = np.random.binomial(1, transform)
@@ -97,5 +97,5 @@ def test_sgd_rust_test_case():
 
     print("thetas", sgd_process.value)
 
-    if IS_CI_BUILD:
+    if not IS_CI_BUILD:
         plot(data, sgd_process.value)
