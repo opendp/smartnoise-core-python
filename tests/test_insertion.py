@@ -7,7 +7,7 @@ def test_insertion_simple():
     Conduct a differentially private analysis with values inserted from other systems
     :return:
     """
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
 
         # construct a fake dataset that describes your actual data (will never be run)
         data = sn.Dataset(path="", column_names=["A", "B", "C", "D"])
