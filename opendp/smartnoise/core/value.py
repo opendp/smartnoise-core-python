@@ -104,6 +104,7 @@ def serialize_release(release_values):
         values={
             component_id: serialize_release_node(release_node)
             for component_id, release_node in release_values.items()
+            if release_node['value'] is not None
         })
 
 
