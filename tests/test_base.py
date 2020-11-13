@@ -1,8 +1,11 @@
 import os
 from distutils.util import strtobool
+
+import numpy as np
+import pytest
+
 import opendp.smartnoise.core as sn
-from tests import (TEST_PUMS_PATH, TEST_PUMS_NAMES,
-                   TEST_EDUC_PATH, TEST_EDUC_NAMES)
+from tests import (TEST_PUMS_PATH, TEST_PUMS_NAMES)
 
 # Used to skip showing plots, etc.
 #
@@ -468,3 +471,199 @@ def test_reports():
 
         # TODO: uncomment when reports fix is merged
         # assert len(analysis.report()) == 1
+
+
+@pytest.mark.parametrize(
+    "mechanism",
+    [
+        pytest.param("SimpleGeometric", id="SimpleGeometricAccuracy"),
+        pytest.param("Laplace", id="LaplaceAccuracy"),
+        pytest.param("Snapping", id="SnappingAccuracy"),
+        pytest.param("Gaussian", id="GaussianAccuracy"),
+        pytest.param("AnalyticGaussian", id="AnalyticGaussianAccuracy"),
+    ],
+)
+def test_accuracies(mechanism):
+
+    num_rows = 14
+
+    with sn.Analysis(protect_floating_point=False):
+        # given some hypothetical dataset with four columns
+        data = sn.Dataset(path="", column_names=["A", "B", "C", "D"])
+        # compute what the accuracies would be for some common aggregations
+        if mechanism.lower() != "simplegeometric":
+            print("mean accuracy:", sn.dp_mean(
+                sn.to_float(data['A']),
+                mechanism=mechanism,
+                data_rows=num_rows,
+                data_lower=0.,
+                data_upper=10.,
+                privacy_usage={"epsilon": 0.5, "delta": 1E-10})
+                  .get_accuracy(alpha=.05))
+
+        print("count accuracy:", sn.dp_count(
+            data,
+            mechanism=mechanism,
+            upper=float(num_rows),
+            privacy_usage={"epsilon": 0.5, "delta": 1E-10})
+              .get_accuracy(alpha=.05))
+
+        if mechanism.lower() != "simplegeometric":
+            print("variance accuracy:", sn.dp_variance(
+                sn.to_float(data['B']),
+                mechanism=mechanism,
+                data_rows=num_rows,
+                data_lower=10.,
+                data_upper=15.,
+                privacy_usage={"epsilon": 0.5, "delta": 1E-10})
+                  .get_accuracy(alpha=.05))
+
+        print("histogram accuracy:", sn.dp_histogram(
+            sn.clamp(data['C'], categories=['CAT1', 'CAT2', 'CAT3'], null_value='NA'),
+            mechanism=mechanism,
+            upper=float(num_rows),
+            privacy_usage={"epsilon": 0.5, "delta": 1E-10})
+              .get_accuracy(alpha=.05))
+
+
+@pytest.mark.parametrize(
+    "mechanism",
+    [
+        pytest.param("SimpleGeometric", id="SimpleGeometricAlpha"),
+        pytest.param("Laplace", id="LaplaceAlpha"),
+        pytest.param("Snapping", id="SnappingAlpha"),
+        pytest.param("Gaussian", id="GaussianAlpha"),
+        pytest.param("AnalyticGaussian", id="AnalyticGaussianAlpha"),
+    ],
+)
+def test_accuracy_empirical(mechanism):
+    alpha = 0.05
+    trials = 100
+    import numpy as np
+
+    with sn.Analysis(protect_floating_point=False):
+        num_rows = 1000
+        lower = 0
+        upper = 10
+        # raw_data = list(range(num_rows))
+
+        if mechanism.lower() == "simplegeometric":
+            raw_data = np.random.randint(lower, upper, size=num_rows)
+            data = sn.to_int(sn.Dataset(value=raw_data), lower, upper)
+            args = {'lower': num_rows * lower, 'upper': num_rows * upper}
+        else:
+            lower = float(lower)
+            upper = float(upper)
+            raw_data = np.random.uniform(lower, upper, size=num_rows)
+            data = sn.to_float(sn.Dataset(value=raw_data))
+            args = {}
+
+        data = sn.resize(data, lower=lower, upper=upper, number_columns=1, number_rows=num_rows)
+        data = sn.impute(sn.clamp(data, lower=lower, upper=upper))
+
+        estimators = [sn.dp_sum(
+            data,
+            mechanism=mechanism,
+            privacy_usage={"epsilon": 0.5, "delta": 1E-10},
+            **args) for _ in range(trials)]
+
+    accuracy = estimators[0].get_accuracy(alpha=alpha)[0]
+    lower = np.sum(raw_data) - accuracy
+    upper = np.sum(raw_data) + accuracy
+
+    hits = 0
+    for estimator in estimators:
+        if estimator.value < lower or estimator.value > upper:
+            hits += 1
+    empirical_alpha = hits / trials
+    print("Empirical sigma", np.std([i.value for i in estimators]))
+
+    print("Expected alpha:")
+    print(alpha)
+    print("Empirical alpha:")
+    print(empirical_alpha)
+
+    # print([i.value for i in estimators])
+    if abs(empirical_alpha - alpha) > .2:
+        raise ValueError("empirical alpha is too divergent")
+
+
+def test_accuracy_count():
+    with sn.Analysis():
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        release = sn.dp_count(data["sex"] == "1", privacy_usage={"epsilon": 1.0})
+    whitenoise_ci = release.get_accuracy(0.05)
+    assert whitenoise_ci > 0
+
+    print(whitenoise_ci)
+
+
+def test_zero_simple_geometric():
+
+    with sn.Analysis(protect_floating_point=False):
+        # given some hypothetical dataset with four columns
+        data = sn.Dataset(value=np.zeros(10))
+        # compute what the accuracies would be for some common aggregations
+        exact_sum = sn.histogram(
+            sn.to_int(data, lower=0, upper=100),
+            data_rows=10,
+            data_columns=1,
+            data_lower=0,
+            data_upper=100)
+        print()
+        print("sum:", sn.simple_geometric_mechanism(
+            exact_sum,
+            privacy_usage={"epsilon": 0.01}).value)
+
+
+def test_exponential_time():
+    import timeit
+    values = np.random.rand(5) * 10
+    trials = 10
+
+    def run_dp_median(lower, upper, n_candidates, eps):
+        with sn.Analysis() as analysis:
+            data = sn.Dataset(value=sorted(values))
+
+            pre = sn.to_float(data)
+            pre = sn.resize(pre, number_columns=1, lower=lower, upper=upper)
+            pre = sn.impute(pre, lower=lower, upper=upper)
+
+            candidates = np.linspace(lower, upper, n_candidates, dtype=float)
+
+            median = sn.median(pre, candidates=candidates)
+            sn.exponential_mechanism(median,
+                                     candidates=candidates,
+                                     privacy_usage={'epsilon': eps})
+        analysis.release()
+
+    def time_parameterized(n_candidates):
+        return timeit.timeit(lambda: run_dp_median(lower=0.0, upper=10.0, n_candidates=n_candidates, eps=1.0), number=trials) / trials
+
+    # check that exponential mechanism execution time scales linearly
+    assert time_parameterized(100) * 100 > time_parameterized(10000)
+
+@pytest.mark.parametrize(
+    "hist,total,privacy",
+    [
+        pytest.param(np.zeros(1000, dtype=int), 100, .001, id="HistogramInsertionSimple")
+    ],
+)
+def test_histogram_insertion_simple(hist, total, privacy):
+    """
+    Conduct a differentially private analysis with values inserted from other systems
+    :return:
+    """
+    with sn.Analysis() as analysis:
+        # construct a fake dataset that describes your actual data (will never be run)
+        data = sn.Dataset(path="", column_names=["A", "B", "C", "D"])
+        # run a fake aggregation
+        actual_histogram_b = sn.histogram(sn.clamp(data['B'], categories=list(range(len(hist) - 1)), null_value=-1))
+        actual_histogram_b.set(hist)
+        geo_histogram_b = sn.simple_geometric_mechanism(actual_histogram_b, 0, total,
+                                                        privacy_usage={"epsilon": privacy})
+        analysis.release()
+        # check if the analysis is permissible
+        analysis.validate()
+
+    assert sum(np.equal(geo_histogram_b.value, np.zeros(len(hist)))) < len(hist) * .1
