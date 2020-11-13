@@ -126,14 +126,16 @@ def serialize_indexmap_release_node(release_values):
 
 def detect_atomic_type(array):
     if np.issubdtype(array.dtype.type, np.integer):
-        return "i64"
-    if np.issubdtype(array.dtype.type, np.floating):
-        return "f64"
-    if array.dtype.type == np.bool_:
-        return "bool"
-    if np.issubdtype(array.dtype.type, np.character):
-        return "string"
-    raise ValueError(f"Unrecognized atomic type: {array.dtype.type}")
+        atomic_type = "i64"
+    elif np.issubdtype(array.dtype.type, np.floating):
+        atomic_type = "f64"
+    elif array.dtype.type == np.bool_:
+        atomic_type = "bool"
+    elif np.issubdtype(array.dtype.type, np.character):
+        atomic_type = "string"
+    else:
+        raise ValueError(f"Unrecognized atomic type: {array.dtype.type}")
+    return atomic_type
 
 
 def serialize_array1d(array):
