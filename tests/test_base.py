@@ -662,8 +662,6 @@ def test_histogram_insertion_simple(hist, total, privacy):
         actual_histogram_b.set(hist)
         geo_histogram_b = sn.simple_geometric_mechanism(actual_histogram_b, 0, total,
                                                         privacy_usage={"epsilon": privacy})
-        analysis.release()
-        # check if the analysis is permissible
-        analysis.validate()
-
-    assert sum(np.equal(geo_histogram_b.value, np.zeros(len(hist)))) < len(hist) * .1
+    analysis.release()
+    # check if the analysis is permissible
+    analysis.validate()
