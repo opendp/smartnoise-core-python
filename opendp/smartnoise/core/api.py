@@ -223,6 +223,15 @@ class LibraryWrapper(object):
             destroy=self.lib_smartnoise.smartnoise_destroy_bytebuffer)
 
     def laplace_mechanism(self, value, epsilon, sensitivity, enforce_constant_time):
+        """
+        Direct api to access the laplace mechanism.
+
+        :param value: float scalar to privatize
+        :param epsilon: float privacy parameter
+        :param sensitivity: float L1 sensitivity
+        :param enforce_constant_time: ensure all calls take the same elapsed time
+        :return: privatized float
+        """
         return self.lib_smartnoise.laplace_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
@@ -230,6 +239,16 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
+        """
+        Direct api to access the gaussian mechanism.
+
+        :param value: float scalar to privatize
+        :param epsilon: float privacy parameter
+        :param delta: float privacy parameter
+        :param sensitivity: float L2 sensitivity
+        :param enforce_constant_time: ensure all calls take the same elapsed time
+        :return: privatized float
+        """
         return self.lib_smartnoise.gaussian_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
@@ -239,6 +258,16 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def analytic_gaussian_mechanism(self, value, epsilon, delta, sensitivity, enforce_constant_time):
+        """
+        Direct api to access the analytic gaussian mechanism.
+
+        :param value: float scalar to privatize
+        :param epsilon: float privacy parameter
+        :param delta: float privacy parameter
+        :param sensitivity: float L2 sensitivity
+        :param enforce_constant_time: ensure all calls take the same elapsed time
+        :return: privatized float
+        """
         return self.lib_smartnoise.gaussian_mechanism(
             ctypes.c_double(value),
             ctypes.c_double(epsilon),
@@ -248,6 +277,17 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def simple_geometric_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time):
+        """
+        Direct api to access the simple geometric mechanism.
+
+        :param value: integer scalar to privatize
+        :param epsilon: float privacy parameter
+        :param sensitivity: float L1 sensitivity
+        :param min: lower bound on the statistic
+        :param max: upper bound on the statistic
+        :param enforce_constant_time: ensure all calls take the same elapsed time
+        :return: privatized integer
+        """
         return self.lib_smartnoise.simple_geometric_mechanism(
             ctypes.c_int64(value),
             ctypes.c_double(epsilon),
@@ -257,6 +297,18 @@ class LibraryWrapper(object):
             ctypes.c_bool(enforce_constant_time))
 
     def snapping_mechanism(self, value, epsilon, sensitivity, min, max, enforce_constant_time, binding_probability=None):
+        """
+        Direct api to access the snapping mechanism.
+
+        :param value: float scalar to privatize
+        :param epsilon: float privacy parameter
+        :param sensitivity: float L1 sensitivity
+        :param min: lower bound on the statistic
+        :param max: upper bound on the statistic
+        :param enforce_constant_time: ensure all calls take the same elapsed time
+        :param binding_probability: optional float to scale clamping bounds based on the probability of the clamp binding
+        :return: privatized float
+        """
         if binding_probability is None:
             return self.lib_smartnoise.snapping_mechanism(
                 ctypes.c_double(value),

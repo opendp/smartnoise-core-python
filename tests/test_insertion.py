@@ -1,3 +1,5 @@
+import pytest
+
 import opendp.smartnoise.core as sn
 import numpy as np
 
@@ -7,7 +9,7 @@ def test_insertion_simple():
     Conduct a differentially private analysis with values inserted from other systems
     :return:
     """
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
 
         # construct a fake dataset that describes your actual data (will never be run)
         data = sn.Dataset(path="", column_names=["A", "B", "C", "D"])
@@ -91,3 +93,65 @@ def test_insertion_simple():
 
         # retrieve the noised mean
         print("rest gaussian mean", gaussian_mean.value)
+
+
+@pytest.mark.parametrize(
+    "query,max_ids",
+    [
+        pytest.param([
+            {
+                'type': 'count',
+                'value': 23,
+                'privacy_usage': {'epsilon': .2}
+            },
+            {
+                'type': 'sum',
+                'value': 202,
+                'lower': 0,
+                'upper': 1000,
+                'privacy_usage': {'epsilon': .4}
+            },
+            {
+                'type': 'sum',
+                'value': 120.2,
+                'lower': 0.,
+                'upper': 1000.,
+                'privacy_usage': {'epsilon': .4, 'delta': 1.1e-6}
+            }
+        ], 5, id="PrivatizeQuery"),
+    ],
+)
+def privatize_query(queries, max_ids):
+    with sn.Analysis(group_size=max_ids, ) as analysis:
+
+        data = sn.Dataset(value=[])
+        for query in queries:
+            if query['type'] == 'count':
+                counter = sn.count(data)
+                counter.set(query['value'])
+                query['privatizer'] = sn.simple_geometric_mechanism(counter, lower=0, upper=1000000, privacy_usage=query['privacy_usage'])
+
+            if query['type'] == 'sum':
+                # assuming you don't consider the data type private:
+                caster = {
+                    int: lambda x: sn.to_int(x, lower=query['lower'], upper=query['upper']),
+                    float: sn.to_float
+                }[type(query['value'])]
+
+                summer = sn.sum(
+                    caster(data),
+                    data_columns=1,
+                    data_lower=query['lower'],
+                    data_upper=query['upper'])
+                summer.set(query['value'])
+
+                query['privatizer'] = {
+                    int: lambda x: sn.simple_geometric_mechanism(x, lower=0, upper=1000000, privacy_usage=query['privacy_usage']),
+                    float: lambda x: sn.gaussian_mechanism(x, privacy_usage=query['privacy_usage'])
+                }[type(query['value'])](summer)
+
+    analysis.release()
+    for query in queries:
+        query['privatized'] = query['privatizer'].value
+
+    return analysis.privacy_usage

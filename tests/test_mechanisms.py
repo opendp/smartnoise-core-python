@@ -121,7 +121,7 @@ def snapping_similarity():
     ],
 )
 def test_mechanism(args, constructor):
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
         PUMS = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
         categorical = sn.resize(
             sn.clamp(PUMS['sex'], categories=["0", "1"], null_value="0"),

@@ -442,14 +442,21 @@ class Component(object):
         return id(self)
 
     def __str__(self, depth=0):
-        if self.value is not None and depth != 0:
-            return str(self.value).replace("\n", "")
+        value = self.analysis.release_values.get(self.component_id, {"value": None})["value"]
+        if value is not None and depth != 0:
+            return str(value).replace("\n", "")
 
         inner = []
         if self.arguments:
-            inner.append(",\n".join([f'{("  " * (depth + 1))}{name}={value.__str__(depth + 1)}' for name, value in self.arguments.items() if value is not None]))
+            inner.append(",\n".join([
+                f'{("  " * (depth + 1))}{name}={value.__str__(depth + 1)}'
+                for name, value in self.arguments.items() if value is not None
+            ]))
         if self.options:
-            inner.append(",\n".join([f'{("  " * (depth + 1))}{name}={str(value).replace(chr(10), "")}' for name, value in self.options.items() if value is not None]))
+            inner.append(",\n".join([
+                f'{("  " * (depth + 1))}{name}={str(value).replace(chr(10), "")}'
+                for name, value in self.options.items() if value is not None
+            ]))
 
         if self.name == "Literal":
             inner = "released value: " + str(self.value).replace("\n", "")
@@ -636,7 +643,7 @@ class Analysis(object):
                  dynamic=True, eager=False,
                  neighboring='substitute', group_size=1,
                  stack_traces=True, filter_level='public',
-                 protect_floating_point=False,
+                 protect_floating_point=True,
                  protect_elapsed_time=False,
                  strict_parameter_checks=False):
 

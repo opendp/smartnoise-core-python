@@ -71,7 +71,7 @@ def test_groupby_3():
 
 def test_groupby_4():
     # now union private data, and apply mechanism after
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
         data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
 
@@ -120,7 +120,7 @@ def test_fail_groupby():
 
 def test_groupby_c_stab():
     # use the same partition multiple times in union
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
         data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = sn.to_bool(data['sex'], true_label="1")
@@ -199,7 +199,7 @@ def test_multilayer_partition_1():
 def test_multilayer_partition_2():
     #
     # multilayer partition with mechanisms applied after union
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
         data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = sn.to_bool(data['sex'], true_label="1")
@@ -248,7 +248,7 @@ def test_multilayer_partition_2():
 def test_dataframe_partitioning_1():
 
     # dataframe partition
-    with sn.Analysis() as analysis:
+    with sn.Analysis(protect_floating_point=False) as analysis:
         data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = sn.to_bool(data['sex'], true_label="1")
@@ -288,7 +288,7 @@ def test_dataframe_partitioning_2():
                             data_lower=0., data_upper=200_000.,
                             privacy_usage={"epsilon": 0.5})
             for key in partitioned.partition_keys
-        }))
+        }).value)
         print(analysis.privacy_usage)
 
 
