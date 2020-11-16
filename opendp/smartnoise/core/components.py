@@ -558,7 +558,7 @@ def dp_sum(data, lower=None, upper=None, mechanism="Automatic", privacy_usage=No
     :param data: 
     :param lower: Estimated minimum possible value of the statistic, on integral data. Useful to help bound elapsed time when sampling for the geometric mechanism. Useful for the snapping mechanism.
     :param upper: Estimated maximum possible value of the statistic, on integral data. Useful to help bound elapsed time when sampling for the geometric mechanism. Useful for the snapping mechanism.
-    :param mechanism: Privatizing mechanism to use. One of [`Automatic`, `Laplace`, `Gaussian`, `AnalyticGaussian`, `SimpleGeometric`]. `Automatic` chooses based on the input data type.
+    :param mechanism: Privatizing mechanism to use. One of [`Automatic`, `Laplace`, `Snapping`, `Gaussian`, `AnalyticGaussian`, `SimpleGeometric`]. `Automatic` chooses based on the input data type.
     :param privacy_usage: Object describing the type and amount of privacy to be used for the mechanism release.
     :param kwargs: data bounds of the form [argument]_[bound]=[lower | upper | categories | ...]
     :return: Differentially private sum over elements for each column of the data.

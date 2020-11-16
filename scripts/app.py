@@ -9,27 +9,32 @@ from tests import test_insertion
 from tests import test_mechanisms
 from tests import test_base
 
-
 # establish data information
 # data_path = os.path.join('.', 'data', 'PUMS_california_demographics_1000', 'data.csv')
 # var_names = ["age", "sex", "educ", "race", "income", "married", "pid"]
 
 # ~~~ SCRAP AREA FOR TESTING ~~~
-test_components.test_dp_median_raw()
-# test_components.test_dp_linear_regression()
-# test_components.test_dp_covariance()
-# test_median()
 
-# test_histogram()
-# test_partitioning.test_map_4()
-# test_mechanisms.test_mechanism({
-#     "mechanism": "Snapping",
-#     "privacy_usage": {"epsilon": 2.0, "delta": 1E-6}
-# }, test_mechanisms.dp_all_snapping)
-# test_mechanisms.test_snapping()
-# test_components.test_dp_median()
+# print("SimpleGeometric")
+# test_base.test_accuracies("SimpleGeometric")
+# print("Laplace")
+# test_base.test_accuracies("Laplace")
+# print("Snapping")
+# test_base.test_accuracies("Snapping")
+# print("Analytic Gaussian")
+# test_base.test_accuracies("AnalyticGaussian")
+# print("Gaussian")
+# test_base.test_accuracies("Gaussian")
 #
-#
-# # test_validator_properties.test_dp_mean()
-# test_insertion.test_insertion_simple()
-# test_components.test_partition()
+# print("Empirical Accuracies")
+# print("SimpleGeometric")
+# test_base.test_accuracy_empirical("SimpleGeometric")
+# print("Laplace")
+# test_base.test_accuracy_empirical("Laplace")
+# print("Snapping")
+# test_base.test_accuracy_empirical("Snapping")
+# print("Analytic Gaussian")
+# test_base.test_accuracy_empirical("AnalyticGaussian")
+# print("Gaussian")
+# test_base.test_accuracy_empirical("Gaussian")
+
