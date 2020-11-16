@@ -124,20 +124,22 @@ def serialize_indexmap_release_node(release_values):
     )
 
 
-def detect_atomic_type(dtype):
-    if np.issubdtype(dtype, np.integer):
-        return "i64"
-    if np.issubdtype(dtype, np.floating):
-        return "f64"
-    if dtype == np.bool_:
-        return "bool"
-    if np.issubdtype(dtype, np.character):
-        return "string"
-    raise ValueError(f"Unrecognized atomic type: {dtype}")
+def detect_atomic_type(array):
+    if np.issubdtype(array.dtype.type, np.integer):
+        atomic_type = "i64"
+    elif np.issubdtype(array.dtype.type, np.floating):
+        atomic_type = "f64"
+    elif array.dtype.type == np.bool_:
+        atomic_type = "bool"
+    elif np.issubdtype(array.dtype.type, np.character):
+        atomic_type = "string"
+    else:
+        raise ValueError(f"Unrecognized atomic type: {array.dtype.type}")
+    return atomic_type
 
 
 def serialize_array1d(array):
-    data_type = detect_atomic_type(array.dtype.type)
+    data_type = detect_atomic_type(array)
 
     container_type = {
         "bool": value_pb2.Array1dBool,
@@ -194,7 +196,7 @@ def serialize_value(value, value_format=None):
 
         return base_pb2.Value(jagged=value_pb2.Jagged(
             data=[serialize_array1d(np.array(column)) for column in value],
-            data_type=value_pb2.DataType.Value(detect_atomic_type(np.array(value[0]).dtype.type).upper())
+            data_type=value_pb2.DataType.Value(detect_atomic_type(np.array(value[0])).upper())
         ))
 
     if value_format is not None and value_format != 'array':

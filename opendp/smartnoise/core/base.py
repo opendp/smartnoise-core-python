@@ -319,6 +319,24 @@ class Component(object):
             return None
 
     def set(self, value):
+        value = np.array(value)
+
+        # add trailing singleton axes
+        value.shape += (1,) * (self.dimensionality - value.ndim)
+
+        if value.ndim != self.dimensionality:
+            raise ValueError(f"Expected dimensionality is {self.dimensionality}, but passed dimensionality is {value.ndim}.")
+        if self.dimensionality > 0 and value.shape[0] != self.num_records:
+            raise ValueError(f"Expected {self.num_records} records, but passed {value.shape[0]} records.")
+        if self.dimensionality > 1 and value.shape[1] != self.num_columns:
+            raise ValueError(f"Expected {self.num_columns} columns, but passed {value.shape[1]} columns.")
+        # TODO: make cast.rs accept i64, f64, and standardize .data_type property to i64, f64
+        atomic_type = {"bool": "bool", "i64": "int", "f64": "float", "string": "string"}[detect_atomic_type(value)]
+        if atomic_type != self.data_type:
+            raise ValueError(f"Expected {self.data_type} atomic type, but passed {atomic_type} atomic type.")
+
+        # TODO: add sanity checks for lower/upper/nullity
+
         self.analysis.release_values[self.component_id] = {
             'value': value,
             'public': self.releasable
