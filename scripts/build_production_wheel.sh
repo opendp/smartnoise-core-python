@@ -55,7 +55,7 @@ python3 scripts/code_generation.py
 echo "(F) move prior manylinux binary into the library";
 cp tmp_binaries/libsmartnoise_ffi.so opendp/smartnoise/core/lib
 echo "(G) move externally-built windows .dll into the library";
-cp tmp_binaries/smartnoise_ffi.dll opendp/smartnoise/core/lib
+cp smartnoise_ffi.dll opendp/smartnoise/core/lib
 
 echo "(H) package into wheel";
 #workon psi
