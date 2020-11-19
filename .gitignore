@@ -11,6 +11,7 @@ docs_temp/
 wheelhouse/
 opendp/smartnoise/core/lib/
 tmp_binaries/
+smartnoise_ffi.dll
 
 opendp/_native*
 opendp_smartnoise_core.egg-info
