@@ -58,7 +58,8 @@ def serialize_privacy_definition(analysis):
         protect_overflow=analysis.protect_overflow,
         protect_elapsed_time=analysis.protect_elapsed_time,
         protect_memory_utilization=analysis.protect_memory_utilization,
-        protect_floating_point=analysis.protect_floating_point
+        protect_floating_point=analysis.protect_floating_point,
+        protect_sensitivity=analysis.protect_sensitivity
     )
 
 
