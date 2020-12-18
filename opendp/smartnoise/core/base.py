@@ -612,22 +612,21 @@ class Analysis(object):
     Stack traces on the runtime may be disabled to help reduce the amount of leaked private information when an error is encountered.
     The library does not take into account epsilon consumed from errors.
 
-    The filter level determines what data is included in the release.
+    | The filter level determines what data is included in the release.
+    | - `public` only newly released public data is included in the release
+    | - `public_and_prior` will also retain private values previously included in the release
+    | - `all` for including all evaluations from all nodes, which is useful for system debugging
 
-    - `public` only newly released public data is included in the release
-    - `public_and_prior` will also retain private values previously included in the release
-    - `all` for including all evaluations from all nodes, which is useful for system debugging
+    | Floating point protection:
+    | - disables the runtime if the runtime was not compiled against mpfr
+    | - prevents the usage of the laplace and gaussian mechanisms
 
-    Floating point protection:
-    - disables the runtime if the runtime was not compiled against mpfr
-    - prevents the usage of the laplace and gaussian mechanisms
+    | Protect elapsed time:
+    | - forces all computations to run in constant time, with respect to the number of records in the dataset
+    | - WARNING: this feature is still in development
 
-    Protect elapsed time:
-    - forces all computations to run in constant time, with respect to the number of records in the dataset
-    - WARNING: this feature is still in development
-
-    Strict parameter checks:
-    - rejects analyses that consume more then epsilon=1, or delta greater than a value proportional to the number of records
+    | Strict parameter checks:
+    | - rejects analyses that consume more then epsilon=1, or delta greater than a value proportional to the number of records
 
     :param dynamic: flag for enabling dynamic validation
     :param eager: release every time a component is added
@@ -637,6 +636,7 @@ class Analysis(object):
     :param filter_level: may be `public`, `public_and_prior` or `all`
     :param protect_floating_point: enable for protection against floating point attacks
     :param protect_elapsed_time: enable for protection against side-channel timing attacks
+    :param protect_sensitivity: disallow passing custom sensitivities (true by default)
     :param strict_parameter_checks: enable to fail when some soft privacy violations are detected
     """
     def __init__(self,
@@ -645,6 +645,7 @@ class Analysis(object):
                  stack_traces=True, filter_level='public',
                  protect_floating_point=True,
                  protect_elapsed_time=False,
+                 protect_sensitivity=True,
                  strict_parameter_checks=False):
 
         # if false, validate the analysis before running it (enforces static validation)
@@ -673,6 +674,7 @@ class Analysis(object):
         self.strict_parameter_checks = strict_parameter_checks
         self.protect_elapsed_time = protect_elapsed_time
         self.protect_floating_point = protect_floating_point
+        self.protect_sensitivity = protect_sensitivity
         self.protect_overflow = False
         self.protect_memory_utilization = False
 
