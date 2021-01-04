@@ -96,9 +96,8 @@ def test_groupby_4():
     print(noised.value)
 
 
-@pytest.mark.xfail
-def test_fail_groupby():
-    with sn.Analysis() as analysis:
+def test_groupby_5():
+    with sn.Analysis(protect_floating_point=False) as analysis:
         data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
 
         is_male = sn.to_bool(data['sex'], true_label="1")
@@ -109,7 +108,7 @@ def test_fail_groupby():
         bounds = {"data_lower": [0., 0.], "data_upper": [15., 200_000.], "data_rows": 500}
 
         union = sn.union({
-            True: sn.mean(partitioned[True], privacy_usage={"epsilon": 0.1}, **bounds),
+            True: sn.mean(partitioned[True], **bounds),
             False: sn.mean(partitioned[False], **bounds),
         })
 

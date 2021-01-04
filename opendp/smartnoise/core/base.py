@@ -603,49 +603,54 @@ class Analysis(object):
     This class tracks cumulative privacy usage for all components within.
 
     The dynamic flag makes the library easier to use, because multiple batches may be strung together before calling release().
-    However, it opens the execution up to potential side channel attacks. Disable this if side channels are a concern.
+    However, it opens the execution up to potential side channel timing attacks. Disable this if side channels are a concern.
 
     The eager flag makes the library easier to debug, because stack traces pass through malformed components.
     As a library user, it may be useful to enable eager and find a small, similar public dataset to help shape your analysis.
-    Building an analysis with a large dataset and eager enabled is not recommended, because every additional node causes an additional release.
+    Building an analysis with a large dataset and eager enabled is not recommended, because the analysis is re-executed for each additional node.
 
-    Stack traces on the runtime may be disabled to help reduce the amount of leaked private information when an error is encountered.
-    The library does not take into account epsilon consumed from errors.
+    `filter_level` determines what data is included in the release:
+    - `public` only newly released public data is included in the release
+    - `public_and_prior` will also retain private values previously included in the release
+    - `all` for including all evaluations from all nodes, which is useful for system debugging
 
-    | The filter level determines what data is included in the release.
-    | - `public` only newly released public data is included in the release
-    | - `public_and_prior` will also retain private values previously included in the release
-    | - `all` for including all evaluations from all nodes, which is useful for system debugging
+    There are several arguments for enabling/disabling individual protections.
 
-    | Floating point protection:
-    | - disables the runtime if the runtime was not compiled against mpfr
-    | - prevents the usage of the laplace and gaussian mechanisms
-
-    | Protect elapsed time:
-    | - forces all computations to run in constant time, with respect to the number of records in the dataset
-    | - WARNING: this feature is still in development
-
-    | Strict parameter checks:
-    | - rejects analyses that consume more then epsilon=1, or delta greater than a value proportional to the number of records
+    - `protect_floating_point` (enabled by default):
+        - if enabled, disables the runtime if the runtime was not compiled against mpfr
+        - if enabled, prevents the usage of the laplace and gaussian mechanisms
+        - if enabled, noise-addition statistics on floating point numbers default to the snapping mechanism
+    - `protect_sensitivity` (enabled by default):
+        - if enabled, users may not pass custom sensitivities to mechanisms
+    - `protect_elapsed_time` (disabled by default):
+        - if enabled, forces all computations to run in constant time, regardless of the private dataset
+        - WARNING: this feature is still in development. Some components (like resize) may still have different execution times on neighboring datasets.
+    - `strict_parameter_checks` (enabled by default):
+        - if enabled, analyses may not consume more then epsilon=1, or delta greater than a value proportional to the number of records
+    - `stack_traces` (enabled by default):
+        - Disable stack traces to limit the amount of private information leaked should an error be encountered.
+        - This only turns off stack traces from the runtime- the rest of the library is not affected.
+        - The library does not take epsilon consumed from errors into account
 
     :param dynamic: flag for enabling dynamic validation
     :param eager: release every time a component is added
     :param neighboring: may be `substitute` or `add_remove`
     :param group_size: number of individuals to protect simultaneously
-    :param stack_traces: set to False to suppress potentially sensitive stack traces
     :param filter_level: may be `public`, `public_and_prior` or `all`
     :param protect_floating_point: enable for protection against floating point attacks
     :param protect_elapsed_time: enable for protection against side-channel timing attacks
-    :param protect_sensitivity: disallow passing custom sensitivities (true by default)
-    :param strict_parameter_checks: enable to fail when some soft privacy violations are detected
+    :param protect_sensitivity: disable to pass custom sensitivities
+    :param stack_traces: set to False to suppress potentially sensitive stack traces
+    :param strict_parameter_checks: enable this to fail when some soft privacy violations are detected
     """
-    def __init__(self,
+    def __init__(self, *,
                  dynamic=True, eager=False,
                  neighboring='substitute', group_size=1,
-                 stack_traces=True, filter_level='public',
+                 filter_level='public',
                  protect_floating_point=True,
                  protect_elapsed_time=False,
                  protect_sensitivity=True,
+                 stack_traces=True,
                  strict_parameter_checks=False):
 
         # if false, validate the analysis before running it (enforces static validation)
