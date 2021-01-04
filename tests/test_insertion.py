@@ -7,7 +7,6 @@ import numpy as np
 def test_insertion_simple():
     """
     Conduct a differentially private analysis with values inserted from other systems
-    :return:
     """
     with sn.Analysis(protect_floating_point=False) as analysis:
 

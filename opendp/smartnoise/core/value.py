@@ -222,7 +222,7 @@ def parse_privacy_usage(usage: value_pb2.PrivacyUsage):
     Construct a json object representing privacy usage from a proto object
 
     :param usage: protobuf message
-    :return:
+    :return: json privacy usage
     """
 
     if issubclass(type(usage), dict):

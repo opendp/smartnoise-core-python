@@ -610,7 +610,7 @@ class Analysis(object):
     Building an analysis with a large dataset and eager enabled is not recommended, because the analysis is re-executed for each additional node.
 
     `filter_level` determines what data is included in the release:
-    
+
     - `public` only newly released public data is included in the release
     - `public_and_prior` will also retain private values previously included in the release
     - `all` for including all evaluations from all nodes, which is useful for system debugging
@@ -714,7 +714,6 @@ class Analysis(object):
         :param value: Optionally, the result of the computation.
         :param value_format: Optionally, the format of the result of the computation- `array` `indexmap` `jagged`
         :param value_public: set to true if the value is considered public
-        :return:
         """
         if component.analysis:
             raise ValueError("this component is already a part of another analysis")
@@ -743,7 +742,6 @@ class Analysis(object):
     def update_properties(self, component_ids=None, suppress_warnings=False):
         """
         If new nodes have been added or there has been a release, recompute the properties for all of the components.
-        :return:
         """
         if not (self.properties_id['count'] == self.component_count
                 and self.properties_id['submission_count'] == self.submission_count
@@ -794,8 +792,6 @@ class Analysis(object):
         This function touches private data. It calls the runtime rust FFI with protobuf objects.
 
         The response is stored internally in the analysis instance and the all further components are computed in the next batch.
-
-        :return:
         """
         if not self.dynamic:
             assert self.validate(), "cannot release, analysis is not valid"
@@ -829,7 +825,6 @@ class Analysis(object):
         Remove all nodes from the analysis that do not have public descendants with released values.
 
         This can be helpful to clear away components that fail property checks.
-        :return:
         """
         parents = {}
         for (component_id, component) in self.components.items():
@@ -863,7 +858,6 @@ class Analysis(object):
         Set the current analysis as active.
         This allows building analyses outside of context managers, in a REPL environment.
         All new Components will be attributed to the entered analysis.
-        :return:
         """
         global context
         self._context = context
@@ -878,7 +872,6 @@ class Analysis(object):
         Set the current analysis as inactive.
 
         Components constructed after exit() will not longer be attributed to the previously active analysis.
-        :return:
         """
         global context
         context = self._context
@@ -912,7 +905,6 @@ class Analysis(object):
         """
         Visual utility for graphing the analysis. Each component is a node, and arguments are edges.
         networkx and matplotlib are necessary, but must be installed separately
-        :return:
         """
         import networkx as nx
         import matplotlib.pyplot as plt
