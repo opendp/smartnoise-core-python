@@ -610,6 +610,7 @@ class Analysis(object):
     Building an analysis with a large dataset and eager enabled is not recommended, because the analysis is re-executed for each additional node.
 
     `filter_level` determines what data is included in the release:
+    
     - `public` only newly released public data is included in the release
     - `public_and_prior` will also retain private values previously included in the release
     - `all` for including all evaluations from all nodes, which is useful for system debugging
