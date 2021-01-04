@@ -176,6 +176,14 @@ def test_dp_mean():
                          data_lower=0., data_upper=200_000.,
                          privacy_usage={"epsilon": 0.5}).value)
 
+    with sn.Analysis(protect_sensitivity=False, protect_floating_point=False):
+        data = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+        mean = sn.mean(sn.to_float(data['income']), data_lower=0., data_upper=200_000., data_rows=1000)
+        print(sn.gaussian_mechanism(
+            mean,
+            sensitivity=[[0.0000001]],
+            privacy_usage={"epsilon": 0.5, 'delta': .000001}).value)
+
 
 def test_dp_median():
     with sn.Analysis():

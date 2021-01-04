@@ -81,6 +81,7 @@ jobs:
       skip_cleanup: true
       provider: script
       script:
+        # --repository testpypi
         python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
       on:
         branch: develop
