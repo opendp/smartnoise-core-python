@@ -131,4 +131,4 @@ We appreciate all contributions and welcome pull requests with bug-fixes without
 If you plan to contribute new features, utility functions or extensions to the SmartNoise Core, please first open an issue and discuss the feature with us.
   - Sending a pull request (PR) without discussion might end up resulting in a rejected PR, because we may be taking the core in a different direction than you might be aware of.
 
-There is also a [contributing guide](contributing.md) for new developers.
+There is also a [contributing guide](contributing.md) for new developers. 
