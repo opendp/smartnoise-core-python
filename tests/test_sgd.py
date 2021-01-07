@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import sys
+
+# os.environ['WN_DEBUG'] = '1'
+# os.popen("python /Users/ethancowan/IdeaProjects/whitenoise-core-python/scripts/code_generation.py").read()
+# np.set_printoptions(threshold=sys.maxsize)
 
 import opendp.smartnoise.core as sn
 from tests import TEST_PUMS_PATH, TEST_PUMS_NAMES
@@ -44,8 +49,10 @@ def test_sgd_pums():
         iterations = 100
         sgd_process = sn.dp_sgd(
             data=sn.to_float(PUMS[columns]),
+            public_data=sn.to_float(PUMS[columns]),
+            # data_2=sn.to_float(PUMS[columns]),
             theta=np.random.uniform(-10, 10, size=len(columns)),
-            learning_rate=1.,
+            learning_rate=1.0,
             noise_scale=0.1,
             group_size=10,
             gradient_norm_bound=0.5,
@@ -66,6 +73,7 @@ def test_sgd_pums():
 
         data = np.array(pd.read_csv(TEST_PUMS_PATH)[columns])
 
+        print(sgd_process.value)
         sgd_process.analysis.release()
 
         if not IS_CI_BUILD:
@@ -87,7 +95,7 @@ def test_sgd_rust_test_case():
         sgd_process = sn.dp_sgd(
             data=sn.to_float(sn.Dataset(value=data)),
             theta=np.array([-0.5, 2.0]),
-            learning_rate=1.0,
+            learning_rate=0.001,
             noise_scale=0.1,
             group_size=0,  # TODO: remove
             gradient_norm_bound=1.0,
@@ -99,3 +107,7 @@ def test_sgd_rust_test_case():
 
     if not IS_CI_BUILD:
         plot(data, sgd_process.value)
+
+
+if __name__ == '__main__':
+    test_sgd_pums()

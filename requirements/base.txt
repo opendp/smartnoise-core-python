@@ -1,7 +1,8 @@
-protobuf>=3.11.3
 numpy>=1.18.2
-setuptools~=41.4.0
 pandas>=1.0.3
+protobuf>=3.11.3
+seaborn==0.11.0
+setuptools~=41.4.0
 
 # For deployment
 tomlkit>=0.7.0
