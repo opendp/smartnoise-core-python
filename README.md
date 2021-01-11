@@ -119,7 +119,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 - Please use [GitHub issues](https://github.com/opendifferentialprivacy/smartnoise-core-python/issues) for bug reports, feature requests, install issues, and ideas.
 - [Gitter](https://gitter.im/opendifferentialprivacy/SmartNoise) is available for general chat and online discussions.
-- For other requests, please contact us at [smartnoise@opendp.io](mailto:smartnoise@opendp.io).
+- For other requests, please contact us at [smartnoise@opendp.org](mailto:smartnoise@opendp.org).
   - _Note: We encourage you to use [GitHub issues](https://github.com/opendifferentialprivacy/smartnoise-core-python/issues), especially for bugs._
 
 ## Releases and Contributing
