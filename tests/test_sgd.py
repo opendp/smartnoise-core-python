@@ -41,24 +41,33 @@ def plot(data, params):
     plt.show()
 
 
-def test_sgd_pums():
+def test_sgd_pums(learning_rate=None, min_theta=None, max_theta=None, iters=10, plot_results=False):
 
-    with sn.Analysis():
-        PUMS = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
-        columns = ["married", "sex", "educ"]
-        iterations = 100
-        sgd_process = sn.dp_sgd(
-            data=sn.to_float(PUMS[columns]),
-            public_data=sn.to_float(PUMS[columns]),
-            # data_2=sn.to_float(PUMS[columns]),
-            theta=np.random.uniform(-10, 10, size=len(columns)),
-            learning_rate=1.0,
-            noise_scale=0.1,
-            group_size=10,
-            gradient_norm_bound=0.5,
-            max_iters=iterations,
-            clipping_value=100.,
-            sample_size=100)
+    for _ in range(0, iters):
+        with sn.Analysis():
+            PUMS = sn.Dataset(path=TEST_PUMS_PATH, column_names=TEST_PUMS_NAMES)
+            columns = ["married", "sex", "educ"]
+            iterations = 100
+            sgd_process = sn.dp_sgd(
+                data=sn.to_float(PUMS[columns]),
+                public_data=sn.to_float(PUMS[columns]),
+                # data_2=sn.to_float(PUMS[columns]),
+                theta=np.random.uniform(min_theta, max_theta, size=len(columns)),
+                learning_rate=learning_rate,
+                noise_scale=0.1,
+                group_size=10,
+                gradient_norm_bound=0.5,
+                max_iters=iterations,
+                clipping_value=100.,
+                sample_size=100)
+
+            data = np.array(pd.read_csv(TEST_PUMS_PATH)[columns])
+
+            print(sgd_process.value)
+            sgd_process.analysis.release()
+
+            if not IS_CI_BUILD and plot_results:
+                plot(data, sgd_process.value)
 
         # theta_history = pd.DataFrame(
         #     sgd_process.value.reshape((iterations, len(columns))),
@@ -70,14 +79,6 @@ def test_sgd_pums():
         # sns.lineplot(x='index', y='value', hue='variable',
         #              data=melted)
         # plt.show()
-
-        data = np.array(pd.read_csv(TEST_PUMS_PATH)[columns])
-
-        print(sgd_process.value)
-        sgd_process.analysis.release()
-
-        if not IS_CI_BUILD:
-            plot(data, sgd_process.value)
 
 
 def test_sgd_rust_test_case():
@@ -95,13 +96,13 @@ def test_sgd_rust_test_case():
         sgd_process = sn.dp_sgd(
             data=sn.to_float(sn.Dataset(value=data)),
             theta=np.array([-0.5, 2.0]),
-            learning_rate=0.001,
+            learning_rate=0.0000001,
             noise_scale=0.1,
             group_size=0,  # TODO: remove
             gradient_norm_bound=1.0,
             max_iters=iterations,
             clipping_value=100.,
-            sample_size=100)
+            sample_size=10)
 
     print("thetas", sgd_process.value)
 
@@ -110,4 +111,12 @@ def test_sgd_rust_test_case():
 
 
 if __name__ == '__main__':
-    test_sgd_pums()
+    params = []
+    for learning_rate in np.arange(0.05, 0.5, 0.1):
+        for theta in np.arange(0.1, 0.5, 0.1):
+            try:
+                test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta)
+                params.append({'learning_rate': learning_rate, 'theta': [-theta, theta]})
+            except RuntimeError:
+                continue
+    print(params)
