@@ -66,11 +66,12 @@ def test_sgd_pums(learning_rate=None, min_theta=None, max_theta=None, iters=10, 
 
             data = np.array(pd.read_csv(TEST_PUMS_PATH)[columns])
 
-            print(sgd_process.value)
             sgd_process.analysis.release()
+            # print([len(x) for x in sgd_process.value])
 
             if not IS_CI_BUILD and plot_results:
                 plot(data, sgd_process.value)
+    return sgd_process.value
 
         # theta_history = pd.DataFrame(
         #     sgd_process.value.reshape((iterations, len(columns))),
@@ -113,17 +114,25 @@ def test_sgd_rust_test_case():
         plot(data, sgd_process.value)
 
 
-if __name__ == '__main__':
-    learning_rate = 0.1
-    theta = 0.1
-    test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta)
 
-# params = []
-#     for learning_rate in np.arange(0.05, 0.5, 0.1):
-#         for theta in np.arange(0.1, 0.5, 0.1):
-#             try:
-#                 test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta)
-#                 params.append({'learning_rate': learning_rate, 'theta': [-theta, theta]})
-#             except RuntimeError:
-#                 continue
-#     print(params)
+if __name__ == '__main__':
+    results = []
+    for learning_rate in np.arange(0.05, 0.5, 0.1):
+        for theta in np.arange(0.1, 0.5, 0.1):
+            try:
+                print("----------------------------")
+                print("Learning rate: {}\ttheta: {}".format(learning_rate, theta))
+                print("----------------------------")
+
+                values = test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta, iters=1)
+
+                zipped = list(zip(*values))
+                # print("zipped: ", list(zipped))
+                filtered = list(filter(lambda x: sum(x) != 0.0, zipped))
+                print("filtered: ", filtered)
+                print("len: ", len(filtered))
+                results.append({'steps': len(filtered), 'learning_rate': learning_rate, 'theta': [-theta, theta]})
+            except RuntimeError:
+                values = None
+                continue
+    print(sorted(results, key=lambda x: x['steps']))
