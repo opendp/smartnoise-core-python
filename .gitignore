@@ -27,3 +27,4 @@ opendp_smartnoise_core_demo.egg-info/
 opendp_smartnoise_core_python.egg-info/
 
 .idea/
+/data/PUMS_*

@@ -327,6 +327,15 @@ class LibraryWrapper(object):
                 ctypes.c_double(binding_probability),
                 ctypes.c_bool(enforce_constant_time))
 
+    def gaussian_noise(self, sigma):
+        """
+        Direct api to compute N(0, sigma^2)
+
+        :param sigma: float std parameter
+        :return: sample float
+        """
+        return self.lib_smartnoise.gaussian_noise(ctypes.c_double(sigma))
+
 
 def _communicate(function, destroy, argument, response_type):
     """
