@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10\x63omponents.proto\x12\nsmartnoise\x1a\x0bvalue.proto\"\xc7\x17\n\tComponent\x12.\n\targuments\x18\x01 \x01(\x0b\x32\x1b.smartnoise.ArgumentNodeIds\x12\x0c\n\x04omit\x18\x02 \x01(\x08\x12\x12\n\nsubmission\x18\x03 \x01(\r\x12\x1e\n\x03\x61\x62s\x18\x64 \x01(\x0b\x32\x0f.smartnoise.AbsH\x00\x12\x1e\n\x03\x61\x64\x64\x18\x65 \x01(\x0b\x32\x0f.smartnoise.AddH\x00\x12 \n\x04\x63\x61st\x18h \x01(\x0b\x32\x10.smartnoise.CastH\x00\x12\"\n\x05\x63lamp\x18i \x01(\x0b\x32\x11.smartnoise.ClampH\x00\x12.\n\x0b\x63olumn_bind\x18\xa8\x01 \x01(\x0b\x32\x16.smartnoise.ColumnBindH\x00\x12\"\n\x05\x63ount\x18j \x01(\x0b\x32\x11.smartnoise.CountH\x00\x12,\n\ncovariance\x18k \x01(\x0b\x32\x16.smartnoise.CovarianceH\x00\x12(\n\x08\x64igitize\x18w \x01(\x0b\x32\x14.smartnoise.DigitizeH\x00\x12$\n\x06\x64ivide\x18x \x01(\x0b\x32\x12.smartnoise.DivideH\x00\x12\'\n\x08\x64p_count\x18l \x01(\x0b\x32\x13.smartnoise.DPCountH\x00\x12\x31\n\rdp_covariance\x18m \x01(\x0b\x32\x18.smartnoise.DPCovarianceH\x00\x12\x37\n\x10\x64p_gumbel_median\x18\xa6\x01 \x01(\x0b\x32\x1a.smartnoise.DPGumbelMedianH\x00\x12/\n\x0c\x64p_histogram\x18n \x01(\x0b\x32\x17.smartnoise.DPHistogramH\x00\x12?\n\x14\x64p_linear_regression\x18\xa7\x01 \x01(\x0b\x32\x1e.smartnoise.DPLinearRegressionH\x00\x12+\n\ndp_maximum\x18o \x01(\x0b\x32\x15.smartnoise.DPMaximumH\x00\x12%\n\x07\x64p_mean\x18p \x01(\x0b\x32\x12.smartnoise.DPMeanH\x00\x12)\n\tdp_median\x18q \x01(\x0b\x32\x14.smartnoise.DPMedianH\x00\x12+\n\ndp_minimum\x18r \x01(\x0b\x32\x15.smartnoise.DPMinimumH\x00\x12-\n\x0b\x64p_quantile\x18t \x01(\x0b\x32\x16.smartnoise.DPQuantileH\x00\x12\x30\n\rdp_raw_moment\x18s \x01(\x0b\x32\x17.smartnoise.DPRawMomentH\x00\x12$\n\x06\x64p_sgd\x18\xa9\x01 \x01(\x0b\x32\x11.smartnoise.DPSGDH\x00\x12#\n\x06\x64p_sum\x18u \x01(\x0b\x32\x11.smartnoise.DPSumH\x00\x12-\n\x0b\x64p_variance\x18v \x01(\x0b\x32\x16.smartnoise.DPVarianceH\x00\x12\"\n\x05\x65qual\x18y \x01(\x0b\x32\x11.smartnoise.EqualH\x00\x12\x41\n\x15\x65xponential_mechanism\x18z \x01(\x0b\x32 .smartnoise.ExponentialMechanismH\x00\x12$\n\x06\x66ilter\x18{ \x01(\x0b\x32\x12.smartnoise.FilterH\x00\x12;\n\x12gaussian_mechanism\x18| \x01(\x0b\x32\x1d.smartnoise.GaussianMechanismH\x00\x12/\n\x0cgreater_than\x18} \x01(\x0b\x32\x17.smartnoise.GreaterThanH\x00\x12*\n\thistogram\x18~ \x01(\x0b\x32\x15.smartnoise.HistogramH\x00\x12$\n\x06impute\x18\x7f \x01(\x0b\x32\x12.smartnoise.ImputeH\x00\x12#\n\x05index\x18\x80\x01 \x01(\x0b\x32\x11.smartnoise.IndexH\x00\x12:\n\x11laplace_mechanism\x18\x82\x01 \x01(\x0b\x32\x1c.smartnoise.LaplaceMechanismH\x00\x12*\n\tless_than\x18\x83\x01 \x01(\x0b\x32\x14.smartnoise.LessThanH\x00\x12\'\n\x07literal\x18\x84\x01 \x01(\x0b\x32\x13.smartnoise.LiteralH\x00\x12\x1f\n\x03log\x18\x85\x01 \x01(\x0b\x32\x0f.smartnoise.LogH\x00\x12&\n\x0blogical_and\x18\x66 \x01(\x0b\x32\x0f.smartnoise.AndH\x00\x12%\n\nlogical_or\x18\x90\x01 \x01(\x0b\x32\x0e.smartnoise.OrH\x00\x12\x1f\n\x03map\x18\x86\x01 \x01(\x0b\x32\x0f.smartnoise.MapH\x00\x12/\n\x0bmaterialize\x18\x87\x01 \x01(\x0b\x32\x17.smartnoise.MaterializeH\x00\x12\'\n\x07maximum\x18\x88\x01 \x01(\x0b\x32\x13.smartnoise.MaximumH\x00\x12!\n\x04mean\x18\x89\x01 \x01(\x0b\x32\x10.smartnoise.MeanH\x00\x12%\n\x06median\x18\xa3\x01 \x01(\x0b\x32\x12.smartnoise.MedianH\x00\x12\'\n\x07minimum\x18\x8b\x01 \x01(\x0b\x32\x13.smartnoise.MinimumH\x00\x12%\n\x06modulo\x18\x8c\x01 \x01(\x0b\x32\x12.smartnoise.ModuloH\x00\x12)\n\x08multiply\x18\x8d\x01 \x01(\x0b\x32\x14.smartnoise.MultiplyH\x00\x12%\n\x06negate\x18\x8e\x01 \x01(\x0b\x32\x12.smartnoise.NegateH\x00\x12)\n\x08negative\x18\x8f\x01 \x01(\x0b\x32\x14.smartnoise.NegativeH\x00\x12+\n\tpartition\x18\x91\x01 \x01(\x0b\x32\x15.smartnoise.PartitionH\x00\x12#\n\x05power\x18\x92\x01 \x01(\x0b\x32\x11.smartnoise.PowerH\x00\x12)\n\x08quantile\x18\x93\x01 \x01(\x0b\x32\x14.smartnoise.QuantileH\x00\x12,\n\nraw_moment\x18\x81\x01 \x01(\x0b\x32\x15.smartnoise.RawMomentH\x00\x12\'\n\x07reshape\x18\x95\x01 \x01(\x0b\x32\x13.smartnoise.ReshapeH\x00\x12%\n\x06resize\x18\x96\x01 \x01(\x0b\x32\x12.smartnoise.ResizeH\x00\x12&\n\x07row_max\x18\x97\x01 \x01(\x0b\x32\x12.smartnoise.RowMaxH\x00\x12&\n\x07row_min\x18\x98\x01 \x01(\x0b\x32\x12.smartnoise.RowMinH\x00\x12K\n\x1asimple_geometric_mechanism\x18\x99\x01 \x01(\x0b\x32$.smartnoise.SimpleGeometricMechanismH\x00\x12<\n\x12snapping_mechanism\x18\xa4\x01 \x01(\x0b\x32\x1d.smartnoise.SnappingMechanismH\x00\x12)\n\x08subtract\x18\x9b\x01 \x01(\x0b\x32\x14.smartnoise.SubtractH\x00\x12\x1f\n\x03sum\x18\x9c\x01 \x01(\x0b\x32\x0f.smartnoise.SumH\x00\x12*\n\ttheil_sen\x18\xa5\x01 \x01(\x0b\x32\x14.smartnoise.TheilSenH\x00\x12&\n\x07to_bool\x18\x9d\x01 \x01(\x0b\x32\x12.smartnoise.ToBoolH\x00\x12\x30\n\x0cto_dataframe\x18\x94\x01 \x01(\x0b\x32\x17.smartnoise.ToDataframeH\x00\x12(\n\x08to_float\x18\x9e\x01 \x01(\x0b\x32\x13.smartnoise.ToFloatH\x00\x12$\n\x06to_int\x18\x9f\x01 \x01(\x0b\x32\x11.smartnoise.ToIntH\x00\x12*\n\tto_string\x18\xa0\x01 \x01(\x0b\x32\x14.smartnoise.ToStringH\x00\x12#\n\x05union\x18\xa2\x01 \x01(\x0b\x32\x11.smartnoise.UnionH\x00\x12)\n\x08variance\x18\xa1\x01 \x01(\x0b\x32\x14.smartnoise.VarianceH\x00\x42\t\n\x07variant\"\x05\n\x03\x41\x62s\"\x05\n\x03\x41\x64\x64\"\x1b\n\x04\x43\x61st\x12\x13\n\x0b\x61tomic_type\x18\x01 \x01(\t\"\x07\n\x05\x43lamp\"\x0c\n\nColumnBind\"\x19\n\x05\x43ount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\".\n\nCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\"\n\n\x08\x44igitize\"\x08\n\x06\x44ivide\"_\n\x07\x44PCount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"t\n\x0c\x44PCovariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"A\n\x0e\x44PGumbelMedian\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"Q\n\x0b\x44PHistogram\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"]\n\x12\x44PLinearRegression\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"O\n\tDPMaximum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"d\n\x06\x44PMean\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"e\n\x08\x44PMedian\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x03 \x01(\t\"O\n\tDPMinimum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"v\n\nDPQuantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x04 \x01(\t\"`\n\x0b\x44PRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\xa4\x01\n\x05\x44PSGD\x12\x15\n\rlearning_rate\x18\x01 \x01(\x01\x12\x13\n\x0bnoise_scale\x18\x02 \x01(\x01\x12\x12\n\ngroup_size\x18\x03 \x01(\r\x12\x1b\n\x13gradient_norm_bound\x18\x04 \x01(\x01\x12\x11\n\tmax_iters\x18\x05 \x01(\r\x12\x16\n\x0e\x63lipping_value\x18\x06 \x01(\x01\x12\x13\n\x0bsample_size\x18\x07 \x01(\r\"K\n\x05\x44PSum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"r\n\nDPVariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"\x07\n\x05\x45qual\"G\n\x14\x45xponentialMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\x08\n\x06\x46ilter\"V\n\x11GaussianMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x10\n\x08\x61nalytic\x18\x02 \x01(\x08\"\r\n\x0bGreaterThan\"\x0b\n\tHistogram\"\x08\n\x06Impute\"\x07\n\x05Index\"C\n\x10LaplaceMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08LessThan\"\t\n\x07Literal\"\x05\n\x03Log\"\x05\n\x03\x41nd\"\x04\n\x02Or\"/\n\x03Map\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.smartnoise.Component\"B\n\x0bMaterialize\x12\x0e\n\x06public\x18\x01 \x01(\x08\x12\x10\n\x08skip_row\x18\x02 \x01(\x08\x12\x11\n\tfile_path\x18\x03 \x01(\t\"\t\n\x07Maximum\"\x06\n\x04Mean\"\x08\n\x06Median\"\t\n\x07Minimum\"\x08\n\x06Modulo\"\n\n\x08Multiply\"\x08\n\x06Negate\"\n\n\x08Negative\"\x0b\n\tPartition\"\x07\n\x05Power\"0\n\x08Quantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\"\x1a\n\tRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\";\n\x07Reshape\x12\x11\n\tsymmetric\x18\x01 \x01(\x08\x12\x0e\n\x06layout\x18\x02 \x01(\t\x12\r\n\x05shape\x18\x03 \x03(\r\"\x08\n\x06Resize\"\x08\n\x06RowMax\"\x08\n\x06RowMin\"K\n\x18SimpleGeometricMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"D\n\x11SnappingMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08Subtract\"\x05\n\x03Sum\"-\n\x08TheilSen\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\t\n\x01k\x18\x02 \x01(\r\"\x08\n\x06ToBool\"\r\n\x0bToDataframe\"\t\n\x07ToFloat\"\x07\n\x05ToInt\"\n\n\x08ToString\"\x18\n\x05Union\x12\x0f\n\x07\x66latten\x18\x01 \x01(\x08\",\n\x08Variance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x62\x06proto3'
+  serialized_pb=b'\n\x10\x63omponents.proto\x12\nsmartnoise\x1a\x0bvalue.proto\"\xc7\x17\n\tComponent\x12.\n\targuments\x18\x01 \x01(\x0b\x32\x1b.smartnoise.ArgumentNodeIds\x12\x0c\n\x04omit\x18\x02 \x01(\x08\x12\x12\n\nsubmission\x18\x03 \x01(\r\x12\x1e\n\x03\x61\x62s\x18\x64 \x01(\x0b\x32\x0f.smartnoise.AbsH\x00\x12\x1e\n\x03\x61\x64\x64\x18\x65 \x01(\x0b\x32\x0f.smartnoise.AddH\x00\x12 \n\x04\x63\x61st\x18h \x01(\x0b\x32\x10.smartnoise.CastH\x00\x12\"\n\x05\x63lamp\x18i \x01(\x0b\x32\x11.smartnoise.ClampH\x00\x12.\n\x0b\x63olumn_bind\x18\xa8\x01 \x01(\x0b\x32\x16.smartnoise.ColumnBindH\x00\x12\"\n\x05\x63ount\x18j \x01(\x0b\x32\x11.smartnoise.CountH\x00\x12,\n\ncovariance\x18k \x01(\x0b\x32\x16.smartnoise.CovarianceH\x00\x12(\n\x08\x64igitize\x18w \x01(\x0b\x32\x14.smartnoise.DigitizeH\x00\x12$\n\x06\x64ivide\x18x \x01(\x0b\x32\x12.smartnoise.DivideH\x00\x12\'\n\x08\x64p_count\x18l \x01(\x0b\x32\x13.smartnoise.DPCountH\x00\x12\x31\n\rdp_covariance\x18m \x01(\x0b\x32\x18.smartnoise.DPCovarianceH\x00\x12\x37\n\x10\x64p_gumbel_median\x18\xa6\x01 \x01(\x0b\x32\x1a.smartnoise.DPGumbelMedianH\x00\x12/\n\x0c\x64p_histogram\x18n \x01(\x0b\x32\x17.smartnoise.DPHistogramH\x00\x12?\n\x14\x64p_linear_regression\x18\xa7\x01 \x01(\x0b\x32\x1e.smartnoise.DPLinearRegressionH\x00\x12+\n\ndp_maximum\x18o \x01(\x0b\x32\x15.smartnoise.DPMaximumH\x00\x12%\n\x07\x64p_mean\x18p \x01(\x0b\x32\x12.smartnoise.DPMeanH\x00\x12)\n\tdp_median\x18q \x01(\x0b\x32\x14.smartnoise.DPMedianH\x00\x12+\n\ndp_minimum\x18r \x01(\x0b\x32\x15.smartnoise.DPMinimumH\x00\x12-\n\x0b\x64p_quantile\x18t \x01(\x0b\x32\x16.smartnoise.DPQuantileH\x00\x12\x30\n\rdp_raw_moment\x18s \x01(\x0b\x32\x17.smartnoise.DPRawMomentH\x00\x12$\n\x06\x64p_sgd\x18\xa9\x01 \x01(\x0b\x32\x11.smartnoise.DPSGDH\x00\x12#\n\x06\x64p_sum\x18u \x01(\x0b\x32\x11.smartnoise.DPSumH\x00\x12-\n\x0b\x64p_variance\x18v \x01(\x0b\x32\x16.smartnoise.DPVarianceH\x00\x12\"\n\x05\x65qual\x18y \x01(\x0b\x32\x11.smartnoise.EqualH\x00\x12\x41\n\x15\x65xponential_mechanism\x18z \x01(\x0b\x32 .smartnoise.ExponentialMechanismH\x00\x12$\n\x06\x66ilter\x18{ \x01(\x0b\x32\x12.smartnoise.FilterH\x00\x12;\n\x12gaussian_mechanism\x18| \x01(\x0b\x32\x1d.smartnoise.GaussianMechanismH\x00\x12/\n\x0cgreater_than\x18} \x01(\x0b\x32\x17.smartnoise.GreaterThanH\x00\x12*\n\thistogram\x18~ \x01(\x0b\x32\x15.smartnoise.HistogramH\x00\x12$\n\x06impute\x18\x7f \x01(\x0b\x32\x12.smartnoise.ImputeH\x00\x12#\n\x05index\x18\x80\x01 \x01(\x0b\x32\x11.smartnoise.IndexH\x00\x12:\n\x11laplace_mechanism\x18\x82\x01 \x01(\x0b\x32\x1c.smartnoise.LaplaceMechanismH\x00\x12*\n\tless_than\x18\x83\x01 \x01(\x0b\x32\x14.smartnoise.LessThanH\x00\x12\'\n\x07literal\x18\x84\x01 \x01(\x0b\x32\x13.smartnoise.LiteralH\x00\x12\x1f\n\x03log\x18\x85\x01 \x01(\x0b\x32\x0f.smartnoise.LogH\x00\x12&\n\x0blogical_and\x18\x66 \x01(\x0b\x32\x0f.smartnoise.AndH\x00\x12%\n\nlogical_or\x18\x90\x01 \x01(\x0b\x32\x0e.smartnoise.OrH\x00\x12\x1f\n\x03map\x18\x86\x01 \x01(\x0b\x32\x0f.smartnoise.MapH\x00\x12/\n\x0bmaterialize\x18\x87\x01 \x01(\x0b\x32\x17.smartnoise.MaterializeH\x00\x12\'\n\x07maximum\x18\x88\x01 \x01(\x0b\x32\x13.smartnoise.MaximumH\x00\x12!\n\x04mean\x18\x89\x01 \x01(\x0b\x32\x10.smartnoise.MeanH\x00\x12%\n\x06median\x18\xa3\x01 \x01(\x0b\x32\x12.smartnoise.MedianH\x00\x12\'\n\x07minimum\x18\x8b\x01 \x01(\x0b\x32\x13.smartnoise.MinimumH\x00\x12%\n\x06modulo\x18\x8c\x01 \x01(\x0b\x32\x12.smartnoise.ModuloH\x00\x12)\n\x08multiply\x18\x8d\x01 \x01(\x0b\x32\x14.smartnoise.MultiplyH\x00\x12%\n\x06negate\x18\x8e\x01 \x01(\x0b\x32\x12.smartnoise.NegateH\x00\x12)\n\x08negative\x18\x8f\x01 \x01(\x0b\x32\x14.smartnoise.NegativeH\x00\x12+\n\tpartition\x18\x91\x01 \x01(\x0b\x32\x15.smartnoise.PartitionH\x00\x12#\n\x05power\x18\x92\x01 \x01(\x0b\x32\x11.smartnoise.PowerH\x00\x12)\n\x08quantile\x18\x93\x01 \x01(\x0b\x32\x14.smartnoise.QuantileH\x00\x12,\n\nraw_moment\x18\x81\x01 \x01(\x0b\x32\x15.smartnoise.RawMomentH\x00\x12\'\n\x07reshape\x18\x95\x01 \x01(\x0b\x32\x13.smartnoise.ReshapeH\x00\x12%\n\x06resize\x18\x96\x01 \x01(\x0b\x32\x12.smartnoise.ResizeH\x00\x12&\n\x07row_max\x18\x97\x01 \x01(\x0b\x32\x12.smartnoise.RowMaxH\x00\x12&\n\x07row_min\x18\x98\x01 \x01(\x0b\x32\x12.smartnoise.RowMinH\x00\x12K\n\x1asimple_geometric_mechanism\x18\x99\x01 \x01(\x0b\x32$.smartnoise.SimpleGeometricMechanismH\x00\x12<\n\x12snapping_mechanism\x18\xa4\x01 \x01(\x0b\x32\x1d.smartnoise.SnappingMechanismH\x00\x12)\n\x08subtract\x18\x9b\x01 \x01(\x0b\x32\x14.smartnoise.SubtractH\x00\x12\x1f\n\x03sum\x18\x9c\x01 \x01(\x0b\x32\x0f.smartnoise.SumH\x00\x12*\n\ttheil_sen\x18\xa5\x01 \x01(\x0b\x32\x14.smartnoise.TheilSenH\x00\x12&\n\x07to_bool\x18\x9d\x01 \x01(\x0b\x32\x12.smartnoise.ToBoolH\x00\x12\x30\n\x0cto_dataframe\x18\x94\x01 \x01(\x0b\x32\x17.smartnoise.ToDataframeH\x00\x12(\n\x08to_float\x18\x9e\x01 \x01(\x0b\x32\x13.smartnoise.ToFloatH\x00\x12$\n\x06to_int\x18\x9f\x01 \x01(\x0b\x32\x11.smartnoise.ToIntH\x00\x12*\n\tto_string\x18\xa0\x01 \x01(\x0b\x32\x14.smartnoise.ToStringH\x00\x12#\n\x05union\x18\xa2\x01 \x01(\x0b\x32\x11.smartnoise.UnionH\x00\x12)\n\x08variance\x18\xa1\x01 \x01(\x0b\x32\x14.smartnoise.VarianceH\x00\x42\t\n\x07variant\"\x05\n\x03\x41\x62s\"\x05\n\x03\x41\x64\x64\"\x1b\n\x04\x43\x61st\x12\x13\n\x0b\x61tomic_type\x18\x01 \x01(\t\"\x07\n\x05\x43lamp\"\x0c\n\nColumnBind\"\x19\n\x05\x43ount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\".\n\nCovariance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\"\n\n\x08\x44igitize\"\x08\n\x06\x44ivide\"_\n\x07\x44PCount\x12\x10\n\x08\x64istinct\x18\x01 \x01(\x08\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"t\n\x0c\x44PCovariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"A\n\x0e\x44PGumbelMedian\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"Q\n\x0b\x44PHistogram\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"]\n\x12\x44PLinearRegression\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"O\n\tDPMaximum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"d\n\x06\x44PMean\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"e\n\x08\x44PMedian\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x03 \x01(\t\"O\n\tDPMinimum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"v\n\nDPQuantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x15\n\rinterpolation\x18\x04 \x01(\t\"`\n\x0b\x44PRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\x12\x11\n\tmechanism\x18\x02 \x01(\t\x12/\n\rprivacy_usage\x18\x03 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\xe4\x01\n\x05\x44PSGD\x12\x15\n\rlearning_rate\x18\x01 \x01(\x01\x12\x13\n\x0bnoise_scale\x18\x02 \x01(\x01\x12\x12\n\ngroup_size\x18\x03 \x01(\r\x12\x1b\n\x13gradient_norm_bound\x18\x04 \x01(\x01\x12\x11\n\tmax_iters\x18\x05 \x01(\r\x12\x16\n\x0e\x63lipping_value\x18\x06 \x01(\x01\x12\x13\n\x0bsample_size\x18\x07 \x01(\r\x12\x1e\n\x16param_search_step_size\x18\x08 \x01(\x01\x12\x1e\n\x16param_search_max_iters\x18\t \x01(\r\"K\n\x05\x44PSum\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"r\n\nDPVariance\x12\x11\n\tmechanism\x18\x01 \x01(\t\x12/\n\rprivacy_usage\x18\x02 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12 \n\x18\x66inite_sample_correction\x18\x03 \x01(\x08\"\x07\n\x05\x45qual\"G\n\x14\x45xponentialMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\x08\n\x06\x46ilter\"V\n\x11GaussianMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\x12\x10\n\x08\x61nalytic\x18\x02 \x01(\x08\"\r\n\x0bGreaterThan\"\x0b\n\tHistogram\"\x08\n\x06Impute\"\x07\n\x05Index\"C\n\x10LaplaceMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08LessThan\"\t\n\x07Literal\"\x05\n\x03Log\"\x05\n\x03\x41nd\"\x04\n\x02Or\"/\n\x03Map\x12(\n\tcomponent\x18\x01 \x01(\x0b\x32\x15.smartnoise.Component\"B\n\x0bMaterialize\x12\x0e\n\x06public\x18\x01 \x01(\x08\x12\x10\n\x08skip_row\x18\x02 \x01(\x08\x12\x11\n\tfile_path\x18\x03 \x01(\t\"\t\n\x07Maximum\"\x06\n\x04Mean\"\x08\n\x06Median\"\t\n\x07Minimum\"\x08\n\x06Modulo\"\n\n\x08Multiply\"\x08\n\x06Negate\"\n\n\x08Negative\"\x0b\n\tPartition\"\x07\n\x05Power\"0\n\x08Quantile\x12\r\n\x05\x61lpha\x18\x01 \x01(\x01\x12\x15\n\rinterpolation\x18\x02 \x01(\t\"\x1a\n\tRawMoment\x12\r\n\x05order\x18\x01 \x01(\r\";\n\x07Reshape\x12\x11\n\tsymmetric\x18\x01 \x01(\x08\x12\x0e\n\x06layout\x18\x02 \x01(\t\x12\r\n\x05shape\x18\x03 \x03(\r\"\x08\n\x06Resize\"\x08\n\x06RowMax\"\x08\n\x06RowMin\"K\n\x18SimpleGeometricMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"D\n\x11SnappingMechanism\x12/\n\rprivacy_usage\x18\x01 \x03(\x0b\x32\x18.smartnoise.PrivacyUsage\"\n\n\x08Subtract\"\x05\n\x03Sum\"-\n\x08TheilSen\x12\x16\n\x0eimplementation\x18\x01 \x01(\t\x12\t\n\x01k\x18\x02 \x01(\r\"\x08\n\x06ToBool\"\r\n\x0bToDataframe\"\t\n\x07ToFloat\"\x07\n\x05ToInt\"\n\n\x08ToString\"\x18\n\x05Union\x12\x0f\n\x07\x66latten\x18\x01 \x01(\x08\",\n\x08Variance\x12 \n\x18\x66inite_sample_correction\x18\x01 \x01(\x08\x62\x06proto3'
   ,
   dependencies=[value__pb2.DESCRIPTOR,])
 
@@ -1321,6 +1321,20 @@ _DPSGD = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='param_search_step_size', full_name='smartnoise.DPSGD.param_search_step_size', index=7,
+      number=8, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='param_search_max_iters', full_name='smartnoise.DPSGD.param_search_max_iters', index=8,
+      number=9, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -1334,7 +1348,7 @@ _DPSGD = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=4272,
-  serialized_end=4436,
+  serialized_end=4500,
 )
 
 
@@ -1372,8 +1386,8 @@ _DPSUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4438,
-  serialized_end=4513,
+  serialized_start=4502,
+  serialized_end=4577,
 )
 
 
@@ -1418,8 +1432,8 @@ _DPVARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4515,
-  serialized_end=4629,
+  serialized_start=4579,
+  serialized_end=4693,
 )
 
 
@@ -1443,8 +1457,8 @@ _EQUAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4631,
-  serialized_end=4638,
+  serialized_start=4695,
+  serialized_end=4702,
 )
 
 
@@ -1475,8 +1489,8 @@ _EXPONENTIALMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4640,
-  serialized_end=4711,
+  serialized_start=4704,
+  serialized_end=4775,
 )
 
 
@@ -1500,8 +1514,8 @@ _FILTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4713,
-  serialized_end=4721,
+  serialized_start=4777,
+  serialized_end=4785,
 )
 
 
@@ -1539,8 +1553,8 @@ _GAUSSIANMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4723,
-  serialized_end=4809,
+  serialized_start=4787,
+  serialized_end=4873,
 )
 
 
@@ -1564,8 +1578,8 @@ _GREATERTHAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4811,
-  serialized_end=4824,
+  serialized_start=4875,
+  serialized_end=4888,
 )
 
 
@@ -1589,8 +1603,8 @@ _HISTOGRAM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4826,
-  serialized_end=4837,
+  serialized_start=4890,
+  serialized_end=4901,
 )
 
 
@@ -1614,8 +1628,8 @@ _IMPUTE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4839,
-  serialized_end=4847,
+  serialized_start=4903,
+  serialized_end=4911,
 )
 
 
@@ -1639,8 +1653,8 @@ _INDEX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4849,
-  serialized_end=4856,
+  serialized_start=4913,
+  serialized_end=4920,
 )
 
 
@@ -1671,8 +1685,8 @@ _LAPLACEMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4858,
-  serialized_end=4925,
+  serialized_start=4922,
+  serialized_end=4989,
 )
 
 
@@ -1696,8 +1710,8 @@ _LESSTHAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4927,
-  serialized_end=4937,
+  serialized_start=4991,
+  serialized_end=5001,
 )
 
 
@@ -1721,8 +1735,8 @@ _LITERAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4939,
-  serialized_end=4948,
+  serialized_start=5003,
+  serialized_end=5012,
 )
 
 
@@ -1746,8 +1760,8 @@ _LOG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4950,
-  serialized_end=4955,
+  serialized_start=5014,
+  serialized_end=5019,
 )
 
 
@@ -1771,8 +1785,8 @@ _AND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4957,
-  serialized_end=4962,
+  serialized_start=5021,
+  serialized_end=5026,
 )
 
 
@@ -1796,8 +1810,8 @@ _OR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4964,
-  serialized_end=4968,
+  serialized_start=5028,
+  serialized_end=5032,
 )
 
 
@@ -1828,8 +1842,8 @@ _MAP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4970,
-  serialized_end=5017,
+  serialized_start=5034,
+  serialized_end=5081,
 )
 
 
@@ -1874,8 +1888,8 @@ _MATERIALIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5019,
-  serialized_end=5085,
+  serialized_start=5083,
+  serialized_end=5149,
 )
 
 
@@ -1899,8 +1913,8 @@ _MAXIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5087,
-  serialized_end=5096,
+  serialized_start=5151,
+  serialized_end=5160,
 )
 
 
@@ -1924,8 +1938,8 @@ _MEAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5098,
-  serialized_end=5104,
+  serialized_start=5162,
+  serialized_end=5168,
 )
 
 
@@ -1949,8 +1963,8 @@ _MEDIAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5106,
-  serialized_end=5114,
+  serialized_start=5170,
+  serialized_end=5178,
 )
 
 
@@ -1974,8 +1988,8 @@ _MINIMUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5116,
-  serialized_end=5125,
+  serialized_start=5180,
+  serialized_end=5189,
 )
 
 
@@ -1999,8 +2013,8 @@ _MODULO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5127,
-  serialized_end=5135,
+  serialized_start=5191,
+  serialized_end=5199,
 )
 
 
@@ -2024,8 +2038,8 @@ _MULTIPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5137,
-  serialized_end=5147,
+  serialized_start=5201,
+  serialized_end=5211,
 )
 
 
@@ -2049,8 +2063,8 @@ _NEGATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5149,
-  serialized_end=5157,
+  serialized_start=5213,
+  serialized_end=5221,
 )
 
 
@@ -2074,8 +2088,8 @@ _NEGATIVE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5159,
-  serialized_end=5169,
+  serialized_start=5223,
+  serialized_end=5233,
 )
 
 
@@ -2099,8 +2113,8 @@ _PARTITION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5171,
-  serialized_end=5182,
+  serialized_start=5235,
+  serialized_end=5246,
 )
 
 
@@ -2124,8 +2138,8 @@ _POWER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5184,
-  serialized_end=5191,
+  serialized_start=5248,
+  serialized_end=5255,
 )
 
 
@@ -2163,8 +2177,8 @@ _QUANTILE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5193,
-  serialized_end=5241,
+  serialized_start=5257,
+  serialized_end=5305,
 )
 
 
@@ -2195,8 +2209,8 @@ _RAWMOMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5243,
-  serialized_end=5269,
+  serialized_start=5307,
+  serialized_end=5333,
 )
 
 
@@ -2241,8 +2255,8 @@ _RESHAPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5271,
-  serialized_end=5330,
+  serialized_start=5335,
+  serialized_end=5394,
 )
 
 
@@ -2266,8 +2280,8 @@ _RESIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5332,
-  serialized_end=5340,
+  serialized_start=5396,
+  serialized_end=5404,
 )
 
 
@@ -2291,8 +2305,8 @@ _ROWMAX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5342,
-  serialized_end=5350,
+  serialized_start=5406,
+  serialized_end=5414,
 )
 
 
@@ -2316,8 +2330,8 @@ _ROWMIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5352,
-  serialized_end=5360,
+  serialized_start=5416,
+  serialized_end=5424,
 )
 
 
@@ -2348,8 +2362,8 @@ _SIMPLEGEOMETRICMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5362,
-  serialized_end=5437,
+  serialized_start=5426,
+  serialized_end=5501,
 )
 
 
@@ -2380,8 +2394,8 @@ _SNAPPINGMECHANISM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5439,
-  serialized_end=5507,
+  serialized_start=5503,
+  serialized_end=5571,
 )
 
 
@@ -2405,8 +2419,8 @@ _SUBTRACT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5509,
-  serialized_end=5519,
+  serialized_start=5573,
+  serialized_end=5583,
 )
 
 
@@ -2430,8 +2444,8 @@ _SUM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5521,
-  serialized_end=5526,
+  serialized_start=5585,
+  serialized_end=5590,
 )
 
 
@@ -2469,8 +2483,8 @@ _THEILSEN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5528,
-  serialized_end=5573,
+  serialized_start=5592,
+  serialized_end=5637,
 )
 
 
@@ -2494,8 +2508,8 @@ _TOBOOL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5575,
-  serialized_end=5583,
+  serialized_start=5639,
+  serialized_end=5647,
 )
 
 
@@ -2519,8 +2533,8 @@ _TODATAFRAME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5585,
-  serialized_end=5598,
+  serialized_start=5649,
+  serialized_end=5662,
 )
 
 
@@ -2544,8 +2558,8 @@ _TOFLOAT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5600,
-  serialized_end=5609,
+  serialized_start=5664,
+  serialized_end=5673,
 )
 
 
@@ -2569,8 +2583,8 @@ _TOINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5611,
-  serialized_end=5618,
+  serialized_start=5675,
+  serialized_end=5682,
 )
 
 
@@ -2594,8 +2608,8 @@ _TOSTRING = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5620,
-  serialized_end=5630,
+  serialized_start=5684,
+  serialized_end=5694,
 )
 
 
@@ -2626,8 +2640,8 @@ _UNION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5632,
-  serialized_end=5656,
+  serialized_start=5696,
+  serialized_end=5720,
 )
 
 
@@ -2658,8 +2672,8 @@ _VARIANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5658,
-  serialized_end=5702,
+  serialized_start=5722,
+  serialized_end=5766,
 )
 
 _COMPONENT.fields_by_name['arguments'].message_type = value__pb2._ARGUMENTNODEIDS

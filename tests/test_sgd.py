@@ -59,7 +59,10 @@ def test_sgd_pums(learning_rate=None, min_theta=None, max_theta=None, iters=10, 
                 gradient_norm_bound=0.5,
                 max_iters=iterations,
                 clipping_value=100.,
-                sample_size=100)
+                sample_size=100,
+                param_search_step_size=0.1,
+                param_search_max_iters=2
+            )
 
             data = np.array(pd.read_csv(TEST_PUMS_PATH)[columns])
 
@@ -111,12 +114,16 @@ def test_sgd_rust_test_case():
 
 
 if __name__ == '__main__':
-    params = []
-    for learning_rate in np.arange(0.05, 0.5, 0.1):
-        for theta in np.arange(0.1, 0.5, 0.1):
-            try:
-                test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta)
-                params.append({'learning_rate': learning_rate, 'theta': [-theta, theta]})
-            except RuntimeError:
-                continue
-    print(params)
+    learning_rate = 0.1
+    theta = 0.1
+    test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta)
+
+# params = []
+#     for learning_rate in np.arange(0.05, 0.5, 0.1):
+#         for theta in np.arange(0.1, 0.5, 0.1):
+#             try:
+#                 test_sgd_pums(learning_rate=learning_rate, min_theta=-theta, max_theta=theta)
+#                 params.append({'learning_rate': learning_rate, 'theta': [-theta, theta]})
+#             except RuntimeError:
+#                 continue
+#     print(params)
