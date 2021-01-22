@@ -17,11 +17,13 @@ from scripts.pums_downloader import get_pums_data_path, download_pums_data, data
 predictors = ['AGEP', 'PWGTP', 'DREM']
 target = 'DPHY'
 
+debug = False
 
 # overkill flushing
-def printf(x):
-    # print(x, flush=True)
-    sys.stdout.flush()
+def printf(x, force=False):
+    if debug or force:
+        print(x, flush=True)
+        sys.stdout.flush()
 
 
 class PumsModule(nn.Module):
@@ -89,10 +91,7 @@ def run_ring(rank, size, epochs):
         for epoch in range(epochs):
             # Only receive when not in the first run around the ring,
             # otherwise process will sit and wait for rank "-1" to finish
-            if rank == 0:
-                printf(f"{rank: 4d} | {epoch: 5d} | {first}")
-            if not first or (rank != 0):
-                printf(f"{rank: 4d} | {epoch: 5d} | first is now {first}")
+            if not first or rank != 0:
                 printf(f'rank {rank} is blocking waiting for prev_rank {prev_rank}')
                 for param in model.parameters():
                     dist.recv(tensor=param, src=prev_rank)
@@ -112,27 +111,17 @@ def run_ring(rank, size, epochs):
                 optimizer.zero_grad()
 
             accuracy, loss = evaluate(model, test_loader)
-            printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f} | prev: {prev_rank}, next: {next_rank}")
+            printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
 
             # Ensure that send() does not happen on the last epoch of the last node,
-            # since this would send back to the first node
-            # and cause it to hang
-            is_done = rank == size - 1 and epoch == epochs - 1
-            if rank != next_rank and not is_done:
-                for param in model.parameters():
-                    print(f"{rank: 4d} | {epoch: 5d} | prev: {prev_rank}, next: {next_rank} Sending....")
-                    # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
-                    req = dist.isend(tensor=param, dst=next_rank)
-                    print(f"{rank: 4d} | {epoch: 5d} | prev: {prev_rank}, next: {next_rank} Waiting....")
-                    req.wait()
-                    print(f"{rank: 4d} | {epoch: 5d} | Done waiting....")
-
-            if is_done:
+            # since this would send back to the first node (which is done) and hang
+            if rank == size - 1 and epoch == epochs - 1:
                 # TODO: checkpoint model to disk
                 pass
-
-            if rank == next_rank - 1 and rank == prev_rank - 1:
-                printf(f"Rank {rank}, end of epoch {epoch}")
+            else:
+                for param in model.parameters():
+                    # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
+                    dist.send(tensor=param, dst=next_rank)
 
 
 def init_process(rank, size, fn, args, backend='gloo'):
