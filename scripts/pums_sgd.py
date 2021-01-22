@@ -1,40 +1,27 @@
 import pandas as pd
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from sklearn.datasets import load_iris
 from torch.utils.data import random_split, DataLoader, TensorDataset
+import sys
+
 
 import os
 import torch.distributed as dist
-import torch.multiprocessing as mp
-from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.utils.data.dataset import Dataset
+from torch.multiprocessing import Process
 
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
-from .pums_downloader import get_pums_data_path, download_pums_data, datasets
+from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
+
+# defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
+predictors = ['AGEP', 'PWGTP', 'DREM']
+target = 'DPHY'
 
 
-class PumsDataset(Dataset):
-    """PUMS dataset."""
-
-    def __init__(self, csv_path, predictors):
-        """
-        Args:
-            csv_path (string): Path to the csv file.
-            transform (callable, optional): Optional transform to be applied on each sample.
-        """
-        self.data = pd.read_csv(csv_path, usecols=predictors)
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        if torch.is_tensor(idx):
-            idx = idx.tolist()
-
-        return self.data.iloc[idx].to_numpy(dtype=float)
+# overkill flushing
+def printf(x):
+    # print(x, flush=True)
+    sys.stdout.flush()
 
 
 class PumsModule(nn.Module):
@@ -70,68 +57,106 @@ def evaluate(model, loader):
     return torch.mean(torch.tensor([model.score(batch) for batch in loader]), dim=0)
 
 
-def test_ddp_fn(rank, world_size):
-    setup(rank, world_size)
+def run_ring(rank, size, epochs):
 
-    raise NotImplementedError("switch from iris to pums data here")
-    iris_sklearn = load_iris(as_frame=True)
-    data = iris_sklearn['data']
-    target = iris_sklearn['target']
+    # load the data specific to the current rank
+    data_path = get_pums_data_path(**datasets[rank])
+    download_pums_data(data_path, **datasets[rank])
 
-    # predictors = ['petal length (cm)', 'petal width (cm)']
-    predictors = data.columns.values
-    input_columns = torch.from_numpy(data[predictors].to_numpy()).type(torch.float32)
-    output_columns = torch.tensor(target)
+    data = pd.read_csv(data_path, usecols=predictors + [target], engine='python')
+    data.dropna(inplace=True)
+    data = TensorDataset(
+        torch.from_numpy(data[predictors].to_numpy()).type(torch.float32),
+        torch.from_numpy(data[target].to_numpy()).type(torch.LongTensor) - 1)
 
-    data = TensorDataset(input_columns, output_columns)
-
-    rows = input_columns.shape[0]
-    test_split = int(rows * .2)
-    train_split = rows - test_split
-
+    # split
+    test_split = int(len(data) * .2)
+    train_split = len(data) - test_split
     train_set, test_set = random_split(data, [train_split, test_split])
 
-    train_loader = DataLoader(train_set, batch_size=16, shuffle=True)
+    train_loader = DataLoader(train_set, batch_size=1000, shuffle=True)
     test_loader = DataLoader(test_set, batch_size=1)
 
-    model = PumsModule(len(predictors), 3).to(rank)
+    model = PumsModule(len(predictors), 2)
 
-    with PrivacyAccountant(model) as accountant:
-        model = DDP(model, device_ids=[rank])
+    next_rank, prev_rank = ((rank + offset) % size for offset in (1, -1))
 
-        optimizer = torch.optim.Adam(model.parameters(), learning_rate)
-        print("Epoch | Accuracy | Loss")
+    first = True
+
+    with PrivacyAccountant(model, epoch_epsilon=1.0, epoch_delta=.000001) as accountant:
+        optimizer = torch.optim.Adam(model.parameters(), .1)
 
         for epoch in range(epochs):
+            # Only receive when not in the first run around the ring,
+            # otherwise process will sit and wait for rank "-1" to finish
+            if rank == 0:
+                printf(f"{rank: 4d} | {epoch: 5d} | {first}")
+            if not first or (rank != 0):
+                printf(f"{rank: 4d} | {epoch: 5d} | first is now {first}")
+                printf(f'rank {rank} is blocking waiting for prev_rank {prev_rank}')
+                for param in model.parameters():
+                    dist.recv(tensor=param, src=prev_rank)
+                printf(f'rank {rank} is unblocked')
+            printf(f'starting {rank}, epoch {epoch}')
+
+            first = False
             for batch in train_loader:
                 loss = model.loss(batch)
                 loss.backward()
-                accountant.privatize_grad(optimizer)
+
+                # before
+                for param in model.parameters():
+                    accountant.privatize_layer_grad(param, clipping_norm=1.)
 
                 optimizer.step()
                 optimizer.zero_grad()
-                # for name, param in model.named_parameters():
-                #     print(name, param.grad1.size())
-                # print("epoch activations: ", epoch)
-                # print(activations)
 
             accuracy, loss = evaluate(model, test_loader)
-            print(f"{epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}")
+            printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f} | prev: {prev_rank}, next: {next_rank}")
 
-    cleanup()
+            # Ensure that send() does not happen on the last epoch of the last node,
+            # since this would send back to the first node
+            # and cause it to hang
+            is_done = rank == size - 1 and epoch == epochs - 1
+            if rank != next_rank and not is_done:
+                for param in model.parameters():
+                    print(f"{rank: 4d} | {epoch: 5d} | prev: {prev_rank}, next: {next_rank} Sending....")
+                    # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
+                    req = dist.isend(tensor=param, dst=next_rank)
+                    print(f"{rank: 4d} | {epoch: 5d} | prev: {prev_rank}, next: {next_rank} Waiting....")
+                    req.wait()
+                    print(f"{rank: 4d} | {epoch: 5d} | Done waiting....")
+
+            if is_done:
+                # TODO: checkpoint model to disk
+                pass
+
+            if rank == next_rank - 1 and rank == prev_rank - 1:
+                printf(f"Rank {rank}, end of epoch {epoch}")
 
 
-def setup(rank, world_size):
+def init_process(rank, size, fn, args, backend='gloo'):
+    """ Initialize the distributed environment. """
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '29500'
-    dist.init_process_group(backend='gloo', rank=rank, world_size=world_size)
+    dist.init_process_group(backend, rank=rank, world_size=size)
+    fn(rank, size, **args)
 
 
-def cleanup():
-    dist.destroy_process_group()
+def run_parallel():
+    size = 2
+    processes = []
+    print("Rank | Epoch | Accuracy | Loss")
+    for rank in range(size):
+        p = Process(target=init_process, args=(rank, size, run_ring, {
+            'epochs': 2
+        }))
+        p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()
 
 
 if __name__ == "__main__":
-    world_size = 2
-    hook_before = True
-    mp.spawn(test_ddp_fn, args=(world_size, hook_before), nprocs=world_size, join=True)
+    run_parallel()

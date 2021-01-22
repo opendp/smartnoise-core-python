@@ -29,12 +29,11 @@ def download_pums_data(output_dir, year, record_type, state):
 
 def get_pums_data_path(year, record_type, state):
     base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'data')
-    return os.path.join(base_dir, f'PUMS_{year}_{record_type}_{state}')
-
+    return os.path.join(base_dir, f'PUMS_{year}_{record_type}_{state}', 'data.csv')
 
 datasets = [
     {'year': 2010, 'record_type': 'person', 'state': 'ma'},
-    {'year': 2010, 'record_type': 'person', 'state': 'ma'},
+    {'year': 2011, 'record_type': 'person', 'state': 'ma'},
     {'year': 2011, 'record_type': 'person', 'state': 'tx'},
 ]
 

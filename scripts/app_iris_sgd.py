@@ -68,18 +68,20 @@ model = IrisModule(len(predictors), 3)
 learning_rate = .01
 epochs = 16
 
-with PrivacyAccountant(model, epoch_epsilon=1.0, epoch_delta=.000001) as accountant:
-    optimizer = torch.optim.Adam(model.parameters(), learning_rate)
+optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 
-    print("Epoch | Accuracy | Loss")
+print("Epoch | Accuracy | Loss")
 
-    for epoch in range(epochs):
+accountant = PrivacyAccountant(model, epoch_epsilon=1.0, epoch_delta=.000001)
+
+for epoch in range(epochs):
+    with accountant:
         for batch in train_loader:
             loss = model.loss(batch)
             loss.backward()
 
             for layer in model.modules():
-                accountant.privatize_grad(layer, clipping_norm=1.0, loss_type='mean')
+                accountant.privatize_layer_grad(layer, clipping_norm=1.0, loss_type='mean')
 
             optimizer.step()
             optimizer.zero_grad()
