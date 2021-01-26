@@ -5,8 +5,10 @@ import os
 import tempfile
 
 
-def download_pums_data(output_dir, year, record_type, state):
+def download_pums_data(year, record_type, state):
     assert record_type in ('person', 'housing')
+
+    output_dir = get_pums_data_dir(year, record_type, state)
 
     if os.path.exists(output_dir):
         return
@@ -21,15 +23,19 @@ def download_pums_data(output_dir, year, record_type, state):
         with zipfile.ZipFile(temp_download_path, 'r') as zip_file:
             [zip_file.extract(file, output_dir) for file in zip_file.namelist()]
 
-        # rename the .csv file to data.csv
-        for file_name in os.listdir(output_dir):
-            if file_name.endswith('.csv'):
-                os.rename(os.path.join(output_dir, file_name), os.path.join(output_dir, 'data.csv'))
+
+def get_pums_data_dir(year, record_type, state):
+    base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'data')
+    return os.path.join(base_dir, f'PUMS_{year}_{record_type}_{state}')
 
 
 def get_pums_data_path(year, record_type, state):
-    base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'data')
-    return os.path.join(base_dir, f'PUMS_{year}_{record_type}_{state}', 'data.csv')
+    """returns path to the first .csv file"""
+    data_dir = get_pums_data_dir(year, record_type, state)
+    for file_name in os.listdir(data_dir):
+        if file_name.endswith('.csv'):
+            return os.path.join(data_dir, file_name)
+
 
 datasets = [
     {'year': 2010, 'record_type': 'person', 'state': 'ma'},
@@ -42,5 +48,5 @@ if __name__ == '__main__':
     for metadata in datasets:
         print("downloading", metadata)
 
-        data_dir = get_pums_data_path(**metadata)
-        download_pums_data(data_dir, **metadata)
+        print(get_pums_data_dir(**metadata))
+        download_pums_data(**metadata)
