@@ -65,8 +65,8 @@ def evaluate(model, loader):
 def run_ring(rank, size, epochs, queue=None):
 
     # load the data specific to the current rank
-    data_path = get_pums_data_path(**datasets[rank])
     download_pums_data(**datasets[rank])
+    data_path = get_pums_data_path(**datasets[rank])
 
     data = pd.read_csv(data_path, usecols=predictors + [target], engine='python')
     data.dropna(inplace=True)
