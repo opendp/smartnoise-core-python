@@ -27,4 +27,6 @@ opendp_smartnoise_core_demo.egg-info/
 opendp_smartnoise_core_python.egg-info/
 
 .idea/
+venv/*
 /data/PUMS_*
+model_checkpoints/*

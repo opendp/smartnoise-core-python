@@ -19,6 +19,13 @@ _supported_modules = (nn.Linear, nn.Conv2d)  # Supported layer class types
 
 class PrivacyAccountant(object):
     def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True):
+        """
+        Context manager for tracking privacy usage
+        :param model: pyTorch model
+        :param step_epsilon:
+        :param step_delta:
+        :param hook: whether to call hook() on __init__
+        """
         self.model = model
         self._hooks_enabled = False  # work-around for https://github.com/pytorch/pytorch/issues/25723
         self.step_epsilon = step_epsilon
@@ -102,8 +109,6 @@ class PrivacyAccountant(object):
         Must be called after loss.backprop()
         Must be called before optimizer.step()
 
-        :param module:
-        :param clipping_norm:
         :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
         """
 

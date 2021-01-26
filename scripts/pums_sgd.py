@@ -1,16 +1,16 @@
 import json
+import os
+import sys
+
 from multiprocessing import Queue
 
 import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import random_split, DataLoader, TensorDataset
-import sys
-
-
-import os
 import torch.distributed as dist
+
+from torch.utils.data import random_split, DataLoader, TensorDataset
 from torch.multiprocessing import Process
 
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
@@ -22,15 +22,27 @@ target = 'DPHY'
 
 debug = False
 
-# overkill flushing
+
 def printf(x, force=False):
+    """
+    overkill flushing
+    :param x:
+    :param force:
+    :return:
+    """
     if debug or force:
         print(x, flush=True)
         sys.stdout.flush()
 
 
 class PumsModule(nn.Module):
+
     def __init__(self, input_size, output_size):
+        """
+        Example NN module
+        :param input_size:
+        :param output_size:
+        """
         super().__init__()
         internal_size = 5
         self.linear1 = nn.Linear(input_size, internal_size)
@@ -62,7 +74,16 @@ def evaluate(model, loader):
     return torch.mean(torch.tensor([model.score(batch) for batch in loader]), dim=0)
 
 
-def run_ring(rank, size, epochs, queue=None):
+def run_ring(rank, size, epochs, queue=None, model_filepath=None):
+    """
+    Perform federated learning in a ring structure
+    :param rank: index for specific data set
+    :param size: total ring size
+    :param epochs: number of training epochs
+    :param queue: stores values and privacy accountant usage
+    :param model_filepath: indicating where to save the model checkpoint
+    :return:
+    """
 
     # load the data specific to the current rank
     download_pums_data(**datasets[rank])
@@ -74,7 +95,7 @@ def run_ring(rank, size, epochs, queue=None):
         torch.from_numpy(data[predictors].to_numpy()).type(torch.float32),
         torch.from_numpy(data[target].to_numpy()).type(torch.LongTensor) - 1)
 
-    # split
+    # split data into training and testing
     test_split = int(len(data) * .2)
     train_split = len(data) - test_split
     train_set, test_set = random_split(data, [train_split, test_split])
@@ -84,6 +105,7 @@ def run_ring(rank, size, epochs, queue=None):
 
     model = PumsModule(len(predictors), 2)
 
+    # Get the next and previous indices
     next_rank, prev_rank = ((rank + offset) % size for offset in (1, -1))
 
     first = True
@@ -119,8 +141,13 @@ def run_ring(rank, size, epochs, queue=None):
             # Ensure that send() does not happen on the last epoch of the last node,
             # since this would send back to the first node (which is done) and hang
             if rank == size - 1 and epoch == epochs - 1:
-                # TODO: checkpoint model to disk
-                pass
+                # Only save if filename is given
+                if model_filepath:
+                    torch.save({'epoch': epoch,
+                                'model_state_dict': model.state_dict(),
+                                'optimizer_state_dict': optimizer.state_dict(),
+                                'loss': loss
+                                }, model_filepath)
             else:
                 for param in model.parameters():
                     # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
@@ -131,22 +158,37 @@ def run_ring(rank, size, epochs, queue=None):
 
 
 def init_process(rank, size, fn, args, backend='gloo'):
-    """ Initialize the distributed environment. """
+    """
+    Initialize the distributed environment.
+    """
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '29500'
     dist.init_process_group(backend, rank=rank, world_size=size)
     fn(rank, size, **args)
 
 
-def run_parallel():
+def run():
+    """
+    Example method demonstrating ring structure running on
+    multiple processes. ___main__ entrypoint.
+    :return:
+    """
     size = 3
     processes = []
     queue = Queue()
+
+    # Model checkpoints will be saved here
+    model_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'model_checkpoints')
+    if not os.path.exists(model_path):
+        os.mkdir(model_path)
+
     print("Rank | Epoch | Accuracy | Loss")
     for rank in range(size):
         p = Process(target=init_process, args=(rank, size, run_ring, {
             'queue': queue,
-            'epochs': 3
+            'epochs': 3,
+            'model_filepath': os.path.join(model_path, 'model.pt')
+
         }))
         p.start()
         processes.append(p)
@@ -162,4 +204,4 @@ def run_parallel():
 
 
 if __name__ == "__main__":
-    run_parallel()
+    run()
