@@ -88,7 +88,7 @@ def run_ring(rank, size, epochs, queue=None):
 
     first = True
 
-    with PrivacyAccountant(model, step_epsilon=0.01, step_delta=1E-8) as accountant:
+    with PrivacyAccountant(model, step_epsilon=0.01) as accountant:
         optimizer = torch.optim.Adam(model.parameters(), .1)
 
         for epoch in range(epochs):

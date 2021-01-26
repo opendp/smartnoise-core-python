@@ -1,5 +1,6 @@
 """
 Tools for building differentially private models.
+Thanks to https://github.com/cybertronai/autograd-hacks for demonstrating gradient hacks.
 
 A, activations: inputs into current layer
 B, backprops: backprop values (aka Lop aka Jacobian-vector product) observed at current layer
@@ -17,7 +18,7 @@ _supported_modules = (nn.Linear, nn.Conv2d)  # Supported layer class types
 
 
 class PrivacyAccountant(object):
-    def __init__(self, model: nn.Module, step_epsilon, step_delta):
+    def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True):
         self.model = model
         self._hooks_enabled = False  # work-around for https://github.com/pytorch/pytorch/issues/25723
         self.step_epsilon = step_epsilon
@@ -25,7 +26,10 @@ class PrivacyAccountant(object):
         self._epochs = []
         self.steps = 0
 
-    def __enter__(self):
+        if hook:
+            self.hook()
+
+    def hook(self):
         """
         Adds hooks to model to save activations and backprop values.
 
@@ -33,14 +37,12 @@ class PrivacyAccountant(object):
         1. save activations into param.activations during forward pass
         2. append backprops to params.backprops_list during backward pass.
 
-        Use __exit__ to disable this.
+        Use unhook to disable this.
         """
-
-        assert not hasattr(self.model, 'autograd_hacks_hooks'), "Attempted to install hooks twice"
 
         if self._hooks_enabled:
             # hooks have already been added
-            return
+            return self
 
         self._hooks_enabled = True
 
@@ -68,9 +70,9 @@ class PrivacyAccountant(object):
 
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def unhook(self):
         """
-        Remove hooks added by __enter__
+        Remove and deactivate hooks added by .hook()
         """
 
         # This issue indicates that hooks are not actually removed if the forward pass is run
@@ -87,6 +89,12 @@ class PrivacyAccountant(object):
 
         # The _hooks_enabled flag is a secondary fallback if hooks aren't removed
         self._hooks_enabled = False
+
+    def __enter__(self):
+        return self.hook()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.unhook()
 
     def privatize_grad(self, params=None, loss_type: str = 'mean') -> None:
         """
@@ -108,8 +116,8 @@ class PrivacyAccountant(object):
             if not isinstance(param, _supported_modules):
                 return
 
-            assert hasattr(param, 'activations'), "No activations detected, run forward after add_hooks(model)"
-            assert hasattr(param, 'backprops_list'), "No backprops detected, run backward after add_hooks(model)"
+            assert hasattr(param, 'activations'), "No activations detected, run forward after .hook()"
+            assert hasattr(param, 'backprops_list'), "No backprops detected, run backward after .hook()"
             assert len(param.backprops_list) == 1, "Multiple backprops detected"
 
             A = param.activations
