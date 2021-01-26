@@ -1,20 +1,5 @@
 """
-Library for extracting interesting quantites from autograd, see README.md
-
-Not thread-safe because of module-level variables
-
-Notation:
-o: number of output classes (exact Hessian), number of Hessian samples (sampled Hessian)
-n: batch-size
-do: output dimension (output channels for convolution)
-di: input dimension (input channels for convolution)
-Hi: per-example Hessian of matmul, shaped as matrix of [dim, dim], indices have been row-vectorized
-Hi_bias: per-example Hessian of bias
-Oh, Ow: output height, output width (convolution)
-Kh, Kw: kernel height, kernel width (convolution)
-
-Jb: batch output Jacobian of matmul, output sensitivity for example,class pair, [o, n, ....]
-Jb_bias: as above, but for bias
+Tools for building differentially private models.
 
 A, activations: inputs into current layer
 B, backprops: backprop values (aka Lop aka Jacobian-vector product) observed at current layer
@@ -28,17 +13,17 @@ import torch.nn as nn
 from opendp.smartnoise.core.api import LibraryWrapper
 core_library = LibraryWrapper()
 
-_supported_layers = (nn.Linear, nn.Conv2d)  # Supported layer class types
-
-from torch.nn.parallel import DistributedDataParallel as DDP
+_supported_modules = (nn.Linear, nn.Conv2d)  # Supported layer class types
 
 
 class PrivacyAccountant(object):
-    def __init__(self, model: nn.Module, epoch_epsilon, epoch_delta):
+    def __init__(self, model: nn.Module, step_epsilon, step_delta):
         self.model = model
         self._hooks_enabled = False  # work-around for https://github.com/pytorch/pytorch/issues/25723
-        self.epoch_epsilon = epoch_epsilon
-        self.epoch_delta = epoch_delta
+        self.step_epsilon = step_epsilon
+        self.step_delta = step_delta
+        self._epochs = []
+        self.steps = 0
 
     def __enter__(self):
         """
@@ -75,7 +60,7 @@ class PrivacyAccountant(object):
 
         self.model.autograd_hacks_hooks = []
         for layer in self.model.modules():
-            if isinstance(layer, _supported_layers):
+            if isinstance(layer, _supported_modules):
                 self.model.autograd_hacks_hooks.extend([
                     layer.register_forward_hook(capture_activations),
                     layer.register_backward_hook(capture_backprops)
@@ -88,7 +73,10 @@ class PrivacyAccountant(object):
         Remove hooks added by __enter__
         """
 
-        # assert self.model == 0, "not working, remove this after fix to https://github.com/pytorch/pytorch/issues/25723"
+        # This issue indicates that hooks are not actually removed if the forward pass is run
+        # https://github.com/pytorch/pytorch/issues/25723
+        # Based on testing, the hooks are actually removed
+        # Since hooks are removed, there is not an accumulation of hooks if the context manager is used within a loop
 
         if not hasattr(self.model, 'autograd_hacks_hooks'):
             print("Warning, asked to remove hooks, but no hooks found")
@@ -97,63 +85,111 @@ class PrivacyAccountant(object):
                 handle.remove()
             del self.model.autograd_hacks_hooks
 
+        # The _hooks_enabled flag is a secondary fallback if hooks aren't removed
         self._hooks_enabled = False
 
-    def privatize_grad(self, layer, clipping_norm, loss_type: str = 'mean') -> None:
+    def privatize_grad(self, params=None, loss_type: str = 'mean') -> None:
         """
         Compute per-example gradients for a layer, privatize them, and save them under 'param.grad'.
         Must be called after loss.backprop()
         Must be called before optimizer.step()
 
-        Args:
-            model:
-            loss_type: either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
+        :param module:
+        :param clipping_norm:
+        :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
         """
 
         assert loss_type in ('sum', 'mean')
 
-        if not isinstance(layer, _supported_layers):
-            return
+        self.steps += 1
 
-        assert hasattr(layer, 'activations'), "No activations detected, run forward after add_hooks(model)"
-        assert hasattr(layer, 'backprops_list'), "No backprops detected, run backward after add_hooks(model)"
-        assert len(layer.backprops_list) == 1, "Multiple backprops detected"
+        params = params or self.model.parameters()
+        for param in params or self.model.parameters():
+            if not isinstance(param, _supported_modules):
+                return
 
-        A = layer.activations
-        B = layer.backprops_list[0]
+            assert hasattr(param, 'activations'), "No activations detected, run forward after add_hooks(model)"
+            assert hasattr(param, 'backprops_list'), "No backprops detected, run backward after add_hooks(model)"
+            assert len(param.backprops_list) == 1, "Multiple backprops detected"
 
-        n = A.shape[0]
+            A = param.activations
+            B = param.backprops_list[0]
 
-        reducer = torch.sum
-        if loss_type == 'mean':
-            # could be moved into clipping norm
-            B *= n
-            reducer = torch.mean
+            n = A.shape[0]
 
-        sigma = 1 + math.sqrt(2 * math.log(1 / self.epoch_delta))
-        if isinstance(layer, nn.Linear):
-            # reconstruct
-            grad_instance = torch.einsum('ni,nj->nij', B, A)
-            # clip
-            bound = torch.linalg.norm(grad_instance, ord=2, dim=1) / clipping_norm
-            grad_instance /= torch.max(torch.ones_like(bound), bound)[:, None, :]
-            # reduce
-            grad = reducer(grad_instance, dim=0)
-            # noise
-            grad.apply_(lambda x: x + core_library.gaussian_noise(sigma))
+            reducer = torch.sum
+            if loss_type == 'mean':
+                # could be moved into clipping norm
+                B *= n
+                reducer = torch.mean
 
-            setattr(layer.weight, 'grad', grad)
-            if layer.bias is not None:
-                pass
-                # setattr(layer.bias, 'grad', torch.sum(B))
+            sigma = 1 + math.sqrt(2 * math.log(1 / self.step_delta))
+            if isinstance(param, nn.Linear):
+                # reconstruct
+                grad_instance = torch.einsum('ni,nj->nij', B, A)
+                # clip
+                bound = torch.linalg.norm(grad_instance, ord=2, dim=1)
+                grad_instance /= torch.max(torch.ones_like(bound), bound)[:, None, :]
+                # reduce
+                grad = reducer(grad_instance, dim=0)
+                # noise
+                grad.apply_(lambda x: x + core_library.gaussian_noise(sigma))
 
-        # elif isinstance(layer, nn.Conv2d):
-        #     A = torch.nn.functional.unfold(A, layer.kernel_size)
-        #     B = B.reshape(n, -1, A.shape[-1])
-        #     grad1 = torch.einsum('ijk,ilk->ijl', B, A)
-        #     shape = [n] + list(layer.weight.shape)
-        #     setattr(layer.weight, 'grad1', grad1.reshape(shape))
-        #     if layer.bias is not None:
-        #         setattr(layer.bias, 'grad1', torch.sum(B, dim=2))
+                setattr(param.weight, 'grad', grad)
+                if param.bias is not None:
+                    pass
+                    # setattr(layer.bias, 'grad', torch.sum(B))
 
-        del layer.backprops_list
+            # elif isinstance(layer, nn.Conv2d):
+            #     A = torch.nn.functional.unfold(A, layer.kernel_size)
+            #     B = B.reshape(n, -1, A.shape[-1])
+            #     grad1 = torch.einsum('ijk,ilk->ijl', B, A)
+            #     shape = [n] + list(layer.weight.shape)
+            #     setattr(layer.weight, 'grad1', grad1.reshape(shape))
+            #     if layer.bias is not None:
+            #         setattr(layer.bias, 'grad1', torch.sum(B, dim=2))
+
+            del param.backprops_list
+            del param.activations
+
+    def make_private_optimizer(self, optimizer, *args, **kwargs):
+
+        class _PrivacyOptimizer(optimizer):
+            """Extend *Optimizer with custom step function."""
+
+            def __init__(_self, *_args, **_kwargs):
+                _self.accountant = self
+                super().__init__(*_args, **_kwargs)
+
+            def step(_self, *_args, **_kwargs):
+                r"""Performs a single optimization step (parameter update)."""
+                with _self.accountant:
+                    _self.accountant.privatize_grad(*_args, **_kwargs)
+                return super().step(*_args, **_kwargs)
+
+        return _PrivacyOptimizer(*args, **kwargs)
+
+    def increment_epoch(self):
+        if self.steps:
+            self._epochs.append(self.steps)
+        self.steps = 0
+
+    def compute_usage(self, suggested_delta):
+        """
+        Compute epsilon/delta privacy usage for all tracked epochs
+        :param suggested_delta: delta to
+        :return:
+        """
+        epsilon = 0
+        delta = 0
+
+        for batch_len in self._epochs:
+            # TODO: fall-back to linear composition or error
+            test_batch_len = batch_len + 1000
+            batch_epsilon, batch_delta = core_library.shuffle_amplification(
+                self.step_epsilon, self.step_delta, suggested_delta / len(self._epochs), test_batch_len)
+
+            epsilon += batch_epsilon
+            delta += batch_delta
+
+        return epsilon, delta

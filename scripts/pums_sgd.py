@@ -85,7 +85,7 @@ def run_ring(rank, size, epochs):
 
     first = True
 
-    with PrivacyAccountant(model, epoch_epsilon=1.0, epoch_delta=.000001) as accountant:
+    with PrivacyAccountant(model, step_epsilon=0.1, step_delta=1E-8) as accountant:
         optimizer = torch.optim.Adam(model.parameters(), .1)
 
         for epoch in range(epochs):
@@ -104,11 +104,11 @@ def run_ring(rank, size, epochs):
                 loss.backward()
 
                 # before
-                for param in model.parameters():
-                    accountant.privatize_layer_grad(param, clipping_norm=1.)
+                accountant.privatize_grad()
 
                 optimizer.step()
                 optimizer.zero_grad()
+            accountant.increment_epoch()
 
             accuracy, loss = evaluate(model, test_loader)
             printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
@@ -122,6 +122,8 @@ def run_ring(rank, size, epochs):
                 for param in model.parameters():
                     # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
                     dist.send(tensor=param, dst=next_rank)
+
+    print(accountant.compute_usage(suggested_delta=1E-6))
 
 
 def init_process(rank, size, fn, args, backend='gloo'):

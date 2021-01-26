@@ -36,6 +36,12 @@ class LibraryWrapper(object):
                 ('len', ctypes.c_int64),
                 ('data', ctypes.POINTER(ctypes.c_uint8))]
 
+        class PrivacyUsage(ctypes.Structure):
+            """ creates a struct to match emxArray_real_T """
+
+            _fields_ = [('epsilon', ctypes.c_double),
+                        ('delta', ctypes.c_double)]
+
         # validator
         self.lib_smartnoise.accuracy_to_privacy_usage.argtypes = proto_argtypes
         self.lib_smartnoise.compute_privacy_usage.argtypes = proto_argtypes
@@ -88,6 +94,11 @@ class LibraryWrapper(object):
             self.lib_smartnoise.snapping_mechanism_binding.argtypes = [
                 ctypes.c_double, ctypes.c_double, ctypes.c_double,
                 ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_bool
+            ]
+
+            self.lib_smartnoise.shuffle_amplification.restype = PrivacyUsage
+            self.lib_smartnoise.shuffle_amplification.argtypes = [
+                ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_int64, ctypes.c_bool
             ]
 
         except AttributeError:
@@ -335,6 +346,25 @@ class LibraryWrapper(object):
         :return: sample float
         """
         return self.lib_smartnoise.gaussian_noise(ctypes.c_double(sigma))
+
+    def shuffle_amplification(self, step_epsilon, step_delta, delta, steps, empirical=True):
+        """
+
+        :param step_epsilon:
+        :param step_delta: 
+        :param delta: 
+        :param steps:
+        :param empirical:
+        :return: 
+        """
+        struct = self.lib_smartnoise.shuffle_amplification(
+            ctypes.c_double(step_epsilon),
+            ctypes.c_double(step_delta),
+            ctypes.c_double(delta),
+            ctypes.c_int64(steps),
+            ctypes.c_bool(empirical))
+
+        return struct.epsilon, struct.delta
 
 
 def _communicate(function, destroy, argument, response_type):
