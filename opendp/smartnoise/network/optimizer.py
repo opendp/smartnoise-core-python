@@ -174,7 +174,7 @@ class PrivacyAccountant(object):
             self._epochs.append(self.steps)
         self.steps = 0
 
-    def compute_usage(self, suggested_delta):
+    def compute_usage(self, suggested_delta=None):
         """
         Compute epsilon/delta privacy usage for all tracked epochs
         :param suggested_delta: delta to
@@ -184,10 +184,16 @@ class PrivacyAccountant(object):
         delta = 0
 
         for batch_len in self._epochs:
-            # TODO: fall-back to linear composition or error
-            test_batch_len = batch_len + 1000
+            if suggested_delta is None:
+                delta = 2 * math.exp(-batch_len / 16 * math.exp(-self.step_epsilon)) + 1E-8
+            else:
+                suggested_delta / len(self._epochs)
+
             batch_epsilon, batch_delta = core_library.shuffle_amplification(
-                self.step_epsilon, self.step_delta, suggested_delta / len(self._epochs), test_batch_len)
+                step_epsilon=self.step_epsilon,
+                step_delta=self.step_delta,
+                delta=delta,
+                steps=batch_len)
 
             epsilon += batch_epsilon
             delta += batch_delta

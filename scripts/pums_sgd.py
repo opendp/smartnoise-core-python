@@ -1,3 +1,6 @@
+import json
+from multiprocessing import Queue
+
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -59,7 +62,7 @@ def evaluate(model, loader):
     return torch.mean(torch.tensor([model.score(batch) for batch in loader]), dim=0)
 
 
-def run_ring(rank, size, epochs):
+def run_ring(rank, size, epochs, queue=None):
 
     # load the data specific to the current rank
     data_path = get_pums_data_path(**datasets[rank])
@@ -85,7 +88,7 @@ def run_ring(rank, size, epochs):
 
     first = True
 
-    with PrivacyAccountant(model, step_epsilon=0.1, step_delta=1E-8) as accountant:
+    with PrivacyAccountant(model, step_epsilon=0.01, step_delta=1E-8) as accountant:
         optimizer = torch.optim.Adam(model.parameters(), .1)
 
         for epoch in range(epochs):
@@ -123,7 +126,8 @@ def run_ring(rank, size, epochs):
                     # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
                     dist.send(tensor=param, dst=next_rank)
 
-    print(accountant.compute_usage(suggested_delta=1E-6))
+    if queue:
+        queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))
 
 
 def init_process(rank, size, fn, args, backend='gloo'):
@@ -135,18 +139,26 @@ def init_process(rank, size, fn, args, backend='gloo'):
 
 
 def run_parallel():
-    size = 2
+    size = 3
     processes = []
+    queue = Queue()
     print("Rank | Epoch | Accuracy | Loss")
     for rank in range(size):
         p = Process(target=init_process, args=(rank, size, run_ring, {
-            'epochs': 2
+            'queue': queue,
+            'epochs': 3
         }))
         p.start()
         processes.append(p)
 
     for p in processes:
         p.join()
+
+    usage = {}
+    while not queue.empty():
+        rank, (epsilon, delta) = queue.get()
+        usage[str(rank)] = {'epsilon': epsilon, 'delta': delta}
+    print(json.dumps(usage, indent=4))
 
 
 if __name__ == "__main__":
