@@ -162,7 +162,7 @@ class PrivacyAccountant(object):
             if isinstance(param, nn.Linear):
                 self._calculate_and_privatize(A, B, reducer, sigma, param)
 
-            if isinstance(param, nn.ReLU):
+            if isinstance(param, nn.LSTM):
                 # TODO: Does anything need to be done differently here?
                 self._calculate_and_privatize(A, B, reducer, sigma, param)
 
