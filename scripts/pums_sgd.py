@@ -24,6 +24,7 @@ target = 'DPHY'
 debug = False
 
 
+# overkill flushing
 def printf(x, force=False):
     """
     overkill flushing
@@ -144,48 +145,49 @@ def run_ring(rank, size, epochs, queue=None, model_filepath=None):
 
     first = True
 
-    with PrivacyAccountant(model, step_epsilon=0.01) as accountant:
-        optimizer = torch.optim.Adam(model.parameters(), .1)
+    accountant = PrivacyAccountant(model, step_epsilon=0.01)
 
-        for epoch in range(epochs):
-            # Only receive when not in the first run around the ring,
-            # otherwise process will sit and wait for rank "-1" to finish
-            if not first or rank != 0:
-                printf(f'rank {rank} is blocking waiting for prev_rank {prev_rank}')
-                for param in model.parameters():
-                    dist.recv(tensor=param, src=prev_rank)
-                printf(f'rank {rank} is unblocked')
-            printf(f'starting {rank}, epoch {epoch}')
+    optimizer = torch.optim.Adam(model.parameters(), .1)
 
-            first = False
-            for batch in train_loader:
-                loss = model.loss(batch)
-                loss.backward()
+    for epoch in range(epochs):
+        # Only receive when not in the first run around the ring,
+        # otherwise process will sit and wait for rank "-1" to finish
+        if not first or rank != 0:
+            printf(f'rank {rank} is blocking waiting for prev_rank {prev_rank}')
+            for param in model.parameters():
+                dist.recv(tensor=param, src=prev_rank)
+            printf(f'rank {rank} is unblocked')
+        printf(f'starting {rank}, epoch {epoch}')
 
-                # before
-                accountant.privatize_grad()
+        first = False
+        for batch in train_loader:
+            loss = model.loss(batch)
+            loss.backward()
 
-                optimizer.step()
-                optimizer.zero_grad()
-            accountant.increment_epoch()
+            # before
+            accountant.privatize_grad()
 
-            accuracy, loss = evaluate(model, test_loader)
-            printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
+            optimizer.step()
+            optimizer.zero_grad()
+        accountant.increment_epoch()
 
-            # Ensure that send() does not happen on the last epoch of the last node,
-            # since this would send back to the first node (which is done) and hang
-            if rank == size - 1 and epoch == epochs - 1:
-                # Only save if filename is given
-                if model_filepath:
-                    torch.save({'epoch': epoch,
-                                'model_state_dict': model.state_dict(),
-                                'optimizer_state_dict': optimizer.state_dict(),
-                                'loss': loss
-                                }, model_filepath)
-            else:
-                for param in model.parameters():
-                    # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
-                    dist.send(tensor=param, dst=next_rank)
+        accuracy, loss = evaluate(model, test_loader)
+        printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
+
+        # Ensure that send() does not happen on the last epoch of the last node,
+        # since this would send back to the first node (which is done) and hang
+        if rank == size - 1 and epoch == epochs - 1:
+            # Only save if filename is given
+            if model_filepath:
+                torch.save({'epoch': epoch,
+                            'model_state_dict': model.state_dict(),
+                            'optimizer_state_dict': optimizer.state_dict(),
+                            'loss': loss
+                            }, model_filepath)
+        else:
+            for param in model.parameters():
+                # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
+                dist.send(tensor=param, dst=next_rank)
 
     if queue:
         queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))

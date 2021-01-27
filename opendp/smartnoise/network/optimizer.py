@@ -60,12 +60,10 @@ class PrivacyAccountant(object):
             setattr(layer, "activations", input[0].detach())
 
         def capture_backprops(layer: nn.Module, _input, output):
-            """Append backprop to layer.backprops_list in backward pass."""
+            """Save backprops into layer.backprops in backward pass"""
             if not self._hooks_enabled:
                 return
-            if not hasattr(layer, 'backprops_list'):
-                setattr(layer, 'backprops_list', [])
-            layer.backprops_list.append(output[0].detach())
+            setattr(layer, 'backprops', output[0].detach())
 
         self.model.autograd_hacks_hooks = []
         for layer in self.model.modules():
@@ -103,66 +101,102 @@ class PrivacyAccountant(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unhook()
 
-    @staticmethod
-    def _calculate_and_privatize(self, A, B, reducer, sigma, param):
+    def _calculate_norm(self, params):
+        param_sum_squares = []
+        for param in params:
+            if not isinstance(param, _supported_modules):
+                continue
+
+            assert hasattr(param, 'activations'), "No activations detected, run forward after .hook()"
+            assert hasattr(param, 'backprops'), "No backprops detected, run backward after .hook()"
+
+            A = param.activations
+            B = param.backprops
+
+            if isinstance(param, nn.Linear):
+                param_sum_squares.append(torch.einsum('ni,ni,nj,nj->n', A, A, B, B))
+
+                if param.bias is not None:
+                    param_sum_squares.append((B * B).sum(dim=1))
+
+        return torch.sqrt(torch.stack(param_sum_squares, dim=1).sum(dim=0))
+
+    def _calculate_and_privatize(self, grad_instance, loss_type, actual_norm, clipping_norm):
         """
 
-        :param A:
-        :param B:
+        :param grad_instance:
+        :param loss_type:
+        :param actual_norm:
+        :param clipping_norm:
         :return:
         """
-        # reconstruct
-        grad_instance = torch.einsum('ni,nj->nij', B, A)
         # clip
-        bound = torch.linalg.norm(grad_instance, ord=2, dim=1)
-        grad_instance /= torch.max(torch.ones_like(bound), bound)[:, None, :]
+        grad_instance /= torch.max(torch.ones_like(actual_norm), actual_norm / clipping_norm)[:, None, :]
         # reduce
-        grad = reducer(grad_instance, dim=0)
+        grad = {'sum': nn.sum, 'mean': nn.mean}[loss_type](grad_instance, dim=0)
         # noise
-        grad.apply_(lambda x: x + core_library.gaussian_noise(sigma))
+        sensitivity = clipping_norm / {'sum': 1., 'mean': grad_instance.shape[0]}[loss_type]
+        if self.step_delta == 0.:
+            grad.apply_(lambda x: core_library.snapping_mechanism(
+                value=x,
+                epsilon=self.step_epsilon,
+                sensitivity=sensitivity,
+                min=-clipping_norm,
+                max=clipping_norm,
+                enforce_constant_time=False))
+        else:
+            grad.apply_(lambda x: core_library.analytic_gaussian_mechanism(
+                value=x,
+                epsilon=self.step_epsilon,
+                delta=self.step_delta,
+                sensitivity=sensitivity,
+                enforce_constant_time=False))
 
-        setattr(param.weight, 'grad', grad)
-        if param.bias is not None:
-            pass
+        return grad
 
-    def privatize_grad(self, params=None, loss_type: str = 'mean') -> None:
+
+    def privatize_grad(self, *, params=None, clipping_norm=1., loss_type: str = 'mean') -> None:
         """
         Compute per-example gradients for a layer, privatize them, and save them under 'param.grad'.
         Must be called after loss.backprop()
         Must be called before optimizer.step()
 
         :param params:
+        :param clipping_norm:
         :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
         """
         assert loss_type in ('sum', 'mean')
 
         self.steps += 1
 
-        # lstm_privatized = False
-
         params = params or self.model.named_parameters()
         for param_name, param in params or self.model.named_parameters():
             if not isinstance(param, _supported_modules):
                 return
 
-            assert hasattr(param, 'activations'), "No activations detected, run forward after .hook()"
-            assert hasattr(param, 'backprops_list'), "No backprops detected, run backward after .hook()"
-            assert len(param.backprops_list) == 1, "Multiple backprops detected"
+        params = params or self.model.modules()
 
-            A = param.activations
-            B = param.backprops_list[0]
+        # compute L2 norm for flat clipping
+        actual_norm = self._calculate_norm(params)
 
-            n = A.shape[0]
+        # reconstruct instance-level gradients and reduce privately
+        for param in params:
+            if not isinstance(param, _supported_modules):
+                continue
 
-            reducer = torch.sum
+            n = param.activations.shape[0]
+
             if loss_type == 'mean':
-                # could be moved into clipping norm
-                B *= n
-                reducer = torch.mean
+                param.backprops *= n
 
-            sigma = 1 + math.sqrt(2 * math.log(1 / self.step_delta))
             if isinstance(param, nn.Linear):
-                self._calculate_and_privatize(A, B, reducer, sigma, param)
+                # reconstruct
+                grad_instance = torch.einsum('ni,nj->nij', param.backprops, param.activations)
+                setattr(param.weight, 'grad', self._calculate_and_privatize(
+                    grad_instance, loss_type, actual_norm, clipping_norm))
+                if param.bias is not None:
+                    setattr(param.bias, 'grad', self._calculate_and_privatize(
+                        param.backprops, loss_type, actual_norm, clipping_norm))
 
             if isinstance(param, nn.LSTM):
                 # print("Privatizing LSTM layer")
@@ -173,16 +207,14 @@ class PrivacyAccountant(object):
                 pass
 
             if isinstance(param, nn.Conv2d):
+                # A = torch.nn.functional.unfold(A, layer.kernel_size)
+                # B = B.reshape(n, -1, A.shape[-1])
+                # grad1 = torch.einsum('ijk,ilk->ijl', B, A)
+                # shape = [n] + list(layer.weight.shape)
+                # setattr(layer.weight, 'grad1', grad1.reshape(shape))
+                # if layer.bias is not None:
+                #     setattr(layer.bias, 'grad1', torch.sum(B, dim=2))
                 pass
-
-            # elif isinstance(layer, nn.Conv2d):
-            #     A = torch.nn.functional.unfold(A, layer.kernel_size)
-            #     B = B.reshape(n, -1, A.shape[-1])
-            #     grad1 = torch.einsum('ijk,ilk->ijl', B, A)
-            #     shape = [n] + list(layer.weight.shape)
-            #     setattr(layer.weight, 'grad1', grad1.reshape(shape))
-            #     if layer.bias is not None:
-            #         setattr(layer.bias, 'grad1', torch.sum(B, dim=2))
 
             del param.backprops_list
             del param.activations
@@ -234,3 +266,8 @@ class PrivacyAccountant(object):
             delta += batch_delta
 
         return epsilon, delta
+
+#
+# _supported_modules_2 = {
+#     nn.Linear:
+# }
