@@ -103,6 +103,28 @@ class PrivacyAccountant(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unhook()
 
+    @staticmethod
+    def _calculate_and_privatize(self, A, B, reducer, sigma, param):
+        """
+
+        :param A:
+        :param B:
+        :return:
+        """
+        # reconstruct
+        grad_instance = torch.einsum('ni,nj->nij', B, A)
+        # clip
+        bound = torch.linalg.norm(grad_instance, ord=2, dim=1)
+        grad_instance /= torch.max(torch.ones_like(bound), bound)[:, None, :]
+        # reduce
+        grad = reducer(grad_instance, dim=0)
+        # noise
+        grad.apply_(lambda x: x + core_library.gaussian_noise(sigma))
+
+        setattr(param.weight, 'grad', grad)
+        if param.bias is not None:
+            pass
+
     def privatize_grad(self, params=None, loss_type: str = 'mean') -> None:
         """
         Compute per-example gradients for a layer, privatize them, and save them under 'param.grad'.
@@ -138,20 +160,14 @@ class PrivacyAccountant(object):
 
             sigma = 1 + math.sqrt(2 * math.log(1 / self.step_delta))
             if isinstance(param, nn.Linear):
-                # reconstruct
-                grad_instance = torch.einsum('ni,nj->nij', B, A)
-                # clip
-                bound = torch.linalg.norm(grad_instance, ord=2, dim=1)
-                grad_instance /= torch.max(torch.ones_like(bound), bound)[:, None, :]
-                # reduce
-                grad = reducer(grad_instance, dim=0)
-                # noise
-                grad.apply_(lambda x: x + core_library.gaussian_noise(sigma))
+                self._calculate_and_privatize(A, B, reducer, sigma, param)
 
-                setattr(param.weight, 'grad', grad)
-                if param.bias is not None:
-                    pass
-                    # setattr(layer.bias, 'grad', torch.sum(B))
+            if isinstance(param, nn.ReLU):
+                # TODO: Does anything need to be done differently here?
+                self._calculate_and_privatize(A, B, reducer, sigma, param)
+
+            if isinstance(param, nn.Conv2d):
+                pass
 
             # elif isinstance(layer, nn.Conv2d):
             #     A = torch.nn.functional.unfold(A, layer.kernel_size)
