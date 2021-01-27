@@ -14,7 +14,7 @@ import torch.nn as nn
 from opendp.smartnoise.core.api import LibraryWrapper
 core_library = LibraryWrapper()
 
-_supported_modules = (nn.Linear, nn.Conv2d)  # Supported layer class types
+_supported_modules = (nn.Linear, nn.Conv2d, nn.LSTM)  # Supported layer class types
 
 
 class PrivacyAccountant(object):
@@ -131,15 +131,17 @@ class PrivacyAccountant(object):
         Must be called after loss.backprop()
         Must be called before optimizer.step()
 
+        :param params:
         :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
         """
-
         assert loss_type in ('sum', 'mean')
 
         self.steps += 1
 
-        params = params or self.model.parameters()
-        for param in params or self.model.parameters():
+        # lstm_privatized = False
+
+        params = params or self.model.named_parameters()
+        for param_name, param in params or self.model.named_parameters():
             if not isinstance(param, _supported_modules):
                 return
 
@@ -163,8 +165,12 @@ class PrivacyAccountant(object):
                 self._calculate_and_privatize(A, B, reducer, sigma, param)
 
             if isinstance(param, nn.LSTM):
-                # TODO: Does anything need to be done differently here?
-                self._calculate_and_privatize(A, B, reducer, sigma, param)
+                # print("Privatizing LSTM layer")
+                # if not lstm_privatized:
+                #     for hidden_layer, output_layer in zip(self.model.lstm_hidden, self.model.lstm_output):
+                # self._calculate_and_privatize(hidden_layer, output_layer, reducer, sigma, param)
+                # lstm_privatized = True
+                pass
 
             if isinstance(param, nn.Conv2d):
                 pass
