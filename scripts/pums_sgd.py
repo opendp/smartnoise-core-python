@@ -18,8 +18,12 @@ from opendp.smartnoise.network.optimizer import PrivacyAccountant
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
 
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
-predictors = ['AGEP', 'PWGTP', 'DREM']
-target = 'DPHY'
+# JWTR: means of transportation to work
+# WKHP: usual hours worked per week, past 12 months
+# WKW: number of weeks worked, past 12 months
+# HINS4: receiving medicare benefits
+predictors = ['JWTR', 'WKHP', 'WKW']
+target = 'HINS4'
 
 debug = False
 
@@ -292,7 +296,6 @@ def run_lstm_ring(rank, size, epochs, queue=None, model_filepath=None):
         queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))
 
 
-
 def init_process(rank, size, fn, args, backend='gloo'):
     """
     Initialize the distributed environment.
@@ -376,4 +379,4 @@ def run_lstm():
 
 
 if __name__ == "__main__":
-    run_lstm()
+    run()
