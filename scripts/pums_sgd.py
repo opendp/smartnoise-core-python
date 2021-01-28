@@ -1,73 +1,55 @@
 import json
 import os
 import sys
-
 from multiprocessing import Queue
+from random import randint
 
-import numpy as np
 import pandas as pd
 import torch
+import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.distributed as dist
-
-from torch.utils.data import random_split, DataLoader, TensorDataset
 from torch.multiprocessing import Process
+from torch.utils.data import DataLoader, TensorDataset
 
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
 
-# defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
-predictors = ['AGEP', 'PWGTP', 'DREM']
-target = 'DPHY'
+ACTIVE_PROBLEM = 'ambulatory'
 
-debug = False
+problem = {
+    'ambulatory': {
+        'description': 'predict ambulatory difficulty based on age, weight and cognitive difficulty',
+        'predictors': ['AGEP', 'PWGTP', 'DREM'],
+        'target': 'DPHY'
+    },
+    'marital': {
+        'description': 'predict marital status as a function of income and education',
+        'predictors': ['PERNP', 'SCHL'],
+        'target': 'MAR'
+    }
+}[ACTIVE_PROBLEM]
+
+debug = True
 
 
-# overkill flushing
 def printf(x, force=False):
-    """
-    overkill flushing
-    :param x:
-    :param force:
-    :return:
-    """
     if debug or force:
         print(x, flush=True)
         sys.stdout.flush()
 
 
-class LstmModule(nn.Module):
+def load_pums(dataset):
+    download_pums_data(**dataset)
+    data_path = get_pums_data_path(**dataset)
 
-    def __init__(self, embedding_size, internal_size, vocab_size, tagset_size):
-        super().__init__()
-        self.embedding_size = embedding_size
-        self.hidden_size = internal_size
-        self.vocab_size = vocab_size
-        self.tagset_size = tagset_size
-
-        self.embedding = nn.Embedding(vocab_size, embedding_size)
-        self.lstm = nn.LSTM(embedding_size, internal_size)
-        self.hidden2tag = nn.Linear(internal_size, tagset_size)
-        self.lstm_out = []
-        self.lstm_hidden = []
-
-    def forward(self, x):
-        embed = self.embedding(x)
-        hidden = self._init_hidden()
-
-        # the second dimension refers to the batch size, which we've hard-coded
-        # it as 1 throughout the example
-        out, hidden = self.lstm(embed.view(len(x), 1, -1), hidden)
-        self.lstm_out.append(out)
-        self.lstm_hidden.append(hidden)
-        output = self.hidden2tag(out.view(len(x), -1))
-        return output
-
-    def _init_hidden(self):
-        # the dimension semantics are [num_layers, batch_size, hidden_size]
-        return (torch.rand(1, 1, self.hidden_size),
-                torch.rand(1, 1, self.hidden_size))
+    data = pd.read_csv(data_path, usecols=problem['predictors'] + [problem['target']], engine='python')
+    data.dropna(inplace=True)
+    if ACTIVE_PROBLEM == 'marital':
+        data['MAR'] = (data['MAR'] == 1) + 1
+    return TensorDataset(
+        torch.from_numpy(data[problem['predictors']].to_numpy()).type(torch.float32),
+        torch.from_numpy(data[problem['target']].to_numpy()).type(torch.LongTensor) - 1)
 
 
 class PumsModule(nn.Module):
@@ -109,188 +91,143 @@ def evaluate(model, loader):
     return torch.mean(torch.tensor([model.score(batch) for batch in loader]), dim=0)
 
 
-def run_ring(rank, size, epochs, queue=None, model_filepath=None):
-    """
-    Perform federated learning in a ring structure
-    :param rank: index for specific data set
-    :param size: total ring size
-    :param epochs: number of training epochs
-    :param queue: stores values and privacy accountant usage
-    :param model_filepath: indicating where to save the model checkpoint
-    :return:
-    """
+class ModelCoordinator(object):
+    def __init__(self, model, rank, size, step_limit, federation_scheme='shuffle'):
 
-    # load the data specific to the current rank
-    download_pums_data(**datasets[rank])
-    data_path = get_pums_data_path(**datasets[rank])
+        assert federation_scheme in ('shuffle', 'ring')
 
-    data = pd.read_csv(data_path, usecols=predictors + [target], engine='python')
-    data.dropna(inplace=True)
-    data = TensorDataset(
-        torch.from_numpy(data[predictors].to_numpy()).type(torch.float32),
-        torch.from_numpy(data[target].to_numpy()).type(torch.LongTensor) - 1)
+        self.model = model
+        self.rank = rank
+        self.size = size
+        self.federation_scheme = federation_scheme
+        self._requests = {}
 
-    # split data into training and testing
-    test_split = int(len(data) * .2)
-    train_split = len(data) - test_split
-    train_set, test_set = random_split(data, [train_split, test_split])
+        self.step = torch.tensor(0)
+        self.step_limit = step_limit
 
-    train_loader = DataLoader(train_set, batch_size=1000, shuffle=True)
-    test_loader = DataLoader(test_set, batch_size=1)
+    def recv(self):
+        # Only block on receive when not in the initial step
+        # otherwise this process will wait forever for another process to communicate with it
+        if self.step == 0 and self.rank == 0:
+            self.step += 1
+            return
 
-    model = PumsModule(len(predictors), 2)
+        if self.federation_scheme == 'shuffle':
+            prev_rank = None
+        elif self.federation_scheme == 'ring':
+            prev_rank = (self.rank - 1) % self.size
 
-    # Get the next and previous indices
-    next_rank, prev_rank = ((rank + offset) % size for offset in (1, -1))
+        dist.recv(tensor=self.step, src=prev_rank)
+        if self.step == self.step_limit:
+            return
 
-    first = True
+        for param in self.model.parameters():
+            dist.recv(tensor=param, src=prev_rank)
 
-    accountant = PrivacyAccountant(model, step_epsilon=0.01)
+        self.step += 1
 
-    optimizer = torch.optim.Adam(model.parameters(), .1)
+        # kill all other processes
+        if self.step == self.step_limit:
+            for rank in range(self.size):
+                if rank == self.rank:
+                    continue
+                dist.send(tensor=self.step, dst=rank)
 
-    for epoch in range(epochs):
-        # Only receive when not in the first run around the ring,
-        # otherwise process will sit and wait for rank "-1" to finish
-        if not first or rank != 0:
-            printf(f'rank {rank} is blocking waiting for prev_rank {prev_rank}')
-            for param in model.parameters():
-                dist.recv(tensor=param, src=prev_rank)
-            printf(f'rank {rank} is unblocked')
-        printf(f'starting {rank}, epoch {epoch}')
+    def send(self):
+        if self.federation_scheme == 'shuffle':
+            next_rank = self.rank
+            while next_rank == self.rank:
+                next_rank = randint(0, self.size - 1)
+        elif self.federation_scheme == 'ring':
+            next_rank = (self.rank + 1) % self.size
 
-        first = False
+        dist.send(tensor=self.step, dst=next_rank)
+        for param in self.model.parameters():
+            dist.send(tensor=param, dst=next_rank)
+
+
+def train(
+        model, optimizer, private_step_limit,
+        train_loader, test_loader,
+        coordinator, accountant,
+        rank, public):
+
+    epoch = 0
+    while True:
         for batch in train_loader:
+
+            if not public or epoch != 0:
+                # synchronize weights with the previous worker
+                coordinator.recv()
+
+            if coordinator.step == private_step_limit:
+                return epoch
+
             loss = model.loss(batch)
             loss.backward()
 
-            # before
+            # privatize the gradient and record usage
             accountant.privatize_grad()
 
             optimizer.step()
             optimizer.zero_grad()
+
+            # send weights to the next worker
+            if not public or epoch != 0:
+                coordinator.send()
+
+            accuracy, loss = evaluate(model, test_loader)
+            printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
+
+        # privacy book-keeping
+        epoch += 1
         accountant.increment_epoch()
 
-        accuracy, loss = evaluate(model, test_loader)
-        printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
 
-        # Ensure that send() does not happen on the last epoch of the last node,
-        # since this would send back to the first node (which is done) and hang
-        if rank == size - 1 and epoch == epochs - 1:
-            # Only save if filename is given
-            if model_filepath:
-                torch.save({'epoch': epoch,
-                            'model_state_dict': model.state_dict(),
-                            'optimizer_state_dict': optimizer.state_dict(),
-                            'loss': loss
-                            }, model_filepath)
-        else:
-            for param in model.parameters():
-                # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
-                dist.send(tensor=param, dst=next_rank)
-
-    if queue:
-        queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))
-
-
-def run_lstm_ring(rank, size, epochs, queue=None, model_filepath=None):
+def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None):
     """
-    Perform federated learning in a ring structure
+    Perform federated learning over pums data
+
     :param rank: index for specific data set
     :param size: total ring size
-    :param epochs: number of training epochs
+    :param federation_scheme:
+    :param private_step_limit:
     :param queue: stores values and privacy accountant usage
     :param model_filepath: indicating where to save the model checkpoint
     :return:
     """
 
-    # Every node gets same data for now
-    EMBEDDING_SIZE = 6
-    HIDDEN_SIZE = 6
+    public = datasets[rank]['public']
 
-    training_data = [
-        ("The dog ate the apple".split(), ["DET", "NN", "V", "DET", "NN"]),
-        ("Everybody read that book".split(), ["NN", "V", "DET", "NN"])
-    ]
+    # load train data specific to the current rank
+    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
+    test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
 
-    idx_to_tag = ['DET', 'NN', 'V']
-    tag_to_idx = {'DET': 0, 'NN': 1, 'V': 2}
+    model = PumsModule(len(problem['predictors']), 2)
 
-    word_to_idx = {}
-    for sent, tags in training_data:
-        for word in sent:
-            if word not in word_to_idx:
-                word_to_idx[word] = len(word_to_idx)
+    accountant = PrivacyAccountant(model, step_epsilon=0.001, disable=public)
+    coordinator = ModelCoordinator(model, rank, size, private_step_limit, federation_scheme)
 
-    def prepare_sequence(seq, to_idx):
-        """Convert sentence/sequence to torch Tensors"""
-        idxs = [to_idx[w] for w in seq]
-        return torch.LongTensor(idxs)
+    optimizer = torch.optim.SGD(model.parameters(), .1)
 
-    seq = training_data[0][0]
-    inputs = prepare_sequence(seq, word_to_idx)
+    epoch = train(
+        model, optimizer,
+        private_step_limit,
+        train_loader, test_loader,
+        coordinator, accountant,
+        rank, public)
 
-    model = LstmModule(EMBEDDING_SIZE, HIDDEN_SIZE, len(word_to_idx), len(tag_to_idx))
-    criterion = nn.CrossEntropyLoss()
-
-    # Get the next and previous indices
-    next_rank, prev_rank = ((rank + offset) % size for offset in (1, -1))
-
-    first = True
-
-    with PrivacyAccountant(model, step_epsilon=0.01) as accountant:
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
-
-        for epoch in range(epochs):
-            # Only receive when not in the first run around the ring,
-            # otherwise process will sit and wait for rank "-1" to finish
-            if not first or rank != 0:
-                printf(f'rank {rank} is blocking waiting for prev_rank {prev_rank}')
-                for param in model.parameters():
-                    dist.recv(tensor=param, src=prev_rank)
-                printf(f'rank {rank} is unblocked')
-            printf(f'starting {rank}, epoch {epoch}')
-
-            first = False
-            for sentence, tags in training_data:
-                sentence = prepare_sequence(sentence, word_to_idx)
-                target = prepare_sequence(tags, tag_to_idx)
-
-                output = model(sentence)
-                loss = criterion(output, target)
-                loss.backward()
-
-                # before
-                accountant.privatize_grad()
-
-                optimizer.step()
-                optimizer.zero_grad()
-            accountant.increment_epoch()
-
-            inputs = prepare_sequence(training_data[0][0], word_to_idx)
-            tag_scores = model(inputs)
-            tag_scores = tag_scores.detach().numpy()
-            tag = [idx_to_tag[idx] for idx in np.argmax(tag_scores, axis = 1)]
-            printf(f"{rank: 4d} | {epoch: 5d} | {tag}     | {training_data[0][1]}", force=True)
-
-            # Ensure that send() does not happen on the last epoch of the last node,
-            # since this would send back to the first node (which is done) and hang
-            if rank == size - 1 and epoch == epochs - 1:
-                # Only save if filename is given
-                if model_filepath:
-                    torch.save({'epoch': epoch,
-                                'model_state_dict': model.state_dict(),
-                                'optimizer_state_dict': optimizer.state_dict(),
-                                'loss': loss
-                                }, model_filepath)
-            else:
-                for param in model.parameters():
-                    # https://pytorch.org/docs/stable/distributed.html#torch.distributed.send
-                    dist.send(tensor=param, dst=next_rank)
+    # Only save if filename is given
+    if rank == size - 1 and model_filepath:
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': evaluate(model, test_loader)
+        }, model_filepath)
 
     if queue:
         queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))
-
 
 
 def init_process(rank, size, fn, args, backend='gloo'):
@@ -303,13 +240,13 @@ def init_process(rank, size, fn, args, backend='gloo'):
     fn(rank, size, **args)
 
 
-def run():
+def main(worker):
     """
     Example method demonstrating ring structure running on
-    multiple processes. ___main__ entrypoint.
+    multiple processes. __main__ entrypoint.
     :return:
     """
-    size = 3
+    size = len(datasets)
     processes = []
     queue = Queue()
 
@@ -318,49 +255,12 @@ def run():
     if not os.path.exists(model_path):
         os.mkdir(model_path)
 
-    print("Rank | Epoch | Accuracy | Loss")
     for rank in range(size):
-        p = Process(target=init_process, args=(rank, size, run_ring, {
+        p = Process(target=init_process, args=(rank, size, worker, {
             'queue': queue,
-            'epochs': 3,
-            'model_filepath': os.path.join(model_path, 'model.pt')
-
-        }))
-        p.start()
-        processes.append(p)
-
-    for p in processes:
-        p.join()
-
-    usage = {}
-    while not queue.empty():
-        rank, (epsilon, delta) = queue.get()
-        usage[str(rank)] = {'epsilon': epsilon, 'delta': delta}
-    print(json.dumps(usage, indent=4))
-
-
-def run_lstm():
-    """
-    Example method demonstrating ring structure running on
-    multiple processes. ___main__ entrypoint.
-    :return:
-    """
-    size = 3
-    processes = []
-    queue = Queue()
-
-    # Model checkpoints will be saved here
-    model_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'model_checkpoints')
-    if not os.path.exists(model_path):
-        os.mkdir(model_path)
-
-    print("Rank | Epoch | Predicted | Actual")
-    for rank in range(size):
-        p = Process(target=init_process, args=(rank, size, run_lstm_ring, {
-            'queue': queue,
-            'epochs': 3,
-            'model_filepath': os.path.join(model_path, 'model.pt')
-
+            'private_step_limit': 100,
+            'model_filepath': os.path.join(model_path, 'model.pt'),
+            'federation_scheme': 'shuffle'
         }))
         p.start()
         processes.append(p)
@@ -376,4 +276,5 @@ def run_lstm():
 
 
 if __name__ == "__main__":
-    run_lstm()
+    print("Rank | Epoch | Accuracy | Loss")
+    main(worker=run_pums_worker)

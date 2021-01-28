@@ -18,7 +18,7 @@ _supported_modules = (nn.Linear, nn.Conv2d, nn.LSTM)  # Supported layer class ty
 
 
 class PrivacyAccountant(object):
-    def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True):
+    def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True, disable=False):
         """
         Context manager for tracking privacy usage
         :param model: pyTorch model
@@ -32,8 +32,9 @@ class PrivacyAccountant(object):
         self.step_delta = step_delta
         self._epochs = []
         self.steps = 0
+        self._disable = disable
 
-        if hook:
+        if not disable and hook:
             self.hook()
 
     def hook(self):
@@ -157,7 +158,6 @@ class PrivacyAccountant(object):
 
         return grad
 
-
     def privatize_grad(self, *, modules=None, clipping_norm=1., loss_type: str = 'mean') -> None:
         """
         Compute per-example gradients for each parameter, privatize them, and save them under 'param.grad'.
@@ -169,6 +169,9 @@ class PrivacyAccountant(object):
         :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
         """
         assert loss_type in ('sum', 'mean')
+
+        if self._disable:
+            return
 
         self.steps += 1
 
@@ -245,27 +248,24 @@ class PrivacyAccountant(object):
         :param suggested_delta: delta to
         :return:
         """
+        self.increment_epoch()
+
         epsilon = 0
         delta = 0
 
         for batch_len in self._epochs:
             if suggested_delta is None:
-                delta = 2 * math.exp(-batch_len / 16 * math.exp(-self.step_epsilon)) + 1E-8
+                batch_delta = 2 * math.exp(-batch_len / 16 * math.exp(-self.step_epsilon)) + 1E-8
             else:
-                suggested_delta / len(self._epochs)
+                batch_delta = suggested_delta / len(self._epochs)
 
             batch_epsilon, batch_delta = core_library.shuffle_amplification(
                 step_epsilon=self.step_epsilon,
                 step_delta=self.step_delta,
-                delta=delta,
+                delta=batch_delta,
                 steps=batch_len)
 
             epsilon += batch_epsilon
             delta += batch_delta
 
         return epsilon, delta
-
-#
-# _supported_modules_2 = {
-#     nn.Linear:
-# }
