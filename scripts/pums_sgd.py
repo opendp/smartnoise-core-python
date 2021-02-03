@@ -1,9 +1,12 @@
 import json
 import os
 import sys
-from multiprocessing import Queue
+import time
+import traceback
+from multiprocessing import Queue, Event
 from random import randint
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import torch
 import torch.distributed as dist
@@ -56,7 +59,11 @@ def load_pums(dataset):
     download_pums_data(**dataset)
     data_path = get_pums_data_path(**dataset)
 
-    data = pd.read_csv(data_path, usecols=problem['predictors'] + [problem['target']], engine='python')
+    data = pd.read_csv(
+        data_path,
+        nrows=50 if dataset['public'] else None,
+        usecols=problem['predictors'] + [problem['target']],
+        engine='python')
     data.dropna(inplace=True)
     if ACTIVE_PROBLEM == 'marital':
         data['MAR'] = (data['MAR'] == 1) + 1
@@ -105,7 +112,7 @@ def evaluate(model, loader):
 
 
 class ModelCoordinator(object):
-    def __init__(self, model, rank, size, step_limit, federation_scheme='shuffle'):
+    def __init__(self, model, rank, size, step_limit, federation_scheme='shuffle', end_event=None):
 
         assert federation_scheme in ('shuffle', 'ring')
 
@@ -117,6 +124,7 @@ class ModelCoordinator(object):
 
         self.step = torch.tensor(0)
         self.step_limit = step_limit
+        self.end_event = end_event
 
     def recv(self):
         # Only block on receive when not in the initial step
@@ -146,6 +154,9 @@ class ModelCoordinator(object):
                     continue
                 dist.send(tensor=self.step, dst=rank)
 
+            if self.end_event is not None:
+                self.end_event.set()
+
     def send(self):
         if self.federation_scheme == 'shuffle':
             next_rank = self.rank
@@ -165,6 +176,7 @@ def train(
         coordinator, accountant,
         rank, public):
 
+    history = []
     epoch = 0
     while True:
         for batch in train_loader:
@@ -174,7 +186,7 @@ def train(
                 coordinator.recv()
 
             if coordinator.step == private_step_limit:
-                return epoch
+                return history
 
             loss = model.loss(batch)
             loss.backward()
@@ -190,14 +202,20 @@ def train(
                 coordinator.send()
 
             accuracy, loss = evaluate(model, test_loader)
+            history.append({
+                'rank': rank, 'step': coordinator.step.item(), 'loss': loss.item(), 'accuracy': accuracy.item()
+            })
             printf(f"{rank: 4d} | {epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}", force=True)
 
         # privacy book-keeping
         epoch += 1
+        if not public:
+            accountant.steps = len(train_loader)
         accountant.increment_epoch()
+    return history
 
 
-def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None):
+def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None, end_event=None):
     """
     Perform federated learning over pums data
 
@@ -213,17 +231,17 @@ def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuf
     public = datasets[rank]['public']
 
     # load train data specific to the current rank
-    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
+    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1, shuffle=True)
     test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
 
     model = PumsModule(len(problem['predictors']), 2)
 
-    accountant = PrivacyAccountant(model, step_epsilon=0.001, disable=public)
-    coordinator = ModelCoordinator(model, rank, size, private_step_limit, federation_scheme)
+    accountant = PrivacyAccountant(model, step_epsilon=.1, disable=public)
+    coordinator = ModelCoordinator(model, rank, size, private_step_limit, federation_scheme, end_event=end_event)
 
-    optimizer = torch.optim.SGD(model.parameters(), .1)
+    optimizer = torch.optim.SGD(model.parameters(), .00005)
 
-    epoch = train(
+    history = train(
         model, optimizer,
         private_step_limit,
         train_loader, test_loader,
@@ -233,27 +251,32 @@ def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuf
     # Only save if filename is given
     if rank == size - 1 and model_filepath:
         torch.save({
-            'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'loss': evaluate(model, test_loader)
         }, model_filepath)
 
     if queue:
-        queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))
+        queue.put((tuple(datasets[rank].values()), accountant.compute_usage(), history))
 
 
-def init_process(rank, size, fn, args, backend='gloo'):
+def init_process(rank, size, fn, kwargs, backend='gloo'):
     """
     Initialize the distributed environment.
     """
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '29500'
     dist.init_process_group(backend, rank=rank, world_size=size)
-    fn(rank, size, **args)
+
+    try:
+        fn(rank, size, **kwargs)
+    except Exception:
+        if not kwargs['end_event'].is_set():
+            traceback.print_exc()
+        kwargs['end_event'].set()
 
 
-def main(worker):
+def main(worker, **kwargs):
     """
     Example method demonstrating ring structure running on
     multiple processes. __main__ entrypoint.
@@ -263,31 +286,52 @@ def main(worker):
     processes = []
     queue = Queue()
 
+    end_event = Event()
+
+    for rank in range(size):
+        p = Process(target=init_process, args=(rank, size, worker, {
+            'queue': queue, 'end_event': end_event,
+            **kwargs
+        }))
+        p.start()
+        processes.append(p)
+
+    end_event.wait()
+    # wait for history to be queued
+    time.sleep(1)
+
+    for p in processes:
+        p.terminate()
+
+    history = []
+    usage = {}
+    while not queue.empty():
+        rank, (epsilon, delta), batch_history = queue.get()
+        usage[str(rank)] = {'epsilon': epsilon, 'delta': delta}
+        history.extend(batch_history)
+
+    print(json.dumps(usage, indent=4))
+
+    if history:
+        import pandas
+        history = pandas.DataFrame.from_records(list(sorted(history, key=lambda x: x['step'])))
+        plt.plot(list(range(len(history))), history['loss'], color='b', alpha=0.5)
+        plt.scatter(x=list(range(len(history))), y=history['loss'], c=history['rank'])
+        plt.title("Log-Loss of Federated DPSGD")
+        plt.xlabel("Step")
+        plt.ylabel("Log-Loss")
+        plt.legend(loc='upper right')
+        plt.show()
+
+
+if __name__ == "__main__":
     # Model checkpoints will be saved here
     model_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'model_checkpoints')
     if not os.path.exists(model_path):
         os.mkdir(model_path)
 
-    for rank in range(size):
-        p = Process(target=init_process, args=(rank, size, worker, {
-            'queue': queue,
-            'private_step_limit': 100,
-            'model_filepath': os.path.join(model_path, 'model.pt'),
-            'federation_scheme': 'shuffle'
-        }))
-        p.start()
-        processes.append(p)
-
-    for p in processes:
-        p.join()
-
-    usage = {}
-    while not queue.empty():
-        rank, (epsilon, delta) = queue.get()
-        usage[str(rank)] = {'epsilon': epsilon, 'delta': delta}
-    print(json.dumps(usage, indent=4))
-
-
-if __name__ == "__main__":
     print("Rank | Epoch | Accuracy | Loss")
-    main(worker=run_pums_worker)
+    main(worker=run_pums_worker,
+         private_step_limit=40,
+         model_filepath=os.path.join(model_path, 'model.pt'),
+         federation_scheme='shuffle')

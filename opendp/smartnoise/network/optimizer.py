@@ -12,9 +12,17 @@ from typing import List
 import torch
 import torch.nn as nn
 from opendp.smartnoise.core.api import LibraryWrapper
+from opendp.smartnoise.network.lstm import DPLSTM
+# from opendp.smartnoise.network.attention import DPMultiheadAttention
+
 core_library = LibraryWrapper()
 
-_supported_modules = (nn.Linear, nn.Conv2d, nn.LSTM)  # Supported layer class types
+_blacklisted_modules = (nn.LSTM,)
+_supported_modules = (nn.Linear, nn.Conv2d)  # Supported layer class types
+_dp_modules = (
+    DPLSTM,
+    # DPMultiheadAttention
+)
 
 
 class PrivacyAccountant(object):
@@ -123,7 +131,7 @@ class PrivacyAccountant(object):
             else:
                 raise NotImplementedError(f"Norm calculation is not implemented for {module}")
 
-        return torch.sqrt(torch.stack(instance_sum_squares, dim=1).sum(dim=0))
+        return torch.sqrt(torch.cat(instance_sum_squares, dim=0).sum(dim=0))
 
     def _calculate_and_privatize(self, grad_instance, loss_type, actual_norm, clipping_norm):
         """
@@ -198,14 +206,6 @@ class PrivacyAccountant(object):
                 if module.bias is not None:
                     setattr(module.bias, 'grad', self._calculate_and_privatize(
                         module.backprops, loss_type, actual_norm, clipping_norm))
-
-            if isinstance(module, nn.LSTM):
-                # print("Privatizing LSTM layer")
-                # if not lstm_privatized:
-                #     for hidden_layer, output_layer in zip(self.model.lstm_hidden, self.model.lstm_output):
-                # self._calculate_and_privatize(hidden_layer, output_layer, reducer, sigma, module)
-                # lstm_privatized = True
-                pass
 
             if isinstance(module, nn.Conv2d):
                 # A = torch.nn.functional.unfold(A, module.kernel_size)

@@ -1,25 +1,32 @@
 from scripts.pums_downloader import datasets
 from scripts.pums_sgd import main, ModelCoordinator, printf
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
+from opendp.smartnoise.network.lstm import DPLSTM
 
 import torch.nn as nn
 import torch
 
 import numpy as np
+import os
 
 
 class LstmModule(nn.Module):
 
-    def __init__(self, embedding_size, internal_size, vocab_size, tagset_size):
+    def __init__(self, vocab_size, embedding_size, hidden_size, tagset_size):
         super().__init__()
-        self.embedding_size = embedding_size
-        self.hidden_size = internal_size
+        # size of input vocabulary
         self.vocab_size = vocab_size
+        # size of initial linear layer outputs
+        self.embedding_size = embedding_size
+        # size of lstm outputs
+        self.hidden_size = hidden_size
+        # size of target
         self.tagset_size = tagset_size
 
         self.embedding = nn.Embedding(vocab_size, embedding_size)
-        self.lstm = nn.LSTM(embedding_size, internal_size)
-        self.hidden2tag = nn.Linear(internal_size, tagset_size)
+        self.lstm = DPLSTM(embedding_size, hidden_size)
+        self.hidden2tag = nn.Linear(hidden_size, tagset_size)
+
         self.lstm_out = []
         self.lstm_hidden = []
 
@@ -42,7 +49,7 @@ class LstmModule(nn.Module):
 
 
 
-def run_lstm_worker(rank, size, epoch_limit=None, step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None):
+def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None, end_event=None):
     """
     Perform federated learning in a ring structure
     :param rank: index for specific data set
@@ -78,11 +85,11 @@ def run_lstm_worker(rank, size, epoch_limit=None, step_limit=None, federation_sc
     seq = training_data[0][0]
     inputs = prepare_sequence(seq, word_to_idx)
 
-    model = LstmModule(EMBEDDING_SIZE, HIDDEN_SIZE, len(word_to_idx), len(tag_to_idx))
+    model = LstmModule(len(word_to_idx), EMBEDDING_SIZE, HIDDEN_SIZE, len(tag_to_idx))
     criterion = nn.CrossEntropyLoss()
 
     accountant = PrivacyAccountant(model, step_epsilon=0.01)
-    coordinator = ModelCoordinator(model, rank, size, federation_scheme)
+    coordinator = ModelCoordinator(model, rank, size, federation_scheme, end_event=end_event)
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
 
@@ -97,7 +104,6 @@ def run_lstm_worker(rank, size, epoch_limit=None, step_limit=None, federation_sc
             loss = criterion(output, target)
             loss.backward()
 
-            # before
             accountant.privatize_grad()
 
             optimizer.step()
@@ -129,5 +135,12 @@ def run_lstm_worker(rank, size, epoch_limit=None, step_limit=None, federation_sc
 
 
 if __name__ == "__main__":
+    model_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'model_checkpoints')
+    if not os.path.exists(model_path):
+        os.mkdir(model_path)
+
     print("Rank | Epoch | Predicted | Actual")
-    main(worker=run_lstm_worker)
+    main(worker=run_lstm_worker,
+         epoch_limit=1000,
+         model_filepath=os.path.join(model_path, 'model.pt'),
+         federation_scheme='shuffle')
