@@ -37,15 +37,14 @@ class DPGradientSelector(object):
         """
         utilities = [x[1].item() for x in self.utility_function()]
         candidates = [x.mean().item() for x in self.tensor_list]
+
         with sn.Analysis() as analysis:
-            median_scores = sn.median(
-                utilities,
-                candidates=candidates,
-                data_rows=len(utilities),
-                data_lower=-100.,
-                data_upper=10.)
-            selected_gradient = sn.exponential_mechanism(median_scores,
-                                                         candidates=candidates,
-                                                         privacy_usage={"epsilon": 1.})
-        analysis.release()
-        return selected_gradient
+            temp = sn.impute(sn.resize(sn.to_float(sn.Dataset(value=utilities)),
+                             number_columns=1,
+                             number_rows=len(utilities),
+                             lower=-5000.,
+                             upper=5000.),
+                             lower=-5000.,
+                             upper=5000.)
+            selected = sn.dp_median(temp, candidates=candidates, privacy_usage={"epsilon": 1.}).value
+            return self.tensor_list[list.index(candidates, selected)]

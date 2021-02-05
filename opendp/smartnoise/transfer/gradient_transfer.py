@@ -111,7 +111,7 @@ if __name__ == '__main__':
     print("Sorted: ")
     print(gradient_selector.utility_function())
 
-    print("Selected gradient: ")
+    print("DP Median Selected Gradient: ")
     selected = gradient_selector.select_gradient_tensor()
     print(selected)
 
