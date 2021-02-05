@@ -12,17 +12,9 @@ from typing import List
 import torch
 import torch.nn as nn
 from opendp.smartnoise.core.api import LibraryWrapper
-from opendp.smartnoise.network.lstm import DPLSTM
-# from opendp.smartnoise.network.attention import DPMultiheadAttention
+from opendp.smartnoise.network.attention import CatBias
 
 core_library = LibraryWrapper()
-
-_blacklisted_modules = (nn.LSTM,)
-_supported_modules = (nn.Linear, nn.Conv2d)  # Supported layer class types
-_dp_modules = (
-    DPLSTM,
-    # DPMultiheadAttention
-)
 
 
 class PrivacyAccountant(object):
@@ -72,12 +64,13 @@ class PrivacyAccountant(object):
             """Save backprops into module.backprops in backward pass"""
             if not self._hooks_enabled:
                 return
+            print(module, output[0].shape)
             setattr(module, 'backprops', output[0].detach())
 
-        self.model.autograd_hacks_hooks = []
+        self.model.autograd_hooks = []
         for module in self.model.modules():
-            if isinstance(module, _supported_modules):
-                self.model.autograd_hacks_hooks.extend([
+            if next(module.parameters(recurse=False), None) is not None:
+                self.model.autograd_hooks.extend([
                     module.register_forward_hook(capture_activations),
                     module.register_backward_hook(capture_backprops)
                 ])
@@ -94,12 +87,12 @@ class PrivacyAccountant(object):
         # Based on testing, the hooks are actually removed
         # Since hooks are removed, there is not an accumulation of hooks if the context manager is used within a loop
 
-        if not hasattr(self.model, 'autograd_hacks_hooks'):
+        if not hasattr(self.model, 'autograd_hooks'):
             print("Warning, asked to remove hooks, but no hooks found")
         else:
-            for handle in self.model.autograd_hacks_hooks:
+            for handle in self.model.autograd_hooks:
                 handle.remove()
-            del self.model.autograd_hacks_hooks
+            del self.model.autograd_hooks
 
         # The _hooks_enabled flag is a secondary fallback if hooks aren't removed
         self._hooks_enabled = False
@@ -113,7 +106,7 @@ class PrivacyAccountant(object):
     def _calculate_norm(self, modules):
         instance_sum_squares = []
         for module in modules:
-            if not isinstance(module, _supported_modules):
+            if next(module.parameters(recurse=False), None) is None:
                 continue
 
             assert hasattr(module, 'activations'), "No activations detected, run forward after .hook()"
@@ -126,10 +119,31 @@ class PrivacyAccountant(object):
                 instance_sum_squares.append(torch.einsum('ni,ni,nj,nj->n', A, A, B, B))
 
                 if module.bias is not None:
-                    instance_sum_squares.append((B * B).sum(dim=1))
+                    instance_sum_squares.append((B ** 2).sum(dim=1))
+
+            elif isinstance(module, CatBias):
+                instance_sum_squares.append((module.backprops[:, -1, None] ** 2).sum(dim=1))
+
+            elif isinstance(module, nn.Conv2d):
+                batch_size = module.activations.shape[0]
+                A = nn.functional.unfold(A, module.kernel_size)
+                B = module.backprops.reshape(batch_size, -1, module.activations.shape[-1])
+                grad_instance = torch.einsum('ijk,ilk->ijl', B, A)\
+                    .reshape([batch_size] + list(module.weight.shape))
+
+                setattr(module.weight, 'grad_instance', grad_instance)
+                instance_sum_squares.append((grad_instance ** 2).reshape(batch_size, -1).sum(dim=1))
+
+                if module.bias is not None:
+                    instance_sum_squares.append((module.backprops ** 2).reshape(batch_size, -1).sum(dim=1))
+
+            elif isinstance(module, nn.Embedding):
+                instance_sum_squares.append(torch.index_select(module.weight, 0, A).sum(dim=1))
 
             else:
                 raise NotImplementedError(f"Norm calculation is not implemented for {module}")
+
+        print([list(i.shape) for i in instance_sum_squares])
 
         return torch.sqrt(torch.cat(instance_sum_squares, dim=0).sum(dim=0))
 
@@ -190,7 +204,7 @@ class PrivacyAccountant(object):
 
         # reconstruct instance-level gradients and reduce privately
         for module in modules:
-            if not isinstance(module, _supported_modules):
+            if next(module.parameters(recurse=False), None) is None:
                 continue
 
             n = module.activations.shape[0]
@@ -207,15 +221,25 @@ class PrivacyAccountant(object):
                     setattr(module.bias, 'grad', self._calculate_and_privatize(
                         module.backprops, loss_type, actual_norm, clipping_norm))
 
+            if isinstance(module, CatBias):
+                # grab the last column of the backprop for the layer, which corresponds to the cat'ed column
+                grad_instance = module.backprops[:, -1]
+                setattr(module.bias, 'grad', self._calculate_and_privatize(
+                    grad_instance, loss_type, actual_norm, clipping_norm))
+
             if isinstance(module, nn.Conv2d):
-                # A = torch.nn.functional.unfold(A, module.kernel_size)
-                # B = B.reshape(n, -1, A.shape[-1])
-                # grad1 = torch.einsum('ijk,ilk->ijl', B, A)
-                # shape = [n] + list(module.weight.shape)
-                # setattr(module.weight, 'grad1', grad1.reshape(shape))
-                # if module.bias is not None:
-                #     setattr(module.bias, 'grad1', torch.sum(B, dim=2))
-                pass
+                setattr(module.weight, 'grad', self._calculate_and_privatize(
+                    module.weight.grad_instance, loss_type, actual_norm, clipping_norm))
+                if module.bias is not None:
+                    B = module.backprops.reshape(n, -1, module.activations.shape[-1])
+                    setattr(module.weight, 'grad', self._calculate_and_privatize(
+                        torch.sum(B, dim=2), loss_type, actual_norm, clipping_norm))
+
+            if isinstance(module, nn.Embedding):
+                grad_instance_nonzero = torch.index_select(module.weight, 0, module.activations)
+                grad = self._calculate_and_privatize(
+                    grad_instance_nonzero, loss_type, actual_norm, clipping_norm)
+                module.weight.grad.index_copy_(grad, module.activations)
 
             del module.backprops
             del module.activations
@@ -269,3 +293,12 @@ class PrivacyAccountant(object):
             delta += batch_delta
 
         return epsilon, delta
+
+
+    def _get_parameters(self, module):
+        memo = {None}
+        for param in module._parameters.values():
+            if param in memo:
+                continue
+            memo.add(param)
+            yield param
