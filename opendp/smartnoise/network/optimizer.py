@@ -13,6 +13,7 @@ import torch
 import torch.nn as nn
 from opendp.smartnoise.core.api import LibraryWrapper
 from opendp.smartnoise.network.attention import CatBias
+from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
 
 core_library = LibraryWrapper()
 
@@ -64,7 +65,6 @@ class PrivacyAccountant(object):
             """Save backprops into module.backprops in backward pass"""
             if not self._hooks_enabled:
                 return
-            print(module, output[0].shape)
             setattr(module, 'backprops', output[0].detach())
 
         self.model.autograd_hooks = []
@@ -114,12 +114,20 @@ class PrivacyAccountant(object):
 
             A = module.activations
             B = module.backprops
+            n = A.shape[0]
 
-            if isinstance(module, nn.Linear):
-                instance_sum_squares.append(torch.einsum('ni,ni,nj,nj->n', A, A, B, B))
+            if isinstance(module, nn.Embedding):
+                instance_sum_squares.append((module.backprops ** 2).view(n, -1).sum(dim=1))
+
+            elif isinstance(module, nn.Linear):
+                # sum((AB)^2) == sum(A^2 * B^2),
+                #   where * is the dot product along final axis,
+                #   and sum preserves the first axis
+                squares = torch.einsum('n...i,n...i,n...j,n...j->n...', A, A, B, B)
+                instance_sum_squares.append(squares.view(n, -1).sum(dim=1))
 
                 if module.bias is not None:
-                    instance_sum_squares.append((B ** 2).sum(dim=1))
+                    instance_sum_squares.append((B ** 2).view(n, -1).sum(dim=1))
 
             elif isinstance(module, CatBias):
                 instance_sum_squares.append((module.backprops[:, -1, None] ** 2).sum(dim=1))
@@ -137,15 +145,13 @@ class PrivacyAccountant(object):
                 if module.bias is not None:
                     instance_sum_squares.append((module.backprops ** 2).reshape(batch_size, -1).sum(dim=1))
 
-            elif isinstance(module, nn.Embedding):
-                instance_sum_squares.append(torch.index_select(module.weight, 0, A).sum(dim=1))
+            elif isinstance(module, BahdanauAttentionScale):
+                NotImplementedError("Bahdanau!")
 
             else:
                 raise NotImplementedError(f"Norm calculation is not implemented for {module}")
 
-        print([list(i.shape) for i in instance_sum_squares])
-
-        return torch.sqrt(torch.cat(instance_sum_squares, dim=0).sum(dim=0))
+        return torch.sqrt(torch.stack(instance_sum_squares, dim=1).sum(dim=1))
 
     def _calculate_and_privatize(self, grad_instance, loss_type, actual_norm, clipping_norm):
         """
@@ -157,9 +163,9 @@ class PrivacyAccountant(object):
         :return:
         """
         # clip
-        grad_instance /= torch.max(torch.ones_like(actual_norm), actual_norm / clipping_norm)[:, None, :]
+        grad_instance /= torch.max(torch.ones_like(actual_norm), actual_norm / clipping_norm).expand_as(grad_instance)
         # reduce
-        grad = {'sum': nn.sum, 'mean': nn.mean}[loss_type](grad_instance, dim=0)
+        grad = {'sum': torch.sum, 'mean': torch.mean}[loss_type](grad_instance, dim=0)
         # noise
         sensitivity = clipping_norm / {'sum': 1., 'mean': grad_instance.shape[0]}[loss_type]
         if self.step_delta == 0.:
@@ -197,7 +203,7 @@ class PrivacyAccountant(object):
 
         self.steps += 1
 
-        modules = modules or self.model.modules()
+        modules = list(modules or self.model.modules())
 
         # compute L2 norm for flat clipping
         actual_norm = self._calculate_norm(modules)
@@ -212,22 +218,32 @@ class PrivacyAccountant(object):
             if loss_type == 'mean':
                 module.backprops *= n
 
-            if isinstance(module, nn.Linear):
-                # reconstruct
-                grad_instance = torch.einsum('ni,nj->nij', module.backprops, module.activations)
-                setattr(module.weight, 'grad', self._calculate_and_privatize(
-                    grad_instance, loss_type, actual_norm, clipping_norm))
-                if module.bias is not None:
-                    setattr(module.bias, 'grad', self._calculate_and_privatize(
-                        module.backprops, loss_type, actual_norm, clipping_norm))
+            if isinstance(module, nn.Embedding):
+                assert module.activations.shape[0] == 1, "DP embedding currently only works with stochastic GD"
+                # reduction is along dense axis
+                print(module.backprops.shape)
+                grad = self._calculate_and_privatize(
+                    module.backprops, loss_type, actual_norm, clipping_norm)
+                # the gradient will be specific to each embedding
+                module.weight.grad.index_copy_(0, module.activations[0], grad)
 
-            if isinstance(module, CatBias):
+            elif isinstance(module, nn.Linear):
+                # reconstruct
+                grad_instance = torch.einsum('n...i,n...j->n...ij', module.backprops, module.activations)
+
+                module.weight.grad = self._calculate_and_privatize(
+                    torch.einsum('n...ij->nij', grad_instance), loss_type, actual_norm, clipping_norm)
+                if module.bias is not None:
+                    module.bias.grad = self._calculate_and_privatize(
+                        torch.einsum('n...i->ni', module.backprops), loss_type, actual_norm, clipping_norm)
+
+            elif isinstance(module, CatBias):
                 # grab the last column of the backprop for the layer, which corresponds to the cat'ed column
                 grad_instance = module.backprops[:, -1]
                 setattr(module.bias, 'grad', self._calculate_and_privatize(
                     grad_instance, loss_type, actual_norm, clipping_norm))
 
-            if isinstance(module, nn.Conv2d):
+            elif isinstance(module, nn.Conv2d):
                 setattr(module.weight, 'grad', self._calculate_and_privatize(
                     module.weight.grad_instance, loss_type, actual_norm, clipping_norm))
                 if module.bias is not None:
@@ -235,12 +251,11 @@ class PrivacyAccountant(object):
                     setattr(module.weight, 'grad', self._calculate_and_privatize(
                         torch.sum(B, dim=2), loss_type, actual_norm, clipping_norm))
 
-            if isinstance(module, nn.Embedding):
-                grad_instance_nonzero = torch.index_select(module.weight, 0, module.activations)
-                grad = self._calculate_and_privatize(
-                    grad_instance_nonzero, loss_type, actual_norm, clipping_norm)
-                module.weight.grad.index_copy_(grad, module.activations)
+            elif isinstance(module, BahdanauAttentionScale):
+                raise NotImplementedError()
 
+            else:
+                raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
             del module.backprops
             del module.activations
 

@@ -264,6 +264,8 @@ def init_process(rank, size, fn, kwargs, backend='gloo'):
     """
     Initialize the distributed environment.
     """
+    # use this command to kill processes:
+    # lsof -t -i tcp:29500 | xargs kill
     os.environ['MASTER_ADDR'] = '127.0.0.1'
     os.environ['MASTER_PORT'] = '29500'
     dist.init_process_group(backend, rank=rank, world_size=size)

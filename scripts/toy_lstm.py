@@ -1,51 +1,68 @@
-from scripts.pums_downloader import datasets
-from scripts.pums_sgd import main, ModelCoordinator, printf
-from opendp.smartnoise.network.optimizer import PrivacyAccountant
-from opendp.smartnoise.network.lstm import DPLSTM
-
-import torch.nn as nn
-import torch
+import os
 
 import numpy as np
-import os
+import torch
+import torch.nn as nn
+
+from opendp.smartnoise.network.lstm import DPLSTM
+from opendp.smartnoise.network.optimizer import PrivacyAccountant
+from scripts.pums_downloader import datasets
+from scripts.pums_sgd import main, ModelCoordinator, printf
 
 
 class LstmModule(nn.Module):
 
-    def __init__(self, vocab_size, embedding_size, hidden_size, tagset_size):
+    def __init__(self, vocab_size, embedding_size, hidden_size, tagset_size, num_layers=1):
         super().__init__()
         # size of input vocabulary
         self.vocab_size = vocab_size
         # size of initial linear layer outputs
         self.embedding_size = embedding_size
+        # number of layers internal to the lstm
+        self.num_layers = num_layers
         # size of lstm outputs
         self.hidden_size = hidden_size
         # size of target
         self.tagset_size = tagset_size
 
         self.embedding = nn.Embedding(vocab_size, embedding_size)
-        self.lstm = DPLSTM(embedding_size, hidden_size)
+        self.lstm = DPLSTM(embedding_size, hidden_size, num_layers=num_layers)
         self.hidden2tag = nn.Linear(hidden_size, tagset_size)
 
-        self.lstm_out = []
-        self.lstm_hidden = []
+        self.loss_function = torch.nn.CrossEntropyLoss(reduction='sum')
 
     def forward(self, x):
+        """
+
+        :param x: data of structure [batch_size, sequence_length]
+        :return:
+        """
+        x = torch.atleast_2d(x)
         embed = self.embedding(x)
-        hidden = self._init_hidden()
+        hidden = self._init_hidden(batch_size=x.shape[0])
 
-        # the second dimension refers to the batch size, which we've hard-coded
-        # it as 1 throughout the example
-        out, hidden = self.lstm(embed.view(len(x), 1, -1), hidden)
-        self.lstm_out.append(out)
-        self.lstm_hidden.append(hidden)
-        output = self.hidden2tag(out.view(len(x), -1))
-        return output
+        # batch index must be second
+        embed = torch.transpose(embed, 0, 1)
 
-    def _init_hidden(self):
+        out, hidden = self.lstm(embed, hidden)
+
+        # batch index is now first
+        out = torch.transpose(out, 0, 1)
+
+        # linear transform on each step of each sequence in each batch
+        return self.hidden2tag(out)
+
+    def loss(self, x, y):
+        # forward is structured [batch, sequence, tag]
+        y_pred = self(x).view(-1, self.tagset_size)
+        # y is structured [batch, sequence]
+        y = y.view(-1)
+        return self.loss_function(y_pred, y)
+
+    def _init_hidden(self, batch_size):
         # the dimension semantics are [num_layers, batch_size, hidden_size]
-        return (torch.rand(1, 1, self.hidden_size),
-                torch.rand(1, 1, self.hidden_size))
+        return (torch.rand(self.num_layers, batch_size, self.hidden_size),
+                torch.rand(self.num_layers, batch_size, self.hidden_size))
 
 
 
@@ -61,7 +78,7 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
 
     # Every node gets same data for now
     EMBEDDING_SIZE = 6
-    HIDDEN_SIZE = 6
+    HIDDEN_SIZE = 7
 
     training_data = [
         ("The dog ate the apple".split(), ["DET", "NN", "V", "DET", "NN"]),
@@ -82,11 +99,7 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
         idxs = [to_idx[w] for w in seq]
         return torch.LongTensor(idxs)
 
-    seq = training_data[0][0]
-    inputs = prepare_sequence(seq, word_to_idx)
-
     model = LstmModule(len(word_to_idx), EMBEDDING_SIZE, HIDDEN_SIZE, len(tag_to_idx))
-    criterion = nn.CrossEntropyLoss()
 
     accountant = PrivacyAccountant(model, step_epsilon=0.01)
     coordinator = ModelCoordinator(model, rank, size, federation_scheme, end_event=end_event)
@@ -100,8 +113,7 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
             sentence = prepare_sequence(sentence, word_to_idx)
             target = prepare_sequence(tags, tag_to_idx)
 
-            output = model(sentence)
-            loss = criterion(output, target)
+            loss = model.loss(sentence, target)
             loss.backward()
 
             accountant.privatize_grad()
@@ -111,9 +123,9 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
         accountant.increment_epoch()
 
         inputs = prepare_sequence(training_data[0][0], word_to_idx)
-        tag_scores = model(inputs)
-        tag_scores = tag_scores.detach().numpy()
-        tag = [idx_to_tag[idx] for idx in np.argmax(tag_scores, axis = 1)]
+        tag_scores = model(inputs).detach().numpy()
+
+        tag = [idx_to_tag[idx] for idx in np.argmax(tag_scores[0], axis=1)]
         printf(f"{rank: 4d} | {epoch: 5d} | {tag}     | {training_data[0][1]}", force=True)
 
         # Ensure that send() does not happen on the last epoch of the last node,
