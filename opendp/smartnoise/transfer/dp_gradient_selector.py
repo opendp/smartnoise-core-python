@@ -36,9 +36,9 @@ class DPGradientSelector(object):
         :return: torch tensor
         """
         utilities = [x[1].item() for x in self.utility_function()]
-        candidates = [x.mean().item() for x in self.tensor_list]
+        candidates = [float(x) for x in range(0, len(self.tensor_list))]
 
-        with sn.Analysis() as analysis:
+        with sn.Analysis():
             temp = sn.impute(sn.resize(sn.to_float(sn.Dataset(value=utilities)),
                              number_columns=1,
                              number_rows=len(utilities),
@@ -46,5 +46,5 @@ class DPGradientSelector(object):
                              upper=5000.),
                              lower=-5000.,
                              upper=5000.)
-            selected = sn.dp_median(temp, candidates=candidates, privacy_usage={"epsilon": 1.}).value
-            return self.tensor_list[list.index(candidates, selected)]
+            selected = int(sn.dp_median(temp, candidates=candidates, privacy_usage={"epsilon": 1.}).value)
+            return self.tensor_list[selected]
