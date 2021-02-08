@@ -1,4 +1,3 @@
-import numpy as np
 import torch
 
 from torch.utils.data import DataLoader
@@ -52,24 +51,17 @@ class GradientTransfer(object):
                     if param.requires_grad:
                         grad = param.grad.detach().clone()
                         self.gradients[name].append(grad)
+
+                for name, grad in self.gradients.items():
+                    # Use gradient selector for DP Median selection
+                    dp_gradient_selector = DPGradientSelector(self.gradients[name])
+                    medians = dp_gradient_selector.select_gradient_tensor()
+                    # Names are of the form "linear1.weight"
+                    layer, param = name.split('.')
+                    getattr(getattr(model, layer), param).grad = medians
+
                 optimizer.step()
                 optimizer.zero_grad()
-
-            for name, grad in self.gradients.items():
-                columns = self._get_columns_for_median(name)
-
-                # TODO: Use gradient selector for DP Median selection
-                # gradient_selector = DPGradientSelector(self.gradients[name])
-                # dp_median = gradient_selector.select_gradient_tensor()
-                # For now, just use this np.median call
-                medians = torch.Tensor([np.median(col) for col in columns]).reshape(*self.gradients[name][0].shape)
-
-                # Names are of the form "linear1.weight"
-                layer, param = name.split('.')
-                getattr(getattr(model, layer), param).grad = medians
-
-            optimizer.step()
-            optimizer.zero_grad()
 
             accuracy, loss = evaluate(model, test_loader)
             print(f"{epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}")
