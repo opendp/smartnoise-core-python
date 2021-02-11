@@ -17,6 +17,9 @@ from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
 
 core_library = LibraryWrapper()
 
+CHECK_CORRECTNESS = False
+torch.set_printoptions(sci_mode=False)
+
 
 class PrivacyAccountant(object):
     def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True, disable=False):
@@ -59,13 +62,17 @@ class PrivacyAccountant(object):
             """Save activations into module.activations in forward pass"""
             if not self._hooks_enabled:
                 return
-            setattr(module, "activations", input[0].detach())
+            if not hasattr(module, 'activations'):
+                module.activations = []
+            module.activations.append(input[0].detach())
 
-        def capture_backprops(module: nn.Module, _input, output):
+        def capture_backprops(module: nn.Module, _input, output: List[torch.Tensor]):
             """Save backprops into module.backprops in backward pass"""
             if not self._hooks_enabled:
                 return
-            setattr(module, 'backprops', output[0].detach())
+            if not hasattr(module, 'backprops'):
+                module.backprops = []
+            module.backprops.append(output[0].detach())
 
         self.model.autograd_hooks = []
         for module in self.model.modules():
@@ -103,57 +110,162 @@ class PrivacyAccountant(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unhook()
 
-    def _calculate_norm(self, modules):
-        instance_sum_squares = []
-        for module in modules:
-            if next(module.parameters(recurse=False), None) is None:
-                continue
+    def privatize_grad(self, *, modules=None, clipping_norm=1., loss_type: str = 'mean') -> None:
+        """
+        Compute per-example gradients for each parameter, privatize them, and save them under 'param.grad'.
+        Must be called after loss.backprop()
+        Must be called before optimizer.step()
 
+        :param modules:
+        :param clipping_norm:
+        :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
+        """
+        assert loss_type in ('sum', 'mean')
+
+        if self._disable:
+            return
+
+        self.steps += 1
+
+        modules = [m for m in modules or self.model.modules() if self._has_params(m)]
+
+        for module in modules:
             assert hasattr(module, 'activations'), "No activations detected, run forward after .hook()"
             assert hasattr(module, 'backprops'), "No backprops detected, run backward after .hook()"
 
-            A = module.activations
-            B = module.backprops
-            n = A.shape[0]
+            # ignore leading activations from evaluations outside of the training loop
+            module.activations = module.activations[-len(module.backprops):]
+            # backprops are in reverse-order
+            module.backprops = module.backprops[::-1]
 
-            if isinstance(module, nn.Embedding):
-                instance_sum_squares.append((module.backprops ** 2).view(n, -1).sum(dim=1))
+        # compute L2 norm for flat clipping
+        actual_norm = self._calculate_norm(modules)
 
-            elif isinstance(module, nn.Linear):
-                # sum((AB)^2) == sum(A^2 * B^2),
-                #   where * is the dot product along final axis,
-                #   and sum preserves the first axis
-                squares = torch.einsum('n...i,n...i,n...j,n...j->n...', A, A, B, B)
-                instance_sum_squares.append(squares.view(n, -1).sum(dim=1))
+        # reconstruct instance-level gradients and reduce privately
+        for module in modules:
+            # pair forward activations with reversed backpropagations
+            for A, B in zip(module.activations, module.backprops):
+                batch_size = A.shape[0]
 
-                if module.bias is not None:
-                    instance_sum_squares.append((B ** 2).view(n, -1).sum(dim=1))
+                if loss_type == 'mean':
+                    B *= batch_size
 
-            elif isinstance(module, CatBias):
-                instance_sum_squares.append((module.backprops[:, -1, None] ** 2).sum(dim=1))
+                if isinstance(module, nn.Embedding):
+                    A = A.unsqueeze(-1).expand(*A.shape, module.embedding_dim)
+                    shape = batch_size, -1, module.embedding_dim
 
-            elif isinstance(module, nn.Conv2d):
-                batch_size = module.activations.shape[0]
-                A = nn.functional.unfold(A, module.kernel_size)
-                B = module.backprops.reshape(batch_size, -1, module.activations.shape[-1])
-                grad_instance = torch.einsum('ijk,ilk->ijl', B, A)\
-                    .reshape([batch_size] + list(module.weight.shape))
+                    # massive... empty... tensor, because clip doesn't distribute
+                    grad_instance = torch.zeros([batch_size, *module.weight.shape])
+                    grad_instance.scatter_add_(1, A.reshape(*shape), B.reshape(*shape))
 
-                setattr(module.weight, 'grad_instance', grad_instance)
-                instance_sum_squares.append((grad_instance ** 2).reshape(batch_size, -1).sum(dim=1))
+                    self._accumulate_grad(module.weight, grad_instance)
 
-                if module.bias is not None:
-                    instance_sum_squares.append((module.backprops ** 2).reshape(batch_size, -1).sum(dim=1))
+                    # # reconstructs exact grad
+                    # grad = torch.zeros_like(module.weight.grad)
+                    # grad.index_add_(0, A.reshape(-1), B.reshape(-1, module.embedding_dim))
+                    # self._accumulate_grad(module.weight, grad)
 
-            elif isinstance(module, BahdanauAttentionScale):
-                NotImplementedError("Bahdanau!")
+                elif isinstance(module, nn.Linear):
+                    grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
+                    self._accumulate_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
+                    if module.bias is not None:
+                        self._accumulate_grad(module.bias, torch.einsum('n...i->ni', B))
 
-            else:
-                raise NotImplementedError(f"Norm calculation is not implemented for {module}")
+                elif isinstance(module, nn.Conv2d):
+                    self._accumulate_grad(module.weight, module.weight.grad_instance)
+                    if module.bias is not None:
+                        self._accumulate_grad(module.bias, torch.sum(B.reshape(batch_size, -1, A.shape[-1]), dim=2))
+
+                elif isinstance(module, CatBias):
+                    # grab the last column of the backprop for the layer, which corresponds to the cat'ed column
+                    self._accumulate_grad(module.bias, B[:, -1])
+
+                elif isinstance(module, BahdanauAttentionScale):
+                    # print(A.shape)
+                    # print(B.shape)
+                    # grad_instance = torch.einsum('ni,ni->ni', B, A)
+                    # self._calculate_and_privatize()
+                    self._accumulate_grad(module.v, A / module.v)
+                    # if module.normalize:
+                    #     module.v.grad +=
+
+                else:
+                    raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
+
+            for param in module.parameters(recurse=False):
+                if CHECK_CORRECTNESS:
+                    print('checking:', module, param.shape)
+                    self._check_grad(param, loss_type)
+
+                param.grad = self._privatize_grad(
+                    param.grad_instance, loss_type, actual_norm, clipping_norm)
+                del param.grad_instance
+            del module.activations
+            del module.backprops
+
+    @staticmethod
+    def _calculate_norm(modules):
+        instance_sum_squares = []
+        for module in modules:
+            for A, B in zip(module.activations, module.backprops):
+                batch_size = A.shape[0]
+
+                if isinstance(module, nn.Embedding):
+                    instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
+
+                elif isinstance(module, nn.Linear):
+                    # sum((AB)^2) == sum(A^2 * B^2),
+                    #   where * is the dot product along final axis,
+                    #   and sum preserves the first axis
+                    squares = torch.einsum('n...i,n...i,n...j,n...j->n...', A, A, B, B)
+                    instance_sum_squares.append(squares.reshape(batch_size, -1).sum(dim=1))
+
+                    if module.bias is not None:
+                        instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
+
+                elif isinstance(module, CatBias):
+                    instance_sum_squares.append((B[:, -1, None] ** 2).sum(dim=1))
+
+                elif isinstance(module, nn.Conv2d):
+                    batch_size = A.shape[0]
+                    A = nn.functional.unfold(A, module.kernel_size)
+                    B = B.reshape(batch_size, -1, A.shape[-1])
+                    grad_instance = torch.einsum('ijk,ilk->ijl', B, A) \
+                        .reshape([batch_size] + list(module.weight.shape))
+
+                    setattr(module.weight, 'grad_instance', grad_instance)
+                    instance_sum_squares.append((grad_instance ** 2).reshape(batch_size, -1).sum(dim=1))
+
+                    if module.bias is not None:
+                        instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
+
+                elif isinstance(module, BahdanauAttentionScale):
+                    NotImplementedError("Bahdanau!")
+
+                else:
+                    raise NotImplementedError(f"Norm calculation is not implemented for {module}")
 
         return torch.sqrt(torch.stack(instance_sum_squares, dim=1).sum(dim=1))
 
-    def _calculate_and_privatize(self, grad_instance, loss_type, actual_norm, clipping_norm):
+    @staticmethod
+    def _accumulate_grad(tensor, grad):
+        if hasattr(tensor, 'grad_instance'):
+            tensor.grad_instance += grad
+        else:
+            tensor.grad_instance = grad
+
+    @staticmethod
+    def _check_grad(param, loss_type):
+        grad = PrivacyAccountant._reduce_grad(param.grad_instance, loss_type)
+        if not torch.equal(torch.Tensor(list(param.grad.shape)), torch.Tensor(list(grad.shape))):
+            raise ValueError(f"Non-private reconstructed gradient {param.grad.shape} differs from expected shape {grad.shape}")
+        if not torch.allclose(param.grad, grad, atol=.01):
+            print('          failed')
+            print('          difference:')
+            print(param.grad - grad)
+            raise ValueError("Non-private reconstructed gradient differs in value")
+
+    def _privatize_grad(self, grad_instance, loss_type, actual_norm, clipping_norm):
         """
 
         :param grad_instance:
@@ -162,10 +274,11 @@ class PrivacyAccountant(object):
         :param clipping_norm:
         :return:
         """
+
         # clip
         grad_instance /= torch.max(torch.ones_like(actual_norm), actual_norm / clipping_norm).expand_as(grad_instance)
         # reduce
-        grad = {'sum': torch.sum, 'mean': torch.mean}[loss_type](grad_instance, dim=0)
+        grad = PrivacyAccountant._reduce_grad(grad_instance, loss_type)
         # noise
         sensitivity = clipping_norm / {'sum': 1., 'mean': grad_instance.shape[0]}[loss_type]
         if self.step_delta == 0.:
@@ -186,78 +299,13 @@ class PrivacyAccountant(object):
 
         return grad
 
-    def privatize_grad(self, *, modules=None, clipping_norm=1., loss_type: str = 'mean') -> None:
-        """
-        Compute per-example gradients for each parameter, privatize them, and save them under 'param.grad'.
-        Must be called after loss.backprop()
-        Must be called before optimizer.step()
+    @staticmethod
+    def _reduce_grad(grad_instance, loss_type):
+        return {'sum': torch.sum, 'mean': torch.mean}[loss_type](grad_instance, dim=0)
 
-        :param modules:
-        :param clipping_norm:
-        :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
-        """
-        assert loss_type in ('sum', 'mean')
-
-        if self._disable:
-            return
-
-        self.steps += 1
-
-        modules = list(modules or self.model.modules())
-
-        # compute L2 norm for flat clipping
-        actual_norm = self._calculate_norm(modules)
-
-        # reconstruct instance-level gradients and reduce privately
-        for module in modules:
-            if next(module.parameters(recurse=False), None) is None:
-                continue
-
-            n = module.activations.shape[0]
-
-            if loss_type == 'mean':
-                module.backprops *= n
-
-            if isinstance(module, nn.Embedding):
-                assert module.activations.shape[0] == 1, "DP embedding currently only works with stochastic GD"
-                # reduction is along dense axis
-                print(module.backprops.shape)
-                grad = self._calculate_and_privatize(
-                    module.backprops, loss_type, actual_norm, clipping_norm)
-                # the gradient will be specific to each embedding
-                module.weight.grad.index_copy_(0, module.activations[0], grad)
-
-            elif isinstance(module, nn.Linear):
-                # reconstruct
-                grad_instance = torch.einsum('n...i,n...j->n...ij', module.backprops, module.activations)
-
-                module.weight.grad = self._calculate_and_privatize(
-                    torch.einsum('n...ij->nij', grad_instance), loss_type, actual_norm, clipping_norm)
-                if module.bias is not None:
-                    module.bias.grad = self._calculate_and_privatize(
-                        torch.einsum('n...i->ni', module.backprops), loss_type, actual_norm, clipping_norm)
-
-            elif isinstance(module, CatBias):
-                # grab the last column of the backprop for the layer, which corresponds to the cat'ed column
-                grad_instance = module.backprops[:, -1]
-                setattr(module.bias, 'grad', self._calculate_and_privatize(
-                    grad_instance, loss_type, actual_norm, clipping_norm))
-
-            elif isinstance(module, nn.Conv2d):
-                setattr(module.weight, 'grad', self._calculate_and_privatize(
-                    module.weight.grad_instance, loss_type, actual_norm, clipping_norm))
-                if module.bias is not None:
-                    B = module.backprops.reshape(n, -1, module.activations.shape[-1])
-                    setattr(module.weight, 'grad', self._calculate_and_privatize(
-                        torch.sum(B, dim=2), loss_type, actual_norm, clipping_norm))
-
-            elif isinstance(module, BahdanauAttentionScale):
-                raise NotImplementedError()
-
-            else:
-                raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
-            del module.backprops
-            del module.activations
+    @staticmethod
+    def _has_params(module):
+        return next(module.parameters(recurse=False), None) is not None
 
     def make_private_optimizer(self, optimizer, *args, **kwargs):
 
@@ -308,12 +356,3 @@ class PrivacyAccountant(object):
             delta += batch_delta
 
         return epsilon, delta
-
-
-    def _get_parameters(self, module):
-        memo = {None}
-        for param in module._parameters.values():
-            if param in memo:
-                continue
-            memo.add(param)
-            yield param

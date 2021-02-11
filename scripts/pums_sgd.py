@@ -18,6 +18,8 @@ from torch.utils.data import DataLoader, TensorDataset
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
 
+TRAIN_PUBLIC = False
+
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
 ACTIVE_PROBLEM = 'ambulatory'
 
@@ -177,7 +179,7 @@ def train(
         rank, public):
 
     history = []
-    epoch = 0
+    epoch = 0 if TRAIN_PUBLIC else 1
     while True:
         for batch in train_loader:
 

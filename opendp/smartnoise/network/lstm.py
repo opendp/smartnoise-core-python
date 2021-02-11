@@ -9,6 +9,10 @@ from torch.nn.utils.rnn import PackedSequence
 from torch.tensor import Tensor
 
 
+class TAGLinear(nn.Linear):
+    pass
+
+
 class DPRNNBase(nn.Module):
     __constants__ = ['mode', 'input_size', 'hidden_size', 'num_layers', 'bias',
                      'batch_first', 'dropout', 'bidirectional']
@@ -25,7 +29,7 @@ class DPRNNBase(nn.Module):
 
     def __init__(self, mode: str, input_size: int, hidden_size: int,
                  num_layers: int = 1, bias: bool = True, batch_first: bool = False,
-                 dropout: float = 0., bidirectional: bool = False) -> None:
+                 dropout: float = 0., bidirectional: bool = False, proj_size: int = 0) -> None:
         super().__init__()
         self.mode = mode
         self.input_size = input_size
@@ -35,6 +39,12 @@ class DPRNNBase(nn.Module):
         self.batch_first = batch_first
         self.dropout = float(dropout)
         self.bidirectional = bidirectional
+        self.proj_size = proj_size
+
+        if bidirectional:
+            raise NotImplementedError("bidirectional lstm is not implemented.")
+        if proj_size != 0:
+            raise NotImplementedError("non-zero proj_size is not implemented.")
 
         if not isinstance(dropout, numbers.Number) or not 0 <= dropout <= 1 or \
                 isinstance(dropout, bool):
@@ -78,25 +88,34 @@ class DPRNNBase(nn.Module):
 class LSTMCell(nn.Module):
     def __init__(self, input_size: int, hidden_size: int, bias: bool = True):
         super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.input_lin = TAGLinear(input_size, 4 * hidden_size, bias=bias)
+        self.hidden_lin = TAGLinear(hidden_size, 4 * hidden_size, bias=bias)
 
-        self.hidden_lin = nn.Linear(hidden_size, 4 * hidden_size, bias=bias)
-        self.input_lin = nn.Linear(input_size, 4 * hidden_size, bias=bias)
+    def forward(self, input: torch.Tensor, state: Tuple[torch.Tensor, torch.Tensor]):
+        h_0, c_0 = state
+        gates = self.input_lin(input) + self.hidden_lin(h_0)
+        gate_in, gate_forget, gate_cell, gate_out = gates.chunk(4, dim=-1)
 
-    def forward(self, x: torch.Tensor, h: torch.Tensor, c: torch.Tensor):
-        i, f, g, o = (self.hidden_lin(h) + self.input_lin(x)).chunk(4, dim=-1)
+        gate_in = torch.sigmoid(gate_in)
+        gate_forget = torch.sigmoid(gate_forget)
+        gate_cell = torch.tanh(gate_cell)
+        gate_out = torch.sigmoid(gate_out)
 
-        c_next = torch.sigmoid(f) * c + torch.sigmoid(i) * torch.tanh(g)
-        h_next = torch.sigmoid(o) * torch.tanh(c_next)
-        return h_next, c_next
+        c_1 = gate_forget * c_0 + gate_in * gate_cell
+        h_1 = gate_out * torch.tanh(c_1)
+
+        return h_1, c_1
 
 
 class DPLSTM(DPRNNBase):
     def __init__(self, *args, **kwargs):
         super().__init__('LSTM', *args, **kwargs)
 
-        self.cells = nn.ModuleList(
-            [LSTMCell(self.input_size, self.hidden_size)] +
-            [LSTMCell(self.hidden_size, self.hidden_size) for _ in range(self.num_layers - 1)])
+        self.layers = nn.ModuleList(
+            [LSTMCell(self.input_size, self.hidden_size, bias=self.bias)] +
+            [LSTMCell(self.hidden_size, self.hidden_size, bias=self.bias) for _ in range(self.num_layers - 1)])
 
     def forward(self, input, hx: Optional[Tuple[torch.Tensor, torch.Tensor]] = None):
         orig_input = input
@@ -115,38 +134,43 @@ class DPLSTM(DPRNNBase):
         if hx is None:
             num_directions = 2 if self.bidirectional else 1
             real_hidden_size = self.proj_size if self.proj_size > 0 else self.hidden_size
-            h_zeros = torch.zeros(self.num_layers * num_directions,
-                                  max_batch_size, real_hidden_size,
-                                  dtype=input.dtype, device=input.device)
-            c_zeros = torch.zeros(self.num_layers * num_directions,
-                                  max_batch_size, self.hidden_size,
-                                  dtype=input.dtype, device=input.device)
-            hx = (h_zeros, c_zeros)
+            h = torch.zeros(self.num_layers * num_directions,
+                            max_batch_size, real_hidden_size,
+                            dtype=input.dtype, device=input.device)
+            c = torch.zeros(self.num_layers * num_directions,
+                            max_batch_size, self.hidden_size,
+                            dtype=input.dtype, device=input.device)
         else:
             # Each batch of the hidden state should match the input sequence that
             # the user believes he/she is passing in.
-            hx = self.permute_hidden(hx, sorted_indices)
+            h, c = self.permute_hidden(hx, sorted_indices)
+
+        self.check_forward_args(input, (h, c), batch_sizes)
 
         # unbind so that each layer gets separate backprop
-        h, c = list(torch.unbind(hx[0])), list(torch.unbind(hx[1]))
+        # h: hidden state, c: cell state
+        # TODO: switch to chunk(x, self.num_layers) for bidirectional
+        h, c = list(torch.unbind(h)), list(torch.unbind(c))
 
-        self.check_forward_args(input, hx, batch_sizes)
+        output = []
+        # for each step in sequence
+        for input_t in torch.unbind(input, dim=1 if self.batch_first else 0):
+            # pass forward through each layer
+            for l in range(self.num_layers):
+                h[l], c[l] = self.layers[l](input_t, (h[l], c[l]))
+                input_t = h[l]
+            output.append(input_t)
 
-        out = []
-        for inp in input:
-            for layer in range(self.num_layers):
-                h[layer], c[layer] = self.cells[layer](inp, h[layer], c[layer])
-                inp = h[layer]
-            out.append(h[-1])
+        output = torch.stack(output, dim=1 if self.batch_first else 0)
 
-        out = torch.stack(out)
+        hx = (torch.stack(h), torch.stack(c))
 
         # xxx: isinstance check needs to be in conditional for TorchScript to compile
         if isinstance(orig_input, PackedSequence):
-            output_packed = PackedSequence(out, batch_sizes, sorted_indices, unsorted_indices)
+            output_packed = PackedSequence(output, batch_sizes, sorted_indices, unsorted_indices)
             return output_packed, self.permute_hidden(hx, unsorted_indices)
         else:
-            return out, self.permute_hidden(hx, unsorted_indices)
+            return output, self.permute_hidden(hx, unsorted_indices)
 
     def permute_hidden(self, hx: Tuple[Tensor, Tensor], permutation: Optional[Tensor]) -> Tuple[Tensor, Tensor]:
         if permutation is None:

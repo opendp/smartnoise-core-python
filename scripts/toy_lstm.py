@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
 from opendp.smartnoise.network.lstm import DPLSTM
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
 from scripts.pums_downloader import datasets
@@ -12,7 +13,7 @@ from scripts.pums_sgd import main, ModelCoordinator, printf
 
 class LstmModule(nn.Module):
 
-    def __init__(self, vocab_size, embedding_size, hidden_size, tagset_size, num_layers=1):
+    def __init__(self, vocab_size, embedding_size, hidden_size, tagset_size, num_layers=1, bahdanau=False):
         super().__init__()
         # size of input vocabulary
         self.vocab_size = vocab_size
@@ -27,6 +28,7 @@ class LstmModule(nn.Module):
 
         self.embedding = nn.Embedding(vocab_size, embedding_size)
         self.lstm = DPLSTM(embedding_size, hidden_size, num_layers=num_layers)
+        self.bahdanau = (BahdanauAttentionScale if bahdanau else nn.Identity)(hidden_size, normalize=False)
         self.hidden2tag = nn.Linear(hidden_size, tagset_size)
 
         self.loss_function = torch.nn.CrossEntropyLoss(reduction='sum')
@@ -34,36 +36,57 @@ class LstmModule(nn.Module):
     def forward(self, x):
         """
 
-        :param x: data of structure [batch_size, sequence_length]
+        :param x: x.shape == [batch_size, sequence_length]
         :return:
         """
+        # x.shape == [batch_size, sequence_length]
         x = torch.atleast_2d(x)
-        embed = self.embedding(x)
+
+        # x.shape == [batch_size, sequence_length, embedding_size]
+        x = self.embedding(x)
         hidden = self._init_hidden(batch_size=x.shape[0])
 
-        # batch index must be second
-        embed = torch.transpose(embed, 0, 1)
+        # x.shape == [sequence_length, batch_size, features_length]
+        x = torch.transpose(x, 0, 1)
 
-        out, hidden = self.lstm(embed, hidden)
+        # x.shape == [sequence_length, batch_size, hidden_size]
+        x, hidden = self.lstm(x, hidden)
 
-        # batch index is now first
-        out = torch.transpose(out, 0, 1)
+        # x.shape == [batch_size, sequence_length, hidden_size]
+        x = torch.transpose(x, 0, 1)
+
+        # conditionally apply bahdanau scaler
+        # x.shape == [batch_size, sequence_length, hidden_size]
+        x = self.bahdanau(x)
 
         # linear transform on each step of each sequence in each batch
-        return self.hidden2tag(out)
+        # x.shape == [batch_size, sequence_length, tagset_size]
+        x = self.hidden2tag(x)
+
+        return x
 
     def loss(self, x, y):
-        # forward is structured [batch, sequence, tag]
-        y_pred = self(x).view(-1, self.tagset_size)
-        # y is structured [batch, sequence]
+        """
+        Compute loss for all sequence elements over all batches
+        :param x: x.shape == [batch_size, sequence_length]
+        :param y: y.shape == [batch_size, sequence_length]
+        :return:
+        """
+        # y_pred.shape == [batch_size, sequence_length, tagset_size]
+        y_pred = self(x)
+
+        # y_pred.shape == [batch_size * sequence_length, tagset_size]
+        y_pred = y_pred.view(-1, self.tagset_size)
+
+        # y_pred.shape == [batch_size * sequence_length]
         y = y.view(-1)
+
         return self.loss_function(y_pred, y)
 
     def _init_hidden(self, batch_size):
         # the dimension semantics are [num_layers, batch_size, hidden_size]
         return (torch.rand(self.num_layers, batch_size, self.hidden_size),
                 torch.rand(self.num_layers, batch_size, self.hidden_size))
-
 
 
 def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None, end_event=None):
@@ -99,9 +122,13 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
         idxs = [to_idx[w] for w in seq]
         return torch.LongTensor(idxs)
 
-    model = LstmModule(len(word_to_idx), EMBEDDING_SIZE, HIDDEN_SIZE, len(tag_to_idx))
+    model = LstmModule(
+        vocab_size=len(word_to_idx),
+        embedding_size=EMBEDDING_SIZE,
+        hidden_size=HIDDEN_SIZE,
+        tagset_size=len(tag_to_idx))
 
-    accountant = PrivacyAccountant(model, step_epsilon=0.01)
+    accountant = PrivacyAccountant(model, step_epsilon=1.0)
     coordinator = ModelCoordinator(model, rank, size, federation_scheme, end_event=end_event)
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
@@ -110,13 +137,28 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
         coordinator.recv()
 
         for sentence, tags in training_data:
+            # sentence1 = prepare_sequence(training_data[0][0][:4], word_to_idx)
+            # sentence2 = prepare_sequence(training_data[1][0][:4], word_to_idx)
+            # sentence = torch.stack([
+            #     sentence1,
+            #     sentence2
+            # ])
+            # print(sentence.shape)
+            #
+            # target1 = prepare_sequence(training_data[0][1][:4], tag_to_idx)
+            # target2 = prepare_sequence(training_data[1][1][:4], tag_to_idx)
+            # target = torch.stack([
+            #     target1,
+            #     target2
+            # ])
+            # print(target.shape)
             sentence = prepare_sequence(sentence, word_to_idx)
             target = prepare_sequence(tags, tag_to_idx)
 
             loss = model.loss(sentence, target)
             loss.backward()
 
-            accountant.privatize_grad()
+            accountant.privatize_grad(loss_type='sum')
 
             optimizer.step()
             optimizer.zero_grad()

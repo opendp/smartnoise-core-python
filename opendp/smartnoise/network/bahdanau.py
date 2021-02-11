@@ -15,29 +15,27 @@ class BahdanauAttentionScale(nn.Module):
         self.v = Parameter(torch.Tensor(embed_dim))
         self.normalize = normalize
         if self.normalize:
-            self.b = Parameter(torch.Tensor(embed_dim))
             self.g = Parameter(torch.Tensor(1))
 
     def reset_parameters(self):
         nn.init.uniform_(self.v, -0.1, 0.1)
         if self.normalize:
-            nn.init.constant_(self.b, 0.0)
             nn.init.constant_(self.g, math.sqrt(1.0 / self.embed_dim))
 
     def forward(self, x):
+        x = torch.tanh(x)
         if self.normalize:
-            # normed_v = g * v / ||v||
-            normed_v = self.g * self.v / torch.norm(self.v)
-            return (normed_v * torch.tanh(x + self.b)).sum(dim=2)  # len x bsz
-        return self.v * torch.tanh(x).sum(dim=2)
+            # learn the norm scale
+            x = x * self.g / torch.norm(self.v)
+        return x * self.v
 
 
 class BahdanauAttention(BaseAttention):
-    """ Bahdanau Attention."""
+    """Bahdanau Attention"""
 
     def __init__(self, query_dim, value_dim, embed_dim, normalize=True):
         super().__init__(query_dim, value_dim, embed_dim)
-        self.query_proj = nn.Linear(self.query_dim, embed_dim, bias=False)
+        self.query_proj = nn.Linear(self.query_dim, embed_dim, bias=normalize)
         self.value_proj = nn.Linear(self.value_dim, embed_dim, bias=False)
         self.scaler = BahdanauAttentionScale(embed_dim, normalize)
 
@@ -52,7 +50,7 @@ class BahdanauAttention(BaseAttention):
         # projected_query: 1 x bsz x embed_dim
         projected_query = self.query_proj(query).unsqueeze(0)
         key = self.value_proj(value)  # len x bsz x embed_dim
-        attn_scores = self.scaler(projected_query + key)
+        attn_scores = self.scaler(projected_query + key).sum(dim=2)
 
         if key_padding_mask is not None:
             attn_scores = (
