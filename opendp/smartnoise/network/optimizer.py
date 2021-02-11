@@ -17,7 +17,7 @@ from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
 
 core_library = LibraryWrapper()
 
-CHECK_CORRECTNESS = False
+CHECK_CORRECTNESS = True
 torch.set_printoptions(sci_mode=False)
 
 
@@ -64,6 +64,7 @@ class PrivacyAccountant(object):
                 return
             if not hasattr(module, 'activations'):
                 module.activations = []
+            # always take the first argument of the input
             module.activations.append(input[0].detach())
 
         def capture_backprops(module: nn.Module, _input, output: List[torch.Tensor]):
@@ -72,6 +73,7 @@ class PrivacyAccountant(object):
                 return
             if not hasattr(module, 'backprops'):
                 module.backprops = []
+            # always take the first output's backprop
             module.backprops.append(output[0].detach())
 
         self.model.autograd_hooks = []
@@ -129,26 +131,38 @@ class PrivacyAccountant(object):
 
         modules = [m for m in modules or self.model.modules() if self._has_params(m)]
 
+        # check for existence of activations and backprops
         for module in modules:
             assert hasattr(module, 'activations'), "No activations detected, run forward after .hook()"
             assert hasattr(module, 'backprops'), "No backprops detected, run backward after .hook()"
 
+            if not module.backprops or not module.activations:
+                return
+
+        # retrieve batch size
+        if modules:
+            batch_size = modules[0].activations[0].shape[0]
+        else:
+            return
+
+        # preprocess activations and backprops
+        for module in modules:
             # ignore leading activations from evaluations outside of the training loop
             module.activations = module.activations[-len(module.backprops):]
             # backprops are in reverse-order
             module.backprops = module.backprops[::-1]
 
+            if loss_type == 'mean':
+                for backprop in module.backprops:
+                    backprop *= batch_size
+
         # compute L2 norm for flat clipping
-        actual_norm = self._calculate_norm(modules)
+        actual_norm = self._calculate_norm(modules, batch_size)
 
         # reconstruct instance-level gradients and reduce privately
         for module in modules:
             # pair forward activations with reversed backpropagations
             for A, B in zip(module.activations, module.backprops):
-                batch_size = A.shape[0]
-
-                if loss_type == 'mean':
-                    B *= batch_size
 
                 if isinstance(module, nn.Embedding):
                     A = A.unsqueeze(-1).expand(*A.shape, module.embedding_dim)
@@ -172,6 +186,7 @@ class PrivacyAccountant(object):
                         self._accumulate_grad(module.bias, torch.einsum('n...i->ni', B))
 
                 elif isinstance(module, nn.Conv2d):
+                    # TODO: testing
                     self._accumulate_grad(module.weight, module.weight.grad_instance)
                     if module.bias is not None:
                         self._accumulate_grad(module.bias, torch.sum(B.reshape(batch_size, -1, A.shape[-1]), dim=2))
@@ -197,18 +212,17 @@ class PrivacyAccountant(object):
                     print('checking:', module, param.shape)
                     self._check_grad(param, loss_type)
 
-                param.grad = self._privatize_grad(
-                    param.grad_instance, loss_type, actual_norm, clipping_norm)
+                param.grad = self._privatize_grad(param.grad_instance, loss_type, actual_norm, clipping_norm)
                 del param.grad_instance
             del module.activations
             del module.backprops
 
     @staticmethod
-    def _calculate_norm(modules):
+    def _calculate_norm(modules, batch_size):
         instance_sum_squares = []
         for module in modules:
             for A, B in zip(module.activations, module.backprops):
-                batch_size = A.shape[0]
+                assert A.shape[0] == batch_size
 
                 if isinstance(module, nn.Embedding):
                     instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
@@ -227,6 +241,7 @@ class PrivacyAccountant(object):
                     instance_sum_squares.append((B[:, -1, None] ** 2).sum(dim=1))
 
                 elif isinstance(module, nn.Conv2d):
+                    # TODO: testing
                     batch_size = A.shape[0]
                     A = nn.functional.unfold(A, module.kernel_size)
                     B = B.reshape(batch_size, -1, A.shape[-1])
