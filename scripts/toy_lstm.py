@@ -28,7 +28,7 @@ class LstmModule(nn.Module):
 
         self.embedding = nn.Embedding(vocab_size, embedding_size)
         self.lstm = DPLSTM(embedding_size, hidden_size, num_layers=num_layers)
-        self.bahdanau = (BahdanauAttentionScale if bahdanau else nn.Identity)(hidden_size, normalize=False)
+        self.bahdanau = (BahdanauAttentionScale if bahdanau else nn.Identity)(hidden_size, normalize=True)
         self.hidden2tag = nn.Linear(hidden_size, tagset_size)
 
         self.loss_function = torch.nn.CrossEntropyLoss(reduction='sum')
@@ -126,7 +126,8 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
         vocab_size=len(word_to_idx),
         embedding_size=EMBEDDING_SIZE,
         hidden_size=HIDDEN_SIZE,
-        tagset_size=len(tag_to_idx))
+        tagset_size=len(tag_to_idx),
+        bahdanau=True)
 
     accountant = PrivacyAccountant(model, step_epsilon=1.0)
     coordinator = ModelCoordinator(model, rank, size, federation_scheme, end_event=end_event)
@@ -158,7 +159,7 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
             loss = model.loss(sentence, target)
             loss.backward()
 
-            accountant.privatize_grad(loss_type='sum')
+            accountant.privatize_grad(reduction='sum')
 
             optimizer.step()
             optimizer.zero_grad()

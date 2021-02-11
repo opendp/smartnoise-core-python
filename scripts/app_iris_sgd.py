@@ -81,7 +81,7 @@ for epoch in range(epochs):
             loss.backward()
 
             for layer in model.modules():
-                accountant.privatize_grad(layer, clipping_norm=1.0, loss_type='mean')
+                accountant.privatize_grad(layer, clipping_norm=1.0, reduction='mean')
 
             optimizer.step()
             optimizer.zero_grad()

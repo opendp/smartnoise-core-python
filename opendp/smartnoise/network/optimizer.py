@@ -17,7 +17,7 @@ from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
 
 core_library = LibraryWrapper()
 
-CHECK_CORRECTNESS = False
+CHECK_CORRECTNESS = True
 torch.set_printoptions(sci_mode=False)
 
 
@@ -65,7 +65,7 @@ class PrivacyAccountant(object):
             if not hasattr(module, 'activations'):
                 module.activations = []
             # always take the first argument of the input
-            # NOTE: clone is required to prevent in-place-overwrite of stored backprops in recurrent layers
+            # NOTE: clone is required to prevent in-place-overwrite of stored activations
             module.activations.append(input[0].detach().clone())
 
         def capture_backprops(module: nn.Module, _input, output: List[torch.Tensor]):
@@ -75,7 +75,7 @@ class PrivacyAccountant(object):
             if not hasattr(module, 'backprops'):
                 module.backprops = []
             # always take the first output's backprop
-            # NOTE: clone is required to prevent in-place-overwrite of stored backprops in recurrent layers
+            # NOTE: clone is required to prevent in-place-overwrite of stored backprops
             module.backprops.append(output[0].detach().clone())
 
         self.model.autograd_hooks = []
@@ -200,19 +200,20 @@ class PrivacyAccountant(object):
                     self._accumulate_grad(module.bias, B[:, -1])
 
                 elif isinstance(module, BahdanauAttentionScale):
-                    # print(A.shape)
-                    # print(B.shape)
-                    # grad_instance = torch.einsum('ni,ni->ni', B, A)
-                    # self._calculate_and_privatize()
-                    self._accumulate_grad(module.v, A / module.v)
-                    # if module.normalize:
-                    #     module.v.grad +=
+                    v_grad_instance = torch.einsum('n...i->ni', B * A)
+
+                    if module.normalize:
+                        g_grad_instance = torch.einsum('n...->n', B * A * module.v) / torch.norm(module.v)
+                        self._accumulate_grad(module.g, g_grad_instance.unsqueeze(-1))
+                        v_grad_instance *= module.g / torch.norm(module.v)
+
+                    self._accumulate_grad(module.v, v_grad_instance)
 
                 else:
                     raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
 
             for param in module.parameters(recurse=False):
-                if CHECK_CORRECTNESS and not isinstance(module, BrokenLinear):
+                if CHECK_CORRECTNESS:
                     print('checking:', module, param.shape)
                     self._check_grad(param, reduction)
 
@@ -269,19 +270,23 @@ class PrivacyAccountant(object):
     @staticmethod
     def _accumulate_grad(tensor, grad):
         if hasattr(tensor, 'grad_instance'):
-            tensor.grad_instance += grad
+            tensor.grad_instance += grad.detach()
         else:
-            tensor.grad_instance = grad
+            tensor.grad_instance = grad.detach()
 
     @staticmethod
     def _check_grad(param, reduction):
         grad = PrivacyAccountant._reduce_grad(param.grad_instance, reduction)
         if not torch.equal(torch.Tensor(list(param.grad.shape)), torch.Tensor(list(grad.shape))):
-            raise ValueError(f"Non-private reconstructed gradient {param.grad.shape} differs from expected shape {grad.shape}")
-        if not torch.allclose(param.grad, grad, atol=.01):
+            raise ValueError(f"Non-private reconstructed gradient {grad.shape} differs from expected shape {param.grad.shape}")
+        if not torch.allclose(param.grad, grad, atol=.01, equal_nan=True):
             print('          failed')
             print('          difference:')
             print(param.grad - grad)
+            print('          expected:')
+            print(param.grad)
+            print('          reconstructed:')
+            print(grad)
             raise ValueError("Non-private reconstructed gradient differs in value")
 
     def _privatize_grad(self, grad_instance, reduction, actual_norm, clipping_norm):

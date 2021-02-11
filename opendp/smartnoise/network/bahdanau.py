@@ -5,13 +5,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
-# TODO: import from espresso
-class BaseAttention(nn.Module):
-    pass
+try:
+    from espresso.modules.speech_attention import BaseAttention
+except ImportError:
+    class BaseAttention(object):
+        def __init__(self, _query_dim, _value_dim, _embed_dim):
+            raise ImportError("espresso is not installed")
 
 
 class BahdanauAttentionScale(nn.Module):
     def __init__(self, embed_dim, normalize):
+        super().__init__()
         self.v = Parameter(torch.Tensor(embed_dim))
         self.normalize = normalize
         if self.normalize:
@@ -23,7 +27,6 @@ class BahdanauAttentionScale(nn.Module):
             nn.init.constant_(self.g, math.sqrt(1.0 / self.embed_dim))
 
     def forward(self, x):
-        x = torch.tanh(x)
         if self.normalize:
             # learn the norm scale
             x = x * self.g / torch.norm(self.v)
@@ -50,7 +53,7 @@ class BahdanauAttention(BaseAttention):
         # projected_query: 1 x bsz x embed_dim
         projected_query = self.query_proj(query).unsqueeze(0)
         key = self.value_proj(value)  # len x bsz x embed_dim
-        attn_scores = self.scaler(projected_query + key).sum(dim=2)
+        attn_scores = self.scaler(torch.tanh(projected_query + key)).sum(dim=2)
 
         if key_padding_mask is not None:
             attn_scores = (
