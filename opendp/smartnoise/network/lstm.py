@@ -9,10 +9,6 @@ from torch.nn.utils.rnn import PackedSequence
 from torch.tensor import Tensor
 
 
-class TAGLinear(nn.Linear):
-    pass
-
-
 class DPRNNBase(nn.Module):
     __constants__ = ['mode', 'input_size', 'hidden_size', 'num_layers', 'bias',
                      'batch_first', 'dropout', 'bidirectional']
@@ -90,8 +86,8 @@ class LSTMCell(nn.Module):
         super().__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
-        self.input_lin = TAGLinear(input_size, 4 * hidden_size, bias=bias)
-        self.hidden_lin = TAGLinear(hidden_size, 4 * hidden_size, bias=bias)
+        self.input_lin = nn.Linear(input_size, 4 * hidden_size, bias=bias)
+        self.hidden_lin = nn.Linear(hidden_size, 4 * hidden_size, bias=bias)
 
     def forward(self, input: torch.Tensor, state: Tuple[torch.Tensor, torch.Tensor]):
         h_0, c_0 = state

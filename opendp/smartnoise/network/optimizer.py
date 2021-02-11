@@ -3,7 +3,7 @@ Tools for building differentially private models.
 Thanks to https://github.com/cybertronai/autograd-hacks for demonstrating gradient hacks.
 
 A, activations: inputs into current module
-B, backprops: backprop values (aka Lop aka Jacobian-vector product) observed at current module
+B, backprops: backprop values (aka Jacobian-vector product) observed at current module
 
 """
 import math
@@ -17,14 +17,14 @@ from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
 
 core_library = LibraryWrapper()
 
-CHECK_CORRECTNESS = True
+CHECK_CORRECTNESS = False
 torch.set_printoptions(sci_mode=False)
 
 
 class PrivacyAccountant(object):
     def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True, disable=False):
         """
-        Context manager for tracking privacy usage
+        Utility for tracking privacy usage
         :param model: pyTorch model
         :param step_epsilon:
         :param step_delta:
@@ -65,7 +65,8 @@ class PrivacyAccountant(object):
             if not hasattr(module, 'activations'):
                 module.activations = []
             # always take the first argument of the input
-            module.activations.append(input[0].detach())
+            # NOTE: clone is required to prevent in-place-overwrite of stored backprops in recurrent layers
+            module.activations.append(input[0].detach().clone())
 
         def capture_backprops(module: nn.Module, _input, output: List[torch.Tensor]):
             """Save backprops into module.backprops in backward pass"""
@@ -74,7 +75,8 @@ class PrivacyAccountant(object):
             if not hasattr(module, 'backprops'):
                 module.backprops = []
             # always take the first output's backprop
-            module.backprops.append(output[0].detach())
+            # NOTE: clone is required to prevent in-place-overwrite of stored backprops in recurrent layers
+            module.backprops.append(output[0].detach().clone())
 
         self.model.autograd_hooks = []
         for module in self.model.modules():
@@ -112,7 +114,7 @@ class PrivacyAccountant(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unhook()
 
-    def privatize_grad(self, *, modules=None, clipping_norm=1., loss_type: str = 'mean') -> None:
+    def privatize_grad(self, *, modules=None, clipping_norm=1., reduction: str = 'mean') -> None:
         """
         Compute per-example gradients for each parameter, privatize them, and save them under 'param.grad'.
         Must be called after loss.backprop()
@@ -120,9 +122,9 @@ class PrivacyAccountant(object):
 
         :param modules:
         :param clipping_norm:
-        :param loss_type:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
+        :param reduction:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
         """
-        assert loss_type in ('sum', 'mean')
+        assert reduction in ('sum', 'mean')
 
         if self._disable:
             return
@@ -152,7 +154,7 @@ class PrivacyAccountant(object):
             # backprops are in reverse-order
             module.backprops = module.backprops[::-1]
 
-            if loss_type == 'mean':
+            if reduction == 'mean':
                 for backprop in module.backprops:
                     backprop *= batch_size
 
@@ -181,6 +183,8 @@ class PrivacyAccountant(object):
 
                 elif isinstance(module, nn.Linear):
                     grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
+                    # if isinstance(module, TAG2Linear):
+                    #     print(torch.sum(grad_instance, dim=0)[0])
                     self._accumulate_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
                     if module.bias is not None:
                         self._accumulate_grad(module.bias, torch.einsum('n...i->ni', B))
@@ -208,11 +212,11 @@ class PrivacyAccountant(object):
                     raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
 
             for param in module.parameters(recurse=False):
-                if CHECK_CORRECTNESS:
+                if CHECK_CORRECTNESS and not isinstance(module, BrokenLinear):
                     print('checking:', module, param.shape)
-                    self._check_grad(param, loss_type)
+                    self._check_grad(param, reduction)
 
-                param.grad = self._privatize_grad(param.grad_instance, loss_type, actual_norm, clipping_norm)
+                param.grad = self._privatize_grad(param.grad_instance, reduction, actual_norm, clipping_norm)
                 del param.grad_instance
             del module.activations
             del module.backprops
@@ -270,8 +274,8 @@ class PrivacyAccountant(object):
             tensor.grad_instance = grad
 
     @staticmethod
-    def _check_grad(param, loss_type):
-        grad = PrivacyAccountant._reduce_grad(param.grad_instance, loss_type)
+    def _check_grad(param, reduction):
+        grad = PrivacyAccountant._reduce_grad(param.grad_instance, reduction)
         if not torch.equal(torch.Tensor(list(param.grad.shape)), torch.Tensor(list(grad.shape))):
             raise ValueError(f"Non-private reconstructed gradient {param.grad.shape} differs from expected shape {grad.shape}")
         if not torch.allclose(param.grad, grad, atol=.01):
@@ -280,22 +284,38 @@ class PrivacyAccountant(object):
             print(param.grad - grad)
             raise ValueError("Non-private reconstructed gradient differs in value")
 
-    def _privatize_grad(self, grad_instance, loss_type, actual_norm, clipping_norm):
+    def _privatize_grad(self, grad_instance, reduction, actual_norm, clipping_norm):
         """
 
         :param grad_instance:
-        :param loss_type:
+        :param reduction:
         :param actual_norm:
         :param clipping_norm:
         :return:
         """
 
         # clip
-        grad_instance /= torch.max(torch.ones_like(actual_norm), actual_norm / clipping_norm).expand_as(grad_instance)
+        PrivacyAccountant._clip_grad_(grad_instance, actual_norm, clipping_norm)
         # reduce
-        grad = PrivacyAccountant._reduce_grad(grad_instance, loss_type)
+        grad = PrivacyAccountant._reduce_grad(grad_instance, reduction)
         # noise
-        sensitivity = clipping_norm / {'sum': 1., 'mean': grad_instance.shape[0]}[loss_type]
+        self._noise_grad_(grad, clipping_norm, reduction, grad_instance.shape[0])
+
+        return grad
+
+    @staticmethod
+    def _clip_grad_(grad_instance, actual_norm, clipping_norm):
+        singletons = (1,) * (grad_instance.ndim - 1)
+        grad_instance /= torch.max(torch.ones_like(actual_norm), actual_norm / clipping_norm) \
+            .reshape(-1, *singletons) \
+            .expand_as(grad_instance)
+
+    @staticmethod
+    def _reduce_grad(grad_instance, reduction):
+        return {'sum': torch.sum, 'mean': torch.mean}[reduction](grad_instance, dim=0)
+
+    def _noise_grad_(self, grad, clipping_norm, reduction, n):
+        sensitivity = clipping_norm / {'sum': 1., 'mean': n}[reduction]
         if self.step_delta == 0.:
             grad.apply_(lambda x: core_library.snapping_mechanism(
                 value=x,
@@ -311,12 +331,6 @@ class PrivacyAccountant(object):
                 delta=self.step_delta,
                 sensitivity=sensitivity,
                 enforce_constant_time=False))
-
-        return grad
-
-    @staticmethod
-    def _reduce_grad(grad_instance, loss_type):
-        return {'sum': torch.sum, 'mean': torch.mean}[loss_type](grad_instance, dim=0)
 
     @staticmethod
     def _has_params(module):
