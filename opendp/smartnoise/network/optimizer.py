@@ -158,9 +158,6 @@ class PrivacyAccountant(object):
                 for backprop in module.backprops:
                     backprop *= batch_size
 
-        # compute L2 norm for flat clipping
-        actual_norm = self._calculate_norm(modules, batch_size)
-
         # reconstruct instance-level gradients and reduce privately
         for module in modules:
             # pair forward activations with reversed backpropagations
@@ -212,60 +209,26 @@ class PrivacyAccountant(object):
                 else:
                     raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
 
-            for param in module.parameters(recurse=False):
-                if CHECK_CORRECTNESS:
+            if CHECK_CORRECTNESS:
+                for param in module.parameters(recurse=False):
                     print('checking:', module, param.shape)
                     self._check_grad(param, reduction)
 
-                param.grad = self._privatize_grad(param.grad_instance, reduction, actual_norm, clipping_norm)
-                del param.grad_instance
             del module.activations
             del module.backprops
 
-    @staticmethod
-    def _calculate_norm(modules, batch_size):
-        instance_sum_squares = []
+        # compute L2 norm for flat clipping
+        sum_squares = []
         for module in modules:
-            for A, B in zip(module.activations, module.backprops):
-                assert A.shape[0] == batch_size
+            for param in module.parameters(recurse=False):
+                sum_squares.append(torch.sum(param.grad_instance.reshape(batch_size, -1) ** 2, dim=1))
+        actual_norm = torch.sqrt(torch.stack(sum_squares, dim=1).sum(dim=1))
 
-                if isinstance(module, nn.Embedding):
-                    instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
-
-                elif isinstance(module, nn.Linear):
-                    # sum((AB)^2) == sum(A^2 * B^2),
-                    #   where * is the dot product along final axis,
-                    #   and sum preserves the first axis
-                    squares = torch.einsum('n...i,n...i,n...j,n...j->n...', A, A, B, B)
-                    instance_sum_squares.append(squares.reshape(batch_size, -1).sum(dim=1))
-
-                    if module.bias is not None:
-                        instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
-
-                elif isinstance(module, CatBias):
-                    instance_sum_squares.append((B[:, -1, None] ** 2).sum(dim=1))
-
-                elif isinstance(module, nn.Conv2d):
-                    # TODO: testing
-                    batch_size = A.shape[0]
-                    A = nn.functional.unfold(A, module.kernel_size)
-                    B = B.reshape(batch_size, -1, A.shape[-1])
-                    grad_instance = torch.einsum('ijk,ilk->ijl', B, A) \
-                        .reshape([batch_size] + list(module.weight.shape))
-
-                    setattr(module.weight, 'grad_instance', grad_instance)
-                    instance_sum_squares.append((grad_instance ** 2).reshape(batch_size, -1).sum(dim=1))
-
-                    if module.bias is not None:
-                        instance_sum_squares.append((B ** 2).reshape(batch_size, -1).sum(dim=1))
-
-                elif isinstance(module, BahdanauAttentionScale):
-                    NotImplementedError("Bahdanau!")
-
-                else:
-                    raise NotImplementedError(f"Norm calculation is not implemented for {module}")
-
-        return torch.sqrt(torch.stack(instance_sum_squares, dim=1).sum(dim=1))
+        # privatize gradients
+        for module in modules:
+            for param in module.parameters(recurse=False):
+                param.grad = self._privatize_grad(param.grad_instance, reduction, actual_norm, clipping_norm)
+                del param.grad_instance
 
     @staticmethod
     def _accumulate_grad(tensor, grad):

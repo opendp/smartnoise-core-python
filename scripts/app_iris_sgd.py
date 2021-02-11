@@ -92,27 +92,3 @@ for epoch in range(epochs):
 
         accuracy, loss = evaluate(model, test_loader)
         print(f"{epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}")
-
-
-# optimizer = torch.optim.Adam(model.parameters(), learning_rate)
-# engine = PrivacyEngine()
-# engine.attach(optimizer)
-#
-# print("Epoch | Accuracy | Loss")
-#
-# for epoch in range(epochs):
-#     for batch in train_loader:
-#         loss = model.loss(batch)
-#         loss.backward()
-#         for param in model.parameters():
-#             accountant.privatize_grad(param, 'mean')
-#
-#         optimizer.step()
-#         optimizer.zero_grad()
-#         # for name, param in model.named_parameters():
-#         #     print(name, param.grad1.size())
-#         # print("epoch activations: ", epoch)
-#         # print(activations)
-#
-#     accuracy, loss = evaluate(model, test_loader)
-#     print(f"{epoch: 5d} | {accuracy.item():.2f}     | {loss.item():.2f}")
