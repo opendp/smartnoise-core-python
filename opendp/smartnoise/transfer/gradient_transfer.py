@@ -54,7 +54,7 @@ class GradientTransfer(object):
 
                 for name, grad in self.gradients.items():
                     # Use gradient selector for DP Median selection
-                    dp_gradient_selector = DPGradientSelector(self.gradients[name])
+                    dp_gradient_selector = DPGradientSelector(self.gradients[name], epsilon=1.0)
                     medians = dp_gradient_selector.select_gradient_tensor()
                     # Names are of the form "linear1.weight"
                     layer, param = name.split('.')
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     print()
 
     gradients = engine.gradients['linear1.weight']
-    gradient_selector = DPGradientSelector(gradients)
+    gradient_selector = DPGradientSelector(gradients, epsilon=1.0)
 
     print("Example mean: ")
     print(gradient_selector.tensor_mean())
