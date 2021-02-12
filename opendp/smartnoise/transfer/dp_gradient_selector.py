@@ -19,7 +19,7 @@ class DPGradientSelector(object):
     def utility_function(self, candidates=None):
         """
         Score a list of tensors based on distance to some central measure
-        :return:
+        :return: tuple of (index, distance)
         """
         candidates = candidates if candidates else self.tensor_list
         mean = self.tensor_mean()
@@ -35,9 +35,9 @@ class DPGradientSelector(object):
         """
         grad_mean = torch.FloatTensor(sum(self.tensor_list) / len(self.tensor_list))
         tensor_size = tuple(self.tensor_list[0].size())
-        candidates = self.tensor_list.copy()
+        candidates = []  # self.tensor_list.copy()
         for i in range(num_extra_samples):
-            x = np.random.normal(size=tensor_size).astype(np.float32)
+            x = np.random.normal(loc=0.0, scale=1.0, size=tensor_size).astype(np.float32)
             candidates.append(torch.FloatTensor(grad_mean + x))
         utilities = np.array([x[1].item() for x in self.utility_function(candidates)])
         sensitivity = 1.0
