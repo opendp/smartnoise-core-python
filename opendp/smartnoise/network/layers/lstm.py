@@ -81,7 +81,7 @@ class DPRNNBase(nn.Module):
         return expected_hidden_size
 
 
-class LSTMCell(nn.Module):
+class DPLSTMCell(nn.Module):
     def __init__(self, input_size: int, hidden_size: int, bias: bool = True):
         super().__init__()
         self.input_size = input_size
@@ -110,8 +110,8 @@ class DPLSTM(DPRNNBase):
         super().__init__('LSTM', *args, **kwargs)
 
         self.layers = nn.ModuleList(
-            [LSTMCell(self.input_size, self.hidden_size, bias=self.bias)] +
-            [LSTMCell(self.hidden_size, self.hidden_size, bias=self.bias) for _ in range(self.num_layers - 1)])
+            [DPLSTMCell(self.input_size, self.hidden_size, bias=self.bias)] +
+            [DPLSTMCell(self.hidden_size, self.hidden_size, bias=self.bias) for _ in range(self.num_layers - 1)])
 
     def forward(self, input, hx: Optional[Tuple[torch.Tensor, torch.Tensor]] = None):
         orig_input = input

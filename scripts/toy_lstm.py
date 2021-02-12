@@ -4,11 +4,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
-from opendp.smartnoise.network.lstm import DPLSTM
-from opendp.smartnoise.network.optimizer import PrivacyAccountant
+from opendp.smartnoise.network import ModelCoordinator, PrivacyAccountant
+from opendp.smartnoise.network.layers.bahdanau import BahdanauAttentionScale
+from opendp.smartnoise.network.layers import DPLSTM
+
 from scripts.pums_downloader import datasets
-from scripts.pums_sgd import main, ModelCoordinator, printf
+from scripts.pums_sgd import main, printf
 
 
 class LstmModule(nn.Module):

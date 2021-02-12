@@ -12,8 +12,8 @@ from typing import List
 import torch
 import torch.nn as nn
 from opendp.smartnoise.core.api import LibraryWrapper
-from opendp.smartnoise.network.attention import CatBias
-from opendp.smartnoise.network.bahdanau import BahdanauAttentionScale
+from opendp.smartnoise.network.layers.attention import CatBias
+from opendp.smartnoise.network.layers.bahdanau import BahdanauAttentionScale
 
 core_library = LibraryWrapper()
 

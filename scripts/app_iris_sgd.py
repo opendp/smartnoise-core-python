@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from sklearn.datasets import load_iris
 from torch.utils.data import random_split, DataLoader, TensorDataset
 
-from opendp.smartnoise.network.optimizer import PrivacyAccountant
+from opendp.smartnoise.network.accountant import PrivacyAccountant
 
 
 iris_sklearn = load_iris(as_frame=True)
