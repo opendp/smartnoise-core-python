@@ -45,3 +45,28 @@ class DPGradientSelector(object):
         pr = pr / np.linalg.norm(pr, ord=1)
         index = np.random.choice([i for i in range(len(candidates))], p=pr)
         return candidates[index]
+
+    def another_select_gradient_tensor(self):
+        """
+        Use exp mechanism to select one of the gradients. Use rejection sampling to
+        select from space around that gradient (consider cube around it).
+        Select from box, then compute distance to all other gradients and see if
+        it is closest to desired gradient. If yes, then it is in the polytope.
+        :return:
+        """
+        tensor_size = tuple(self.tensor_list[0].size())
+        utilities = np.array([x[1].item() for x in self.utility_function()])
+        sensitivity = 1.0
+        pr = np.exp(self.epsilon * utilities / (2.0 * sensitivity))
+        pr = pr / np.linalg.norm(pr, ord=1)
+        index = np.random.choice([i for i in range(len(self.tensor_list))], p=pr)
+        gradient = self.tensor_list[index]
+        hypercube_size = 1.0
+        valid_point_found = False
+        while valid_point_found is False:
+            candidate_point = np.random.uniform(low=0.0, high=hypercube_size, size=tensor_size)
+            gradient_dist = torch.norm(torch.abs(gradient-candidate_point))
+            other_dists = [torch.norm(torch.abs(x-candidate_point)) for x in self.tensor_list]
+            if list(filter(lambda x: x < gradient_dist, other_dists)):
+                valid_point_found = True
+                return candidate_point
