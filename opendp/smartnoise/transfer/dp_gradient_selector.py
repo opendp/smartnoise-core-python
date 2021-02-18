@@ -61,12 +61,13 @@ class DPGradientSelector(object):
         pr = pr / np.linalg.norm(pr, ord=1)
         index = np.random.choice([i for i in range(len(self.tensor_list))], p=pr)
         gradient = self.tensor_list[index]
-        hypercube_size = 1.0
+        hypercube_size = 0.1
         valid_point_found = False
         while valid_point_found is False:
-            candidate_point = np.random.uniform(low=0.0, high=hypercube_size, size=tensor_size)
+            candidate_point = gradient + \
+                              np.random.uniform(low=-hypercube_size/2., high=hypercube_size/2., size=tensor_size)
             gradient_dist = torch.norm(torch.abs(gradient-candidate_point))
             other_dists = [torch.norm(torch.abs(x-candidate_point)) for x in self.tensor_list]
-            if list(filter(lambda x: x < gradient_dist, other_dists)):
-                valid_point_found = True
+            closer_gradients = list(filter(lambda x: x < gradient_dist, other_dists))
+            if not closer_gradients:
                 return candidate_point
