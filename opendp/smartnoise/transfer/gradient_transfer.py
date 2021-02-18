@@ -99,13 +99,19 @@ if __name__ == '__main__':
 
     print("Example mean: ")
     print(gradient_selector.tensor_mean())
+    print()
 
     print("Sorted: ")
     print(gradient_selector.utility_function())
+    print()
 
     print("DP Median Selected Gradient: ")
     selected = gradient_selector.select_gradient_tensor()
     print(selected)
+
+    print("Another DP Median Selected Gradient: ")
+    another_selected = gradient_selector.another_select_gradient_tensor(cube_size=0.1, iteration_limit=1000)
+    print(another_selected)
 
     # print("Running plain: ")
     # engine.run_plain(epoch_size=20)
