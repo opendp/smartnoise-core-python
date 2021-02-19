@@ -108,10 +108,26 @@ if __name__ == '__main__':
     print("DP Median Selected Gradient: ")
     selected = gradient_selector.select_gradient_tensor()
     print(selected)
+    print()
 
-    print("Another DP Median Selected Gradient: ")
-    another_selected = gradient_selector.another_select_gradient_tensor(cube_size=0.1, iteration_limit=1000)
+    print("Estimated cube size: ")
+    distance_measures = gradient_selector.determine_distance_measures()
+    print(distance_measures)
+    print()
+
+    print("Another DP Median Selected Gradient: (Use Mean Distance):")
+    another_selected = gradient_selector.another_select_gradient_tensor(cube_size=None, iteration_limit=100,
+                                                                        use_mean_distance=True,
+                                                                        verbose=True)
     print(another_selected)
+    print()
+
+    print("Another DP Median Selected Gradient: (Use Closest Gradient Distance)")
+    another_selected = gradient_selector.another_select_gradient_tensor(cube_size=None, iteration_limit=100,
+                                                                        use_mean_distance=False,
+                                                                        verbose=True)
+    print(another_selected)
+    print()
 
     # print("Running plain: ")
     # engine.run_plain(epoch_size=20)
