@@ -112,7 +112,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 ### SmartNoise Core Documentation
 
-- [Python library documentation](https://opendifferentialprivacy.github.io/smartnoise-core-python)
+- [Python library documentation](https://opendp.github.io/smartnoise-core-python)
 
 
 ## Communication
