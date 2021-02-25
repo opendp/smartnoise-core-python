@@ -25,8 +25,9 @@ class DPRNNBase(nn.Module):
 
     def __init__(self, mode: str, input_size: int, hidden_size: int,
                  num_layers: int = 1, bias: bool = True, batch_first: bool = False,
-                 dropout: float = 0., bidirectional: bool = False, proj_size: int = 0) -> None:
+                 dropout: float = 0., bidirectional: bool = False) -> None:
         super().__init__()
+        print('lstm base!')
         self.mode = mode
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -35,12 +36,9 @@ class DPRNNBase(nn.Module):
         self.batch_first = batch_first
         self.dropout = float(dropout)
         self.bidirectional = bidirectional
-        self.proj_size = proj_size
 
         if bidirectional:
             raise NotImplementedError("bidirectional lstm is not implemented.")
-        if proj_size != 0:
-            raise NotImplementedError("non-zero proj_size is not implemented.")
 
         if not isinstance(dropout, numbers.Number) or not 0 <= dropout <= 1 or \
                 isinstance(dropout, bool):
@@ -104,10 +102,26 @@ class DPLSTMCell(nn.Module):
 
         return h_1, c_1
 
+    @staticmethod
+    def replace(module: nn.LSTMCell):
+        replacement_cell = DPLSTMCell(
+            input_size=module.input_size,
+            hidden_size=module.hidden_size,
+            bias=module.bias)
+
+        replacement_cell.input_lin.weight = getattr(module, f'weight_ih')
+        replacement_cell.hidden_lin.weight = getattr(module, f'weight_hh')
+        if module.bias:
+            replacement_cell.input_lin.bias = getattr(module, f'bias_ih')
+            replacement_cell.hidden_lin.bias = getattr(module, f'bias_hh')
+
+        return replacement_cell
+
 
 class DPLSTM(DPRNNBase):
     def __init__(self, *args, **kwargs):
         super().__init__('LSTM', *args, **kwargs)
+        print('dplstm init!')
 
         self.layers = nn.ModuleList(
             [DPLSTMCell(self.input_size, self.hidden_size, bias=self.bias)] +
@@ -129,9 +143,8 @@ class DPLSTM(DPRNNBase):
 
         if hx is None:
             num_directions = 2 if self.bidirectional else 1
-            real_hidden_size = self.proj_size if self.proj_size > 0 else self.hidden_size
             h = torch.zeros(self.num_layers * num_directions,
-                            max_batch_size, real_hidden_size,
+                            max_batch_size, self.hidden_size,
                             dtype=input.dtype, device=input.device)
             c = torch.zeros(self.num_layers * num_directions,
                             max_batch_size, self.hidden_size,
@@ -181,3 +194,24 @@ class DPLSTM(DPRNNBase):
                                'Expected hidden[0] size {}, got {}')
         self.check_hidden_size(hidden[1], expected_hidden_size,
                                'Expected hidden[1] size {}, got {}')
+
+    @staticmethod
+    def replace(module: nn.LSTM):
+        replacement_module = DPLSTM(
+            input_size=module.input_size,
+            hidden_size=module.hidden_size,
+            num_layers=module.num_layers,
+            bias=module.bias,
+            batch_first=module.batch_first,
+            dropout=module.dropout,
+            bidirectional=module.bidirectional)
+
+        # reuse the parameter matrices from the original model
+        for i, layer in enumerate(replacement_module.layers):
+            layer.input_lin.weight = getattr(module, f'weight_ih_l{i}')
+            layer.hidden_lin.weight = getattr(module, f'weight_hh_l{i}')
+            if module.bias:
+                layer.input_lin.bias = getattr(module, f'bias_ih_l{i}')
+                layer.hidden_lin.bias = getattr(module, f'bias_hh_l{i}')
+
+        return replacement_module

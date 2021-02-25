@@ -5,15 +5,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 
-try:
-    from espresso.modules.speech_attention import BaseAttention
-except ImportError:
-    class BaseAttention(object):
-        def __init__(self, _query_dim, _value_dim, _embed_dim):
-            raise ImportError("espresso is not installed")
+from opendp.smartnoise.network.layers.base import InstanceGrad
 
-
-class BahdanauAttentionScale(nn.Module):
+class DPBahdanauAttentionScale(nn.Module, InstanceGrad):
     def __init__(self, embed_dim, normalize):
         super().__init__()
         self.v = Parameter(torch.Tensor(embed_dim))
@@ -32,15 +26,29 @@ class BahdanauAttentionScale(nn.Module):
             x = x * self.g / torch.norm(self.v)
         return x * self.v
 
+    def update_instance_grad(self, activation, backprop):
+        ba = backprop * activation
+        v_grad_instance = torch.einsum('n...i->ni', ba)
 
-class BahdanauAttention(BaseAttention):
+        if self.normalize:
+            g_grad_instance = torch.einsum('n...->n', ba * self.v) / torch.norm(self.v)
+            self._accumulate_instance_grad(self.g, g_grad_instance.unsqueeze(-1))
+            v_grad_instance *= self.g / torch.norm(self.v)
+
+        self._accumulate_instance_grad(self.v, v_grad_instance)
+
+
+class DPBahdanauAttention(nn.Module):
     """Bahdanau Attention"""
 
     def __init__(self, query_dim, value_dim, embed_dim, normalize=True):
-        super().__init__(query_dim, value_dim, embed_dim)
+        super().__init__()
+        self.query_dim = query_dim
+        self.value_dim = value_dim
+        self.embed_dim = embed_dim
         self.query_proj = nn.Linear(self.query_dim, embed_dim, bias=normalize)
         self.value_proj = nn.Linear(self.value_dim, embed_dim, bias=False)
-        self.scaler = BahdanauAttentionScale(embed_dim, normalize)
+        self.scaler = DPBahdanauAttentionScale(embed_dim, normalize)
 
         self.reset_parameters()
 
@@ -69,3 +77,19 @@ class BahdanauAttention(BaseAttention):
         next_state = attn_scores
 
         return context, attn_scores, next_state
+
+    @staticmethod
+    def replace(module):
+        from espresso.modules.speech_attention import BahdanauAttention
+        assert type(module) == BahdanauAttention
+
+        replacement_module = DPBahdanauAttention(
+            query_dim=module.query_dim,
+            value_dim=module.value_dim,
+            embed_dim=module.embed_dim,
+            normalize=module.normalize)
+        replacement_module.scaler.v = module.v
+        if module.normalize:
+            replacement_module.scaler.g = module.g
+
+        return replacement_module

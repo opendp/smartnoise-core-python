@@ -7,8 +7,10 @@ import torch.nn.functional as F
 from torch.nn.modules.linear import _LinearWithBias
 from torch.tensor import Tensor
 
+from opendp.smartnoise.network.layers.base import InstanceGrad
 
-class CatBias(nn.Module):
+
+class DPCatBias(nn.Module, InstanceGrad):
     """
     The biasing matrix needs a gradient.
     Instead of attempting to reconstruct the backprop chain within DPMultiHeadAttention,
@@ -19,6 +21,10 @@ class CatBias(nn.Module):
 
     def forward(self, query):
         return torch.cat([query, self.bias.repeat(1, query.size(1), 1)])
+
+    def update_instance_grad(self, activation, backprop):
+        # grab the last column of the backprop for the layer, which corresponds to the cat'ed column
+        self._accumulate_grad(self.bias, backprop[:, -1])
 
 
 class DPMultiheadAttention(nn.Module):
@@ -68,8 +74,8 @@ class DPMultiheadAttention(nn.Module):
         self.out_proj = _LinearWithBias(embed_dim, embed_dim)
 
         if add_bias_kv:
-            self.bias_k = CatBias(embed_dim)
-            self.bias_v = CatBias(embed_dim)
+            self.bias_k = DPCatBias(embed_dim)
+            self.bias_v = DPCatBias(embed_dim)
         else:
             self.bias_k = self.bias_v = None
 

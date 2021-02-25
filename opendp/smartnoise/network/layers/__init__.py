@@ -1,3 +1,3 @@
 from .attention import DPMultiheadAttention
-from .bahdanau import BahdanauAttention
+from .bahdanau import DPBahdanauAttention
 from .lstm import DPLSTM, DPLSTMCell

@@ -6,19 +6,48 @@ A, activations: inputs into current module
 B, backprops: backprop values (aka Jacobian-vector product) observed at current module
 
 """
+import abc
+import copy
 import math
 from typing import List
 
 import torch
 import torch.nn as nn
+from torch.nn.parameter import Parameter
+
 from opendp.smartnoise.core.api import LibraryWrapper
-from opendp.smartnoise.network.layers.attention import CatBias
-from opendp.smartnoise.network.layers.bahdanau import BahdanauAttentionScale
+from opendp.smartnoise.network.layers.base import InstanceGrad
+
+from opendp.smartnoise.network.layers.attention import DPCatBias
+from opendp.smartnoise.network.layers.bahdanau import DPBahdanauAttention
+from opendp.smartnoise.network.layers.lstm import DPLSTM, DPLSTMCell
 
 core_library = LibraryWrapper()
 
-CHECK_CORRECTNESS = True
+CHECK_CORRECTNESS = False
 torch.set_printoptions(sci_mode=False)
+
+REPLACEMENT_MODULES = {
+    nn.LSTM: DPLSTM,
+    nn.LSTMCell: DPLSTMCell,
+    'BahdanauAttention': DPBahdanauAttention
+}
+
+
+class _SharedParameter(Parameter):
+    @classmethod
+    def mark(cls, parameter):
+        assert isinstance(parameter, Parameter)
+        parameter.__class__ = cls
+
+    def unmark(self):
+        self.__class__ = Parameter
+
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memodict={}):
+        return self
 
 
 class PrivacyAccountant(object):
@@ -30,7 +59,17 @@ class PrivacyAccountant(object):
         :param step_delta:
         :param hook: whether to call hook() on __init__
         """
-        self.model = model
+
+        # copy network architecture, but share parameters
+        for param in model.parameters():
+            _SharedParameter.mark(param)
+        self.model = copy.deepcopy(model)
+        for param in model.parameters():
+            param.unmark()
+
+        # restructure the copied network architecture in-place, without breaking references to original parameters
+        self._replace_modules(self.model)
+
         self._hooks_enabled = False  # work-around for https://github.com/pytorch/pytorch/issues/25723
         self.step_epsilon = step_epsilon
         self.step_delta = step_delta
@@ -40,6 +79,26 @@ class PrivacyAccountant(object):
 
         if not disable and hook:
             self.hook()
+
+    @staticmethod
+    def _replace_modules(module):
+        """
+        replaces modules with DP-capable versions of modules throughout a network
+        """
+
+        for attr_str in dir(module):
+            target_attr = getattr(module, attr_str)
+
+            replacement_module = REPLACEMENT_MODULES.get(type(target_attr))
+            if not replacement_module:
+                replacement_module = REPLACEMENT_MODULES.get(target_attr.__class__.__name__)
+            if replacement_module:
+                replacement_attr = replacement_module.replace(target_attr)
+                setattr(module, attr_str, replacement_attr)
+
+        # recurse down child modules
+        for name, child_module in module.named_children():
+            PrivacyAccountant._replace_modules(child_module)
 
     def hook(self):
         """
@@ -162,8 +221,10 @@ class PrivacyAccountant(object):
         for module in modules:
             # pair forward activations with reversed backpropagations
             for A, B in zip(module.activations, module.backprops):
+                if isinstance(module, InstanceGrad):
+                    module.update_instance_grad(A, B)
 
-                if isinstance(module, nn.Embedding):
+                elif isinstance(module, nn.Embedding):
                     A = A.unsqueeze(-1).expand(*A.shape, module.embedding_dim)
                     shape = batch_size, -1, module.embedding_dim
 
@@ -171,7 +232,7 @@ class PrivacyAccountant(object):
                     grad_instance = torch.zeros([batch_size, *module.weight.shape])
                     grad_instance.scatter_add_(1, A.reshape(*shape), B.reshape(*shape))
 
-                    self._accumulate_grad(module.weight, grad_instance)
+                    InstanceGrad._accumulate_instance_grad(module.weight, grad_instance)
 
                     # # reconstructs exact grad
                     # grad = torch.zeros_like(module.weight.grad)
@@ -182,29 +243,15 @@ class PrivacyAccountant(object):
                     grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
                     # if isinstance(module, TAG2Linear):
                     #     print(torch.sum(grad_instance, dim=0)[0])
-                    self._accumulate_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
+                    InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
                     if module.bias is not None:
-                        self._accumulate_grad(module.bias, torch.einsum('n...i->ni', B))
+                        InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
 
-                elif isinstance(module, nn.Conv2d):
-                    # TODO: testing
-                    self._accumulate_grad(module.weight, module.weight.grad_instance)
-                    if module.bias is not None:
-                        self._accumulate_grad(module.bias, torch.sum(B.reshape(batch_size, -1, A.shape[-1]), dim=2))
-
-                elif isinstance(module, CatBias):
-                    # grab the last column of the backprop for the layer, which corresponds to the cat'ed column
-                    self._accumulate_grad(module.bias, B[:, -1])
-
-                elif isinstance(module, BahdanauAttentionScale):
-                    v_grad_instance = torch.einsum('n...i->ni', B * A)
-
-                    if module.normalize:
-                        g_grad_instance = torch.einsum('n...->n', B * A * module.v) / torch.norm(module.v)
-                        self._accumulate_grad(module.g, g_grad_instance.unsqueeze(-1))
-                        v_grad_instance *= module.g / torch.norm(module.v)
-
-                    self._accumulate_grad(module.v, v_grad_instance)
+                # elif isinstance(module, nn.Conv2d):
+                #     # TODO: testing
+                #     self._accumulate_grad(module.weight, module.weight.grad_instance)
+                #     if module.bias is not None:
+                #         self._accumulate_grad(module.bias, torch.sum(B.reshape(batch_size, -1, A.shape[-1]), dim=2))
 
                 else:
                     raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
@@ -229,13 +276,6 @@ class PrivacyAccountant(object):
             for param in module.parameters(recurse=False):
                 param.grad = self._privatize_grad(param.grad_instance, reduction, actual_norm, clipping_norm)
                 del param.grad_instance
-
-    @staticmethod
-    def _accumulate_grad(tensor, grad):
-        if hasattr(tensor, 'grad_instance'):
-            tensor.grad_instance += grad.detach()
-        else:
-            tensor.grad_instance = grad.detach()
 
     @staticmethod
     def _check_grad(param, reduction):

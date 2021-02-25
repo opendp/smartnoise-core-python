@@ -130,7 +130,7 @@ def train(
             if coordinator.step == private_step_limit:
                 return history
 
-            loss = model.loss(batch)
+            loss = accountant.model.loss(batch)
             loss.backward()
 
             # privatize the gradient and record usage
