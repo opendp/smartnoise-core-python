@@ -73,13 +73,25 @@ class DPGradientSelector(object):
                                                                  for x in self.tensor_list])))[:num_points]
         return sum(n_closest_points) / len(n_closest_points)
 
-    def another_select_gradient_tensor(self, cube_size=None, iteration_limit=1000, use_mean_distance=False, verbose=False):
+    def another_select_gradient_tensor(self,
+                                       cube_size=None,
+                                       min_cube_size=None,
+                                       iteration_limit=1000,
+                                       use_mean_distance=False,
+                                       verbose=False,
+                                       debug=False):
         """
         Use exp mechanism to select one of the gradients. Use rejection sampling to
         select from space around that gradient (consider cube around it).
         Select from box, then compute distance to all other gradients and see if
         it is closest to desired gradient. If yes, then it is in the polytope.
-        :return:
+        :param cube_size: Size of starting hypercube to sample from
+        :param min_cube_size: Size of smallest hypercube allowed, after which search will stop
+        :param iteration_limit: Number of attempts per hypercube size
+        :param use_mean_distance: If cube_size not given, use mean distance between gradients as hypercube size
+        :param verbose: Print results
+        :param debug: Print updates for each iteration
+        :return: dict, e.g. {'point': candidate_point, 'iterations': i, 'cube_size': cube_size}
         """
         tensor_size = tuple(self.tensor_list[0].size())
         utilities = np.array([x[1].item() for x in self.utility_function()])
@@ -93,15 +105,14 @@ class DPGradientSelector(object):
                 cube_size = self.determine_distance_measures()['average']
             else:
                 cube_size = self.determine_cube_size(gradient=gradient)
-        min_cube_size = cube_size / 100.
+        min_cube_size = min_cube_size if min_cube_size else cube_size / 100.
 
         while True:
             total_iterations = 0
             for i in range(iteration_limit):
-                # if verbose:
-                #     print(f"Iter: {i}\tCube Size: {cube_size}")
-                candidate_point = gradient + \
-                                  np.random.uniform(low=-cube_size/2., high=cube_size/2., size=tensor_size)
+                if debug:
+                    print(f"Iter: {i}\tCube Size: {cube_size}")
+                candidate_point = gradient + np.random.uniform(low=-cube_size/2., high=cube_size/2., size=tensor_size)
                 gradient_dist = torch.norm(torch.abs(gradient-candidate_point))
                 other_dists = [torch.norm(torch.abs(x-candidate_point)) for x in self.tensor_list]
                 closer_gradients = list(filter(lambda x: x < gradient_dist, other_dists))
