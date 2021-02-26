@@ -13,7 +13,7 @@ from torch.multiprocessing import Process
 from torch.utils.data import DataLoader, TensorDataset
 
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
-from opendp.smartnoise.transfer.gradient_transfer import GradientTransfer
+from gradient_transfer import GradientTransfer
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
 
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
@@ -218,7 +218,7 @@ def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuf
     test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
 
     model = PumsModule(len(problem['predictors']), 2)
-
+    
     accountant = PrivacyAccountant(model, step_epsilon=0.001, disable=public)
     coordinator = ModelCoordinator(model, rank, size, private_step_limit, federation_scheme)
 
@@ -290,24 +290,50 @@ def main(worker):
 
 
 def main_sample_aggregate():
+    print("Training with DP")
     rank = 0
     epochs = 1
 
     # load train data specific to the current rank
     train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
-    for x in train_loader:
-        print(x)
-        break
+
     test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
     dataloader = {"tr_loader": train_loader, "cv_loader": test_loader}
 
     model = PumsModule(len(problem['predictors']), 2)
+    model.cuda()
+
     optimizer = torch.optim.SGD(model.parameters(), .1)
-    trainer = GradientTransfer(dataloader, model, optimizer, epochs)
-    trainer.train()
+    trainer = GradientTransfer(dataloader, model, optimizer, epochs=epochs)
+    trainer.train(private=True)
 
 
+def main(private=True):
+    print(f"Private: {private}")
+    rank = 0
+    epochs = 10
+    batches = 10
+    batch_size = 10
+    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
+
+    test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
+    dataloader = {"tr_loader": train_loader, "cv_loader": test_loader}
+
+    model = PumsModule(len(problem['predictors']), 2)
+    model.cuda()
+
+    optimizer = torch.optim.SGD(model.parameters(), .1)
+
+    trainer = GradientTransfer(dataloader, model, optimizer, epochs=epochs)
+    if private:
+        trainer.train(batches=batches, batch_size=batch_size)
+    else:
+        trainer.train_plain(batches=batches, batch_size=batch_size)
+
+    
 if __name__ == "__main__":
-    print("Rank | Epoch | Accuracy | Loss")
+    # print("Rank | Epoch | Accuracy | Loss")
     # main(worker=run_pums_worker)
-    main_sample_aggregate()
+    main(private=False)
+    main(private=True)
+    
