@@ -74,6 +74,8 @@ class DPGradientSelector(object):
         """
         n_closest_points = list(sorted(filter(lambda x: x > 0., [torch.linalg.norm(torch.abs(x.cpu()-gradient))
                                                                  for x in self.tensor_list])))[:num_points]
+        if not n_closest_points:
+            raise ValueError("No close points")
         return sum(n_closest_points) / len(n_closest_points)
 
     def another_select_gradient_tensor(self,
@@ -105,17 +107,20 @@ class DPGradientSelector(object):
         pr = np.exp(self.epsilon * utilities / (2.0 * sensitivity))
         pr = pr / np.linalg.norm(pr, ord=1)
         try:
-            index = np.random.choice([i for i in range(len(self.tensor_list))], p=pr)        
+            index = np.random.choice([i for i in range(len(self.tensor_list))], p=pr)
         except ValueError as ex:
-            print(f"Pr: {pr}")
-            raise(ex)
+            index = np.random.choice([i for i in range(len(self.tensor_list))])
+            return {'point':  self.tensor_list[index].cpu(), 'iterations': 0, 'cube_size': cube_size}
 
         gradient = self.tensor_list[index].cpu()
         if not cube_size:
             if use_mean_distance:
                 cube_size = self.determine_distance_measures()['average']
             else:
-                cube_size = self.determine_cube_size(gradient=gradient)
+                try:
+                    cube_size = self.determine_cube_size(gradient=gradient)
+                except ValueError:
+                    cube_size = 1.0
         min_cube_size = min_cube_size if min_cube_size else cube_size / 100.
 
         while True:
@@ -133,7 +138,7 @@ class DPGradientSelector(object):
                 if not closer_gradients:
                     if verbose:
                         print(f"Found candidate point after {total_iterations} iterations with cube size {cube_size}")
-                    return {'point': candidate_point, 'iterations': i, 'cube_size': cube_size}
+                    return {'point': gradient, 'iterations': i, 'cube_size': cube_size}
                 total_iterations += 1
             if cube_size <= min_cube_size:
                 break

@@ -90,7 +90,7 @@ class PumsModule(nn.Module):
     def loss(self, batch):
         inputs, targets = batch
         outputs = self(inputs)
-        return torch.nn.NLLLoss()(outputs, targets)
+        return F.cross_entropy(outputs, targets)
 
     def score(self, batch):
         with torch.no_grad():
@@ -311,9 +311,9 @@ def main_sample_aggregate():
 
 
 def burn_in_alabama():
-    epochs = 10
-    batches = 10
-    batch_size = 10
+    epochs = 2
+    batches = 50
+    batch_size = 3
 
     dataset_dicts = [
         {'year': 2010, 'record_type': 'person', 'state': 'al'},
@@ -324,21 +324,52 @@ def burn_in_alabama():
     datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
 
     burn_in_data = datasets['al']
+    test_data = datasets['vt'] + datasets['ct'] + datasets['ma']
 
     model = PumsModule(len(problem['predictors']), 2)
     model.cuda()
     data_loaders = {
-        'burn_in_loader': DataLoader(burn_in_data, batch_size=10, shuffle=False),
-        'cv_loaders': [DataLoader(datasets[x], batch_size=10, shuffle=False) for x in ['ct', 'ma', 'vt']]
+        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
+        'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True)
+    }
+    optimizer = torch.optim.SGD(model.parameters(), .1)
+    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
+    return {'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True),
+            'result': trainer.train(batches=batches, batch_size=batch_size)}
+
+
+def train_on_vt():
+    epochs = 2
+    batches = 15
+    batch_size = 3
+
+    dataset_dicts = [
+        {'year': 2010, 'record_type': 'person', 'state': 'al'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
+        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
+    ]
+    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
+
+    burn_in_data = datasets['al']
+    train_data = [datasets['vt']]
+    test_data = datasets['vt'] + datasets['ct'] + datasets['ma']
+
+    model = PumsModule(len(problem['predictors']), 2)
+    model.cuda()
+    data_loaders = {
+        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
+        'tr_loaders': [DataLoader(x, batch_size=10, shuffle=False) for x in train_data],
+        'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True)
     }
     optimizer = torch.optim.SGD(model.parameters(), .1)
     trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
     return trainer.train(batches=batches, batch_size=batch_size)
 
 
-def train_on_vt():
-    epochs = 10
-    batches = 1
+def train_on_all(cv_loader):
+    epochs = 2
+    batches = 10
     batch_size = 1
 
     dataset_dicts = [
@@ -350,42 +381,15 @@ def train_on_vt():
     datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
 
     burn_in_data = datasets['al']
-    train_data = datasets['vt']
+    train_data = [datasets['vt'], datasets['ct'], datasets['ma']]
+    test_data = datasets['vt'] + datasets['ct'] + datasets['ma']
 
     model = PumsModule(len(problem['predictors']), 2)
     model.cuda()
     data_loaders = {
         'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
-        'tr_loader': DataLoader(train_data, batch_size=10, shuffle=True),
-        'cv_loaders': [DataLoader(datasets[x], batch_size=1000, shuffle=True) for x in ['ct', 'ma', 'vt']]
-    }
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
-    return trainer.train(batches=batches, batch_size=batch_size)
-
-
-def train_on_all():
-    epochs = 10
-    batches = 10
-    batch_size = 2
-
-    dataset_dicts = [
-        {'year': 2010, 'record_type': 'person', 'state': 'al'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
-        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
-    ]
-    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
-
-    burn_in_data = datasets['al']
-    train_data = datasets['vt'] + datasets['ct'] + datasets['ma']
-
-    model = PumsModule(len(problem['predictors']), 2)
-    model.cuda()
-    data_loaders = {
-        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
-        'tr_loader': DataLoader(train_data, batch_size=10, shuffle=True),
-        'cv_loaders': [DataLoader(datasets[x], batch_size=1000, shuffle=True) for x in ['ct', 'ma', 'vt']]
+        'tr_loaders': [DataLoader(x, batch_size=10, shuffle=False) for x in train_data],
+        'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True) if not cv_loader else cv_loader
     }
     optimizer = torch.optim.SGD(model.parameters(), .1)
     trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
@@ -452,10 +456,14 @@ if __name__ == "__main__":
     #     with open('private_result.pkl', 'wb') as outfile:
     #        pickle.dump(private_result, outfile)
 
-    # print("Burn in on Alabama")
-    # burn_in_alabama_results = burn_in_alabama()
+    print("Burn in on Alabama")
+    result = burn_in_alabama()
+    al_df = pd.DataFrame(result['result'])
+    cv_loader = result['cv_loader']
 
     # print("Train on Vermont")
     # train_on_vt_results = train_on_vt()
+    # df = pd.DataFrame(train_on_vt_results)
 
-    train_on_all_results = train_on_all()
+    result = train_on_all(cv_loader)
+    df = pd.DataFrame(result)
