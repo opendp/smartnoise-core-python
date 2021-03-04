@@ -1,5 +1,6 @@
 import json
 import os
+import pickle
 import sys
 from multiprocessing import Queue
 from random import randint
@@ -10,11 +11,12 @@ import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.multiprocessing import Process
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader, TensorDataset, SubsetRandomSampler
 
 from opendp.smartnoise.network.optimizer import PrivacyAccountant
 from gradient_transfer import GradientTransfer
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
+
 
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
 ACTIVE_PROBLEM = 'ambulatory'
@@ -88,7 +90,7 @@ class PumsModule(nn.Module):
     def loss(self, batch):
         inputs, targets = batch
         outputs = self(inputs)
-        return F.cross_entropy(outputs, targets)
+        return torch.nn.NLLLoss()(outputs, targets)
 
     def score(self, batch):
         with torch.no_grad():
@@ -308,32 +310,122 @@ def main_sample_aggregate():
     trainer.train(private=True)
 
 
+def burn_in_alabama():
+    epochs = 10
+    batches = 10
+    batch_size = 10
+
+    dataset_dicts = [
+        {'year': 2010, 'record_type': 'person', 'state': 'al'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
+        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
+    ]
+    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
+
+    burn_in_data = datasets['al']
+
+    model = PumsModule(len(problem['predictors']), 2)
+    model.cuda()
+    data_loaders = {
+        'burn_in_loader': DataLoader(burn_in_data, batch_size=10, shuffle=False),
+        'cv_loaders': [DataLoader(datasets[x], batch_size=10, shuffle=False) for x in ['ct', 'ma', 'vt']]
+    }
+    optimizer = torch.optim.SGD(model.parameters(), .1)
+    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
+    return trainer.train(batches=batches, batch_size=batch_size)
+
+
+def train_on_vt():
+    epochs = 10
+    batches = 1
+    batch_size = 1
+
+    dataset_dicts = [
+        {'year': 2010, 'record_type': 'person', 'state': 'al'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
+        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
+    ]
+    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
+
+    burn_in_data = datasets['al']
+    train_data = datasets['vt']
+
+    model = PumsModule(len(problem['predictors']), 2)
+    model.cuda()
+    data_loaders = {
+        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
+        'tr_loader': DataLoader(train_data, batch_size=10, shuffle=True),
+        'cv_loaders': [DataLoader(datasets[x], batch_size=1000, shuffle=True) for x in ['ct', 'ma', 'vt']]
+    }
+    optimizer = torch.optim.SGD(model.parameters(), .1)
+    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
+    return trainer.train(batches=batches, batch_size=batch_size)
+
+
 def main(private=True):
+    import numpy as np
+
     print(f"Private: {private}")
     rank = 0
     epochs = 10
     batches = 10
     batch_size = 10
-    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
+    validation_split = 0.2
+    dataset_dicts = [
+        {'year': 2010, 'record_type': 'person', 'state': 'al'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
+        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
+    ]
+    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
 
-    test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
-    dataloader = {"tr_loader": train_loader, "cv_loader": test_loader}
+    # for state, data in datasets.items():
+    #     data_size = len(data)
+    #     indices = list(range(data_size))
+    #     split = int(np.floor(validation_split * data_size))
+    #     train_indices, val_indices = indices[split:], indices[:split]
+    #     train_sampler = SubsetRandomSampler(train_indices)
+    #     valid_sampler = SubsetRandomSampler(val_indices)
+    #     train_loader = torch.utils.data.DataLoader(data, batch_size=batch_size,
+    #                                        sampler=train_sampler)
+    #     validation_loader = torch.utils.data.DataLoader(data, batch_size=batch_size,
+    #                                             sampler=valid_sampler)
+
+    data_loaders = dict((state, DataLoader(x, batch_size=1000, shuffle=True), ) for state, x in datasets.items())
+
+    print(data_loaders)
+    #     train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
+
+#     test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
+#     dataloader = {"tr_loader": train_loader, "cv_loader": test_loader}
 
     model = PumsModule(len(problem['predictors']), 2)
     model.cuda()
 
     optimizer = torch.optim.SGD(model.parameters(), .1)
 
-    trainer = GradientTransfer(dataloader, model, optimizer, epochs=epochs)
+    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
     if private:
-        trainer.train(batches=batches, batch_size=batch_size)
+        return trainer.train(batches=batches, batch_size=batch_size)
     else:
-        trainer.train_plain(batches=batches, batch_size=batch_size)
+        return trainer.train_plain(batches=batches, batch_size=batch_size)
 
     
 if __name__ == "__main__":
-    # print("Rank | Epoch | Accuracy | Loss")
-    # main(worker=run_pums_worker)
-    main(private=False)
-    main(private=True)
-    
+
+    #     public_result = main(private=False)
+    #     with open('public_result.pkl', 'wb') as outfile:
+    #        pickle.dump(public_result, outfile)
+
+    # private_result = main(private=True)
+    # print(private_result)
+    #     with open('private_result.pkl', 'wb') as outfile:
+    #        pickle.dump(private_result, outfile)
+
+    # print("Burn in on Alabama")
+    # burn_in_alabama_results = burn_in_alabama()
+
+    print("Train on Vermont")
+    train_on_vt_results = train_on_vt()
