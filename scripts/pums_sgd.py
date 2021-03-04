@@ -364,6 +364,34 @@ def train_on_vt():
     return trainer.train(batches=batches, batch_size=batch_size)
 
 
+def train_on_all():
+    epochs = 10
+    batches = 10
+    batch_size = 2
+
+    dataset_dicts = [
+        {'year': 2010, 'record_type': 'person', 'state': 'al'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
+        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
+    ]
+    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
+
+    burn_in_data = datasets['al']
+    train_data = datasets['vt'] + datasets['ct'] + datasets['ma']
+
+    model = PumsModule(len(problem['predictors']), 2)
+    model.cuda()
+    data_loaders = {
+        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
+        'tr_loader': DataLoader(train_data, batch_size=10, shuffle=True),
+        'cv_loaders': [DataLoader(datasets[x], batch_size=1000, shuffle=True) for x in ['ct', 'ma', 'vt']]
+    }
+    optimizer = torch.optim.SGD(model.parameters(), .1)
+    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
+    return trainer.train(batches=batches, batch_size=batch_size)
+
+
 def main(private=True):
     import numpy as np
 
@@ -427,5 +455,7 @@ if __name__ == "__main__":
     # print("Burn in on Alabama")
     # burn_in_alabama_results = burn_in_alabama()
 
-    print("Train on Vermont")
-    train_on_vt_results = train_on_vt()
+    # print("Train on Vermont")
+    # train_on_vt_results = train_on_vt()
+
+    train_on_all_results = train_on_all()

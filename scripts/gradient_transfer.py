@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from torch.utils.data import DataLoader
 from dp_gradient_select import DPGradientSelector
 
-torch.manual_seed(2)
+torch.manual_seed(5)
 
 
 class GradientTransfer(object):
