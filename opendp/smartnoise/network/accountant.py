@@ -6,7 +6,6 @@ A, activations: inputs into current module
 B, backprops: backprop values (aka Jacobian-vector product) observed at current module
 
 """
-import abc
 import copy
 import math
 from typing import List
@@ -18,14 +17,12 @@ from torch.nn.parameter import Parameter
 from opendp.smartnoise.core.api import LibraryWrapper
 from opendp.smartnoise.network.layers.base import InstanceGrad
 
-from opendp.smartnoise.network.layers.attention import DPCatBias
 from opendp.smartnoise.network.layers.bahdanau import DPBahdanauAttention
 from opendp.smartnoise.network.layers.lstm import DPLSTM, DPLSTMCell
 
 core_library = LibraryWrapper()
 
 CHECK_CORRECTNESS = False
-torch.set_printoptions(sci_mode=False)
 
 REPLACEMENT_MODULES = {
     nn.LSTM: DPLSTM,
@@ -51,7 +48,7 @@ class _SharedParameter(Parameter):
 
 
 class PrivacyAccountant(object):
-    def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True, disable=False):
+    def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True, disable=False, replacement_modules=None):
         """
         Utility for tracking privacy usage
         :param model: pyTorch model
@@ -67,8 +64,10 @@ class PrivacyAccountant(object):
         for param in model.parameters():
             param.unmark()
 
+        replacement_modules = {**REPLACEMENT_MODULES, **(replacement_modules or {})}
+
         # restructure the copied network architecture in-place, without breaking references to original parameters
-        self._replace_modules(self.model)
+        self._replace_modules(self.model, replacement_modules)
 
         self._hooks_enabled = False  # work-around for https://github.com/pytorch/pytorch/issues/25723
         self.step_epsilon = step_epsilon
@@ -81,24 +80,27 @@ class PrivacyAccountant(object):
             self.hook()
 
     @staticmethod
-    def _replace_modules(module):
+    def _replace_modules(module, replacement_modules):
         """
         replaces modules with DP-capable versions of modules throughout a network
         """
 
         for attr_str in dir(module):
             target_attr = getattr(module, attr_str)
+            # ignore anything that isn't a module
+            if not issubclass(type(target_attr), nn.Module):
+                continue
 
-            replacement_module = REPLACEMENT_MODULES.get(type(target_attr))
+            replacement_module = replacement_modules.get(type(target_attr))
             if not replacement_module:
-                replacement_module = REPLACEMENT_MODULES.get(target_attr.__class__.__name__)
+                replacement_module = replacement_modules.get(target_attr.__class__.__name__)
             if replacement_module:
                 replacement_attr = replacement_module.replace(target_attr)
                 setattr(module, attr_str, replacement_attr)
 
         # recurse down child modules
         for name, child_module in module.named_children():
-            PrivacyAccountant._replace_modules(child_module)
+            PrivacyAccountant._replace_modules(child_module, replacement_modules)
 
     def hook(self):
         """
@@ -241,17 +243,9 @@ class PrivacyAccountant(object):
 
                 elif isinstance(module, nn.Linear):
                     grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
-                    # if isinstance(module, TAG2Linear):
-                    #     print(torch.sum(grad_instance, dim=0)[0])
                     InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
                     if module.bias is not None:
                         InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
-
-                # elif isinstance(module, nn.Conv2d):
-                #     # TODO: testing
-                #     self._accumulate_grad(module.weight, module.weight.grad_instance)
-                #     if module.bias is not None:
-                #         self._accumulate_grad(module.bias, torch.sum(B.reshape(batch_size, -1, A.shape[-1]), dim=2))
 
                 else:
                     raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
@@ -307,7 +301,7 @@ class PrivacyAccountant(object):
         # reduce
         grad = PrivacyAccountant._reduce_grad(grad_instance, reduction)
         # noise
-        self._noise_grad_(grad, clipping_norm, reduction, grad_instance.shape[0])
+        grad = self._noise_grad(grad, clipping_norm, reduction, grad_instance.shape[0])
 
         return grad
 
@@ -322,8 +316,12 @@ class PrivacyAccountant(object):
     def _reduce_grad(grad_instance, reduction):
         return {'sum': torch.sum, 'mean': torch.mean}[reduction](grad_instance, dim=0)
 
-    def _noise_grad_(self, grad, clipping_norm, reduction, n):
+    def _noise_grad(self, grad, clipping_norm, reduction, n):
         sensitivity = clipping_norm / {'sum': 1., 'mean': n}[reduction]
+        device = grad.device
+        if device != 'cpu':
+            grad = grad.to('cpu')
+
         if self.step_delta == 0.:
             grad.apply_(lambda x: core_library.snapping_mechanism(
                 value=x,
@@ -339,6 +337,9 @@ class PrivacyAccountant(object):
                 delta=self.step_delta,
                 sensitivity=sensitivity,
                 enforce_constant_time=False))
+        if device != 'cpu':
+            grad = grad.to(device)
+        return grad
 
     @staticmethod
     def _has_params(module):
