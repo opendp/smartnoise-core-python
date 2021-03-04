@@ -146,6 +146,9 @@ class PrivacyAccountant(object):
                     module.register_forward_hook(capture_activations),
                     module.register_backward_hook(capture_backprops)
                 ])
+                # for param in module.parameters(recurse=False):
+                #     if
+                #     module.register_privatization_hooks()
 
         return self
 
@@ -242,10 +245,17 @@ class PrivacyAccountant(object):
                     # self._accumulate_grad(module.weight, grad)
 
                 elif isinstance(module, nn.Linear):
-                    grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
-                    InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
-                    if module.bias is not None:
-                        InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
+                    if len(A.shape) > 2:
+                        for A, B in zip(torch.chunk(A, chunks=10, dim=1), torch.chunk(B, chunks=10, dim=1)):
+                            grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
+                            InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
+                            if module.bias is not None:
+                                InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
+                    else:
+                        grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
+                        InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
+                        if module.bias is not None:
+                            InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
 
                 else:
                     raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
