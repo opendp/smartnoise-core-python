@@ -1,4 +1,7 @@
+import copy
+import datetime
 import json
+import math
 import os
 import pickle
 import sys
@@ -13,13 +16,20 @@ import torch.nn.functional as F
 from torch.multiprocessing import Process
 from torch.utils.data import DataLoader, TensorDataset, SubsetRandomSampler
 
-from opendp.smartnoise.network.optimizer import PrivacyAccountant
 from gradient_transfer import GradientTransfer
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
 
+# import random
+# random.seed(0)
+#
+# import numpy as np
+# np.random.seed(0)
+#
+# torch.manual_seed(5)
+
 
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
-ACTIVE_PROBLEM = 'ambulatory'
+ACTIVE_PROBLEM = 'medicare'
 
 problem = {
     'ambulatory': {
@@ -200,52 +210,6 @@ def train(
         accountant.increment_epoch()
 
 
-def run_pums_worker(rank, size, private_step_limit=None, federation_scheme='shuffle', queue=None, model_filepath=None):
-    """
-    Perform federated learning over pums data
-
-    :param rank: index for specific data set
-    :param size: total ring size
-    :param federation_scheme:
-    :param private_step_limit:
-    :param queue: stores values and privacy accountant usage
-    :param model_filepath: indicating where to save the model checkpoint
-    :return:
-    """
-
-    public = datasets[rank]['public']
-
-    # load train data specific to the current rank
-    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
-    test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
-
-    model = PumsModule(len(problem['predictors']), 2)
-    
-    accountant = PrivacyAccountant(model, step_epsilon=0.001, disable=public)
-    coordinator = ModelCoordinator(model, rank, size, private_step_limit, federation_scheme)
-
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-
-    epoch = train(
-        model, optimizer,
-        private_step_limit,
-        train_loader, test_loader,
-        coordinator, accountant,
-        rank, public)
-
-    # Only save if filename is given
-    if rank == size - 1 and model_filepath:
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': evaluate(model, test_loader)
-        }, model_filepath)
-
-    if queue:
-        queue.put((tuple(datasets[rank].values()), accountant.compute_usage()))
-
-
 def init_process(rank, size, fn, args, backend='gloo'):
     """
     Initialize the distributed environment.
@@ -291,179 +255,116 @@ def main(worker):
     print(json.dumps(usage, indent=4))
 
 
-def main_sample_aggregate():
-    print("Training with DP")
-    rank = 0
-    epochs = 1
+class StateComparison(object):
 
-    # load train data specific to the current rank
-    train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
-
-    test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
-    dataloader = {"tr_loader": train_loader, "cv_loader": test_loader}
-
-    model = PumsModule(len(problem['predictors']), 2)
-    model.cuda()
-
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-    trainer = GradientTransfer(dataloader, model, optimizer, epochs=epochs)
-    trainer.train(private=True)
-
-
-def burn_in_alabama():
-    epochs = 2
-    batches = 50
-    batch_size = 3
-
-    dataset_dicts = [
+    _dataset_dicts = [
         {'year': 2010, 'record_type': 'person', 'state': 'al'},
         {'year': 2010, 'record_type': 'person', 'state': 'ct'},
         {'year': 2010, 'record_type': 'person', 'state': 'ma'},
         {'year': 2010, 'record_type': 'person', 'state': 'vt'},
     ]
-    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
 
-    burn_in_data = datasets['al']
-    test_data = datasets['vt'] + datasets['ct'] + datasets['ma']
+    def __init__(self, batches=10, batch_size=10, epochs=1, shuffle=True, test_data_size=None):
+        self.batches = batches
+        self.batch_size = batch_size
+        self.epochs = epochs
+        self.shuffle = shuffle
+        self.datasets = dict((x['state'], load_pums(x)) for x in self._dataset_dicts)
+        self.models = [
+            {
+                'name': 'initial',
+                'model': PumsModule(len(problem['predictors']), 2),
+                'training_history': pd.DataFrame([])
+            }
+        ]
+        data = self.datasets['vt'] + self.datasets['ct'] + self.datasets['ma']
+        self.test_data_size = test_data_size if test_data_size else batch_size
+        self.test_data = [next(iter(DataLoader(data, batch_size=1, shuffle=self.shuffle)))
+                          for _ in range(self.test_data_size)]
 
-    model = PumsModule(len(problem['predictors']), 2)
-    model.cuda()
-    data_loaders = {
-        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
-        'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True)
-    }
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
-    return {'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True),
-            'result': trainer.train(batches=batches, batch_size=batch_size)}
+    def burn_in_alabama(self, burn_in_batches=10, burn_in_epochs=1):
+        model = copy.deepcopy(self.models[-1]['model'])
+        model.cuda()
+
+        burn_in_data = self.datasets['al']
+
+        data_loaders = {
+            'burn_in_loaders': [DataLoader(burn_in_data, batch_size=1, shuffle=self.shuffle)],
+        }
+        optimizer = torch.optim.SGD(model.parameters(), .1)
+        trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
+        train_results = trainer.train(self.test_data, batches=self.batches, batch_size=self.batch_size,
+                                      burn_in_epochs=burn_in_epochs, burn_in_batches=burn_in_batches)
+        self.models.append({
+            'name': 'burn_in_alabama',
+            'model': trainer.model,
+            'training_history': pd.DataFrame(train_results)
+        })
+        return train_results
+
+    def train(self, state_names, burn_in_states=None, model_index=None):
+        if burn_in_states is None:
+            burn_in_states = []
+        model_index = model_index if model_index else -1
+        model = copy.deepcopy(self.models[model_index]['model'])
+        model.cuda()
+
+        burn_in_data = [self.datasets.get(x) for x in burn_in_states]
+        burn_in = True if burn_in_data else False
+        train_data = [self.datasets[x] for x in state_names]
+
+        data_loaders = {
+            'burn_in_loaders': [DataLoader(x, batch_size=1, shuffle=self.shuffle) for x in burn_in_states],
+            'tr_loaders': [DataLoader(x, batch_size=1, shuffle=self.shuffle) for x in train_data]
+        }
+        optimizer = torch.optim.SGD(model.parameters(), .1)
+        trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
+        train_results = trainer.train(self.test_data,
+                                      batches=self.batches, batch_size=self.batch_size,
+                                      burn_in=burn_in, burn_in_epochs=burn_in_epochs, burn_in_batches=burn_in_batches)
+        self.models.append({
+            'name': ''.join(['train_on_', '_'.join(state_names)]),
+            'model': trainer.model,
+            'training_history': pd.DataFrame(train_results)
+        })
+        return train_results
+
+    def save(self, base_dir='.'):
+        out_path = os.path.join(base_dir, str(datetime.datetime.now()).replace(' ', '-'))
+        os.makedirs(out_path)
+        for i, model_dict in enumerate(self.models):
+            base_filename = ''.join([model_dict['name'], '_', str(i)])
+            torch.save(model_dict['model'].state_dict(), os.path.join(out_path, base_filename + '.pth'))
+            model_dict['training_history'].to_csv(os.path.join(out_path, base_filename + '.csv'))
+        with open(os.path.join(out_path, 'summary.json'), 'w') as outfile:
+            json.dump({
+                'batches': self.batches,
+                'batch_size': self.batch_size,
+                'epochs': self.epochs
+            }, outfile)
 
 
-def train_on_vt():
-    epochs = 2
-    batches = 15
-    batch_size = 3
-
-    dataset_dicts = [
-        {'year': 2010, 'record_type': 'person', 'state': 'al'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
-        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
-    ]
-    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
-
-    burn_in_data = datasets['al']
-    train_data = [datasets['vt']]
-    test_data = datasets['vt'] + datasets['ct'] + datasets['ma']
-
-    model = PumsModule(len(problem['predictors']), 2)
-    model.cuda()
-    data_loaders = {
-        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
-        'tr_loaders': [DataLoader(x, batch_size=10, shuffle=False) for x in train_data],
-        'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True)
-    }
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
-    return trainer.train(batches=batches, batch_size=batch_size)
-
-
-def train_on_all(cv_loader):
-    epochs = 2
-    batches = 10
-    batch_size = 1
-
-    dataset_dicts = [
-        {'year': 2010, 'record_type': 'person', 'state': 'al'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
-        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
-    ]
-    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
-
-    burn_in_data = datasets['al']
-    train_data = [datasets['vt'], datasets['ct'], datasets['ma']]
-    test_data = datasets['vt'] + datasets['ct'] + datasets['ma']
-
-    model = PumsModule(len(problem['predictors']), 2)
-    model.cuda()
-    data_loaders = {
-        'burn_in_loader': DataLoader(burn_in_data, batch_size=1000, shuffle=False),
-        'tr_loaders': [DataLoader(x, batch_size=10, shuffle=False) for x in train_data],
-        'cv_loader': DataLoader(test_data, batch_size=1000, shuffle=True) if not cv_loader else cv_loader
-    }
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
-    return trainer.train(batches=batches, batch_size=batch_size)
-
-
-def main(private=True):
-    import numpy as np
-
-    print(f"Private: {private}")
-    rank = 0
-    epochs = 10
-    batches = 10
-    batch_size = 10
-    validation_split = 0.2
-    dataset_dicts = [
-        {'year': 2010, 'record_type': 'person', 'state': 'al'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ct'},
-        {'year': 2010, 'record_type': 'person', 'state': 'ma'},
-        {'year': 2010, 'record_type': 'person', 'state': 'vt'},
-    ]
-    datasets = dict((x['state'], load_pums(x)) for x in dataset_dicts)
-
-    # for state, data in datasets.items():
-    #     data_size = len(data)
-    #     indices = list(range(data_size))
-    #     split = int(np.floor(validation_split * data_size))
-    #     train_indices, val_indices = indices[split:], indices[:split]
-    #     train_sampler = SubsetRandomSampler(train_indices)
-    #     valid_sampler = SubsetRandomSampler(val_indices)
-    #     train_loader = torch.utils.data.DataLoader(data, batch_size=batch_size,
-    #                                        sampler=train_sampler)
-    #     validation_loader = torch.utils.data.DataLoader(data, batch_size=batch_size,
-    #                                             sampler=valid_sampler)
-
-    data_loaders = dict((state, DataLoader(x, batch_size=1000, shuffle=True), ) for state, x in datasets.items())
-
-    print(data_loaders)
-    #     train_loader = DataLoader(load_pums(datasets[rank]), batch_size=1000, shuffle=True)
-
-#     test_loader = DataLoader(load_pums(datasets[1]), batch_size=1000)
-#     dataloader = {"tr_loader": train_loader, "cv_loader": test_loader}
-
-    model = PumsModule(len(problem['predictors']), 2)
-    model.cuda()
-
-    optimizer = torch.optim.SGD(model.parameters(), .1)
-
-    trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
-    if private:
-        return trainer.train(batches=batches, batch_size=batch_size)
-    else:
-        return trainer.train_plain(batches=batches, batch_size=batch_size)
-
-    
 if __name__ == "__main__":
 
-    #     public_result = main(private=False)
-    #     with open('public_result.pkl', 'wb') as outfile:
-    #        pickle.dump(public_result, outfile)
+    epochs = 4
+    batch_size = 5
+    batches = 100
 
-    # private_result = main(private=True)
-    # print(private_result)
-    #     with open('private_result.pkl', 'wb') as outfile:
-    #        pickle.dump(private_result, outfile)
+    burn_in_epochs = 1
+    burn_in_batch_size = 5
+    burn_in_batches = 50
 
-    print("Burn in on Alabama")
-    result = burn_in_alabama()
-    al_df = pd.DataFrame(result['result'])
-    cv_loader = result['cv_loader']
+    state_comparison = StateComparison(batches=batches, batch_size=batch_size, epochs=epochs, shuffle=True)
 
-    # print("Train on Vermont")
-    # train_on_vt_results = train_on_vt()
-    # df = pd.DataFrame(train_on_vt_results)
+    alabama_burn_in_result = state_comparison.burn_in_alabama(burn_in_batches=burn_in_batches,
+                                                              burn_in_epochs=burn_in_epochs)
+    alabama_burn_in_df = pd.DataFrame(alabama_burn_in_result)
 
-    result = train_on_all(cv_loader)
-    df = pd.DataFrame(result)
+    alabama_result = state_comparison.burn_in_alabama(burn_in_batches=burn_in_batches,
+                                                      burn_in_epochs=burn_in_epochs)
+    alabama_df = pd.DataFrame(alabama_result)
+
+    vermont_result = state_comparison.train(['vt'], model_index=1)
+    vermont_df = pd.DataFrame(vermont_result)
+
+    state_comparison.save(base_dir='results')
