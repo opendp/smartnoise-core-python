@@ -48,7 +48,15 @@ class _SharedParameter(Parameter):
 
 
 class PrivacyAccountant(object):
-    def __init__(self, model: nn.Module, step_epsilon, step_delta=0., hook=True, disable=False, replacement_modules=None):
+    def __init__(
+            self,
+            model: nn.Module,
+            step_epsilon, step_delta=0., clipping_norm=1.,
+            modules=None,
+            hook=True,
+            disable=False,
+            reduction='mean',
+            replacement_modules=None):
         """
         Utility for tracking privacy usage
         :param model: pyTorch model
@@ -75,6 +83,12 @@ class PrivacyAccountant(object):
         self._epochs = []
         self.steps = 0
         self._disable = disable
+
+        assert reduction in ('sum', 'mean')
+        self.reduction = reduction
+
+        self.modules = modules
+        self.clipping_norm = clipping_norm
 
         if not disable and hook:
             self.hook()
@@ -119,38 +133,149 @@ class PrivacyAccountant(object):
 
         self._hooks_enabled = True
 
-        def capture_activations(module: nn.Module, input: List[torch.Tensor], _output: torch.Tensor):
+        modules = [m for m in self.modules or self.model.modules() if self._has_params(m)]
+
+        def capture_activations(module: nn.Module, input: List[torch.Tensor], _output):
             """Save activations into module.activations in forward pass"""
             if not self._hooks_enabled:
                 return
             if not hasattr(module, 'activations'):
                 module.activations = []
-            # always take the first argument of the input
             # NOTE: clone is required to prevent in-place-overwrite of stored activations
-            module.activations.append(input[0].detach().clone())
+            module.activations.append(tuple(in_arg.detach().clone() for in_arg in input))
 
-        def capture_backprops(module: nn.Module, _input, output: List[torch.Tensor]):
+        def capture_backprops(module: nn.Module, _input: List[torch.Tensor], output: List[torch.Tensor]):
             """Save backprops into module.backprops in backward pass"""
             if not self._hooks_enabled:
                 return
             if not hasattr(module, 'backprops'):
                 module.backprops = []
-            # always take the first output's backprop
             # NOTE: clone is required to prevent in-place-overwrite of stored backprops
-            module.backprops.append(output[0].detach().clone())
+            module.backprops.append(tuple(out_arg.detach().clone() for out_arg in output))
+
+        def get_batch_size(module):
+            # first activation, first arg, first axis shape
+            return module.activations[0][0].shape[0]
+
+        def make_privatization_hook(module, param, instance_grad_generator):
+            def privatization_hook(grad):
+
+                # ignore leading activations from evaluations outside of the training loop
+                module.activations = module.activations[-len(module.backprops):]
+
+                if self.reduction == 'mean':
+                    for backprop in module.backprops:
+                        backprop *= get_batch_size(module)
+
+                # backprops are in reverse-order
+                for A, B in zip(module.activations, module.backprops[::-1]):
+                    for chunk in instance_grad_generator(A, B):
+                        InstanceGrad._accumulate_instance_grad(param, chunk)
+
+                if CHECK_CORRECTNESS:
+                    print('checking:', module, param.shape)
+                    self._check_grad(grad, param.grad_instance, self.reduction)
+
+                actual_norm = torch.norm(
+                    param.grad_instance.reshape(param.grad_instance.shape[0], -1) ** 2,
+                    dim=1)
+
+                private_grad = self._privatize_grad(
+                    param.grad_instance, self.reduction,
+                    actual_norm, self.clipping_norm)
+
+                del param.grad_instance
+                param.is_grad_dp = True
+                # clear module hook data once all param grads are dp
+                if all(hasattr(par, 'is_grad_dp') and par.is_grad_dp for par in module.parameters(recurse=False)):
+                    del module.activations
+                    del module.backprops
+                    for par in module.parameters(recurse=False):
+                        del par.is_grad_dp
+
+                return private_grad
+            return privatization_hook
 
         self.model.autograd_hooks = []
-        for module in self.model.modules():
-            if next(module.parameters(recurse=False), None) is not None:
-                self.model.autograd_hooks.extend([
-                    module.register_forward_hook(capture_activations),
-                    module.register_backward_hook(capture_backprops)
-                ])
-                # for param in module.parameters(recurse=False):
-                #     if
-                #     module.register_privatization_hooks()
+        for module in modules:
+            # ignore the module if it has no parameters
+            if next(module.parameters(recurse=False), None) is None:
+                continue
 
-        return self
+            # register global hooks
+            self.model.autograd_hooks.extend([
+                module.register_forward_hook(capture_activations),
+                module.register_backward_hook(capture_backprops)
+            ])
+
+            if isinstance(module, InstanceGrad):
+                # Dict[Parameter, Callable[[A, B], G]], where A is activations, B is backprops, G is instance grad
+                # A: tuple of activations, one for each argument
+                # B: tuple of backprops, one for each output from the network. Implicitly upgraded to a singleton
+                # G: instance gradient of shape- n x (*param.shape)
+                instance_grads = module.get_instance_grad_functions()
+
+            elif isinstance(module, nn.Embedding):
+                def make_embedding_grad_generator(module):
+                    def embedding_grad_generator(A, B):
+                        # only take the first argument to embedding forward
+                        A, B = A[0], B[0]
+                        batch_size = A.shape[0]
+                        A = A.unsqueeze(-1).expand(*A.shape, module.embedding_dim)
+                        shape = batch_size, -1, module.embedding_dim
+
+                        # massive... empty... tensor, because clip doesn't distribute
+                        grad_instance = torch.zeros([batch_size, *module.weight.shape])
+                        grad_instance.scatter_add_(1, A.reshape(*shape), B.reshape(*shape))
+                        yield grad_instance
+                    return embedding_grad_generator
+
+                instance_grads = {module.weight: make_embedding_grad_generator(module)}
+
+                # # reconstructs exact grad
+                # grad = torch.zeros_like(module.weight.grad)
+                # grad.index_add_(0, A.reshape(-1), B.reshape(-1, module.embedding_dim))
+                # self._accumulate_grad(module.weight, grad)
+
+            elif isinstance(module, nn.Linear):
+                def make_weight_grad_generator(_module):
+                    def weight_grad_generator(A, B):
+                        # linear is unary
+                        A, B = A[0], B[0]
+
+                        if len(A.shape) > 2:
+                            for A, B in zip(torch.chunk(A, chunks=10, dim=1), torch.chunk(B, chunks=10, dim=1)):
+                                grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
+                                yield torch.einsum('n...ij->nij', grad_instance)
+                        else:
+                            grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
+                            yield torch.einsum('n...ij->nij', grad_instance)
+                    return weight_grad_generator
+
+                def make_bias_grad_generator(module):
+                    def bias_grad_generator(A, B):
+                        A, B = A[0], B[0]
+                        if module.bias is None:
+                            return
+
+                        if len(A.shape) > 2:
+                            for A, B in zip(torch.chunk(A, chunks=10, dim=1), torch.chunk(B, chunks=10, dim=1)):
+                                yield torch.einsum('n...i->ni', B)
+                        else:
+                            yield torch.einsum('n...i->ni', B)
+                    return bias_grad_generator
+
+                instance_grads = {
+                    module.weight: make_weight_grad_generator(module),
+                    module.bias: make_bias_grad_generator(module),
+                }
+
+            else:
+                raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
+
+            for param in instance_grads:
+                privatization_hook = make_privatization_hook(module, param, instance_grads[param])
+                self.model.autograd_hooks.append(param.register_hook(privatization_hook))
 
     def unhook(self):
         """
@@ -173,127 +298,25 @@ class PrivacyAccountant(object):
         self._hooks_enabled = False
 
     def __enter__(self):
-        return self.hook()
+        self.hook()
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.unhook()
 
-    def privatize_grad(self, *, modules=None, clipping_norm=1., reduction: str = 'mean') -> None:
-        """
-        Compute per-example gradients for each parameter, privatize them, and save them under 'param.grad'.
-        Must be called after loss.backprop()
-        Must be called before optimizer.step()
-
-        :param modules:
-        :param clipping_norm:
-        :param reduction:  either "mean" or "sum" depending whether backpropped loss was averaged or summed over batch
-        """
-        assert reduction in ('sum', 'mean')
-
-        if self._disable:
-            return
-
-        self.steps += 1
-
-        modules = [m for m in modules or self.model.modules() if self._has_params(m)]
-
-        # check for existence of activations and backprops
-        for module in modules:
-            assert hasattr(module, 'activations'), "No activations detected, run forward after .hook()"
-            assert hasattr(module, 'backprops'), "No backprops detected, run backward after .hook()"
-
-            if not module.backprops or not module.activations:
-                return
-
-        # retrieve batch size
-        if modules:
-            batch_size = modules[0].activations[0].shape[0]
-        else:
-            return
-
-        # preprocess activations and backprops
-        for module in modules:
-            # ignore leading activations from evaluations outside of the training loop
-            module.activations = module.activations[-len(module.backprops):]
-            # backprops are in reverse-order
-            module.backprops = module.backprops[::-1]
-
-            if reduction == 'mean':
-                for backprop in module.backprops:
-                    backprop *= batch_size
-
-        # reconstruct instance-level gradients and reduce privately
-        for module in modules:
-            # pair forward activations with reversed backpropagations
-            for A, B in zip(module.activations, module.backprops):
-                if isinstance(module, InstanceGrad):
-                    module.update_instance_grad(A, B)
-
-                elif isinstance(module, nn.Embedding):
-                    A = A.unsqueeze(-1).expand(*A.shape, module.embedding_dim)
-                    shape = batch_size, -1, module.embedding_dim
-
-                    # massive... empty... tensor, because clip doesn't distribute
-                    grad_instance = torch.zeros([batch_size, *module.weight.shape])
-                    grad_instance.scatter_add_(1, A.reshape(*shape), B.reshape(*shape))
-
-                    InstanceGrad._accumulate_instance_grad(module.weight, grad_instance)
-
-                    # # reconstructs exact grad
-                    # grad = torch.zeros_like(module.weight.grad)
-                    # grad.index_add_(0, A.reshape(-1), B.reshape(-1, module.embedding_dim))
-                    # self._accumulate_grad(module.weight, grad)
-
-                elif isinstance(module, nn.Linear):
-                    if len(A.shape) > 2:
-                        for A, B in zip(torch.chunk(A, chunks=10, dim=1), torch.chunk(B, chunks=10, dim=1)):
-                            grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
-                            InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
-                            if module.bias is not None:
-                                InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
-                    else:
-                        grad_instance = torch.einsum('n...i,n...j->n...ij', B, A)
-                        InstanceGrad._accumulate_instance_grad(module.weight, torch.einsum('n...ij->nij', grad_instance))
-                        if module.bias is not None:
-                            InstanceGrad._accumulate_instance_grad(module.bias, torch.einsum('n...i->ni', B))
-
-                else:
-                    raise NotImplementedError(f"Gradient reconstruction is not implemented for {module}")
-
-            if CHECK_CORRECTNESS:
-                for param in module.parameters(recurse=False):
-                    print('checking:', module, param.shape)
-                    self._check_grad(param, reduction)
-
-            del module.activations
-            del module.backprops
-
-        # compute L2 norm for flat clipping
-        sum_squares = []
-        for module in modules:
-            for param in module.parameters(recurse=False):
-                sum_squares.append(torch.sum(param.grad_instance.reshape(batch_size, -1) ** 2, dim=1))
-        actual_norm = torch.sqrt(torch.stack(sum_squares, dim=1).sum(dim=1))
-
-        # privatize gradients
-        for module in modules:
-            for param in module.parameters(recurse=False):
-                param.grad = self._privatize_grad(param.grad_instance, reduction, actual_norm, clipping_norm)
-                del param.grad_instance
-
     @staticmethod
-    def _check_grad(param, reduction):
-        grad = PrivacyAccountant._reduce_grad(param.grad_instance, reduction)
-        if not torch.equal(torch.Tensor(list(param.grad.shape)), torch.Tensor(list(grad.shape))):
-            raise ValueError(f"Non-private reconstructed gradient {grad.shape} differs from expected shape {param.grad.shape}")
-        if not torch.allclose(param.grad, grad, atol=.01, equal_nan=True):
+    def _check_grad(grad, instance_grad, reduction):
+        grad_2 = PrivacyAccountant._reduce_grad(instance_grad, reduction)
+        if not torch.equal(torch.Tensor(list(grad.shape)), torch.Tensor(list(grad_2.shape))):
+            raise ValueError(f"Non-private reconstructed gradient {grad_2.shape} differs from expected shape {grad.shape}")
+        if not torch.allclose(grad, grad_2, atol=.01, equal_nan=True):
             print('          failed')
             print('          difference:')
-            print(param.grad - grad)
+            print(grad - grad_2)
             print('          expected:')
-            print(param.grad)
-            print('          reconstructed:')
             print(grad)
+            print('          reconstructed:')
+            print(grad_2)
             raise ValueError("Non-private reconstructed gradient differs in value")
 
     def _privatize_grad(self, grad_instance, reduction, actual_norm, clipping_norm):

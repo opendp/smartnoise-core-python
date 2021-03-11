@@ -129,7 +129,7 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
         tagset_size=len(tag_to_idx),
         bahdanau=False)
 
-    accountant = PrivacyAccountant(model, step_epsilon=1.0)
+    accountant = PrivacyAccountant(model, step_epsilon=.5, reduction="sum")
     coordinator = ModelCoordinator(model, rank, size, federation_scheme, end_event=end_event)
 
     optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
@@ -158,8 +158,6 @@ def run_lstm_worker(rank, size, epoch_limit=None, private_step_limit=None, feder
 
             loss = accountant.model.loss(sentence, target)
             loss.backward()
-
-            accountant.privatize_grad(reduction='sum')
 
             optimizer.step()
             optimizer.zero_grad()
