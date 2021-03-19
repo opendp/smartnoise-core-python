@@ -19,13 +19,13 @@ from torch.utils.data import DataLoader, TensorDataset, SubsetRandomSampler
 from gradient_transfer import GradientTransfer
 from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
 
-# import random
-# random.seed(0)
-#
-# import numpy as np
-# np.random.seed(0)
-#
-# torch.manual_seed(5)
+import random
+random.seed(0)
+
+import numpy as np
+np.random.seed(0)
+
+torch.manual_seed(5)
 
 
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
@@ -95,6 +95,7 @@ class PumsModule(nn.Module):
         x = self.linear1(x)
         x = F.relu(x)
         x = self.linear2(x)
+        x = torch.sigmoid(x)
         return x
 
     def loss(self, batch):
@@ -259,6 +260,7 @@ class StateComparison(object):
 
     _dataset_dicts = [
         {'year': 2010, 'record_type': 'person', 'state': 'al'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ms'},
         {'year': 2010, 'record_type': 'person', 'state': 'ct'},
         {'year': 2010, 'record_type': 'person', 'state': 'ma'},
         {'year': 2010, 'record_type': 'person', 'state': 'vt'},
@@ -277,32 +279,32 @@ class StateComparison(object):
                 'training_history': pd.DataFrame([])
             }
         ]
-        data = self.datasets['vt'] + self.datasets['ct'] + self.datasets['ma']
+        data = self.datasets['vt']
         self.test_data_size = test_data_size if test_data_size else batch_size
         self.test_data = [next(iter(DataLoader(data, batch_size=1, shuffle=self.shuffle)))
                           for _ in range(self.test_data_size)]
 
-    def burn_in_alabama(self, burn_in_batches=10, burn_in_epochs=1):
+    def burn_in(self, state='al', burn_in_batches=10, burn_in_epochs=1, training_rate=0.1):
         model = copy.deepcopy(self.models[-1]['model'])
         model.cuda()
 
-        burn_in_data = self.datasets['al']
+        burn_in_data = self.datasets[state]
 
         data_loaders = {
             'burn_in_loaders': [DataLoader(burn_in_data, batch_size=1, shuffle=self.shuffle)],
         }
-        optimizer = torch.optim.SGD(model.parameters(), .1)
+        optimizer = torch.optim.SGD(model.parameters(), training_rate)
         trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
         train_results = trainer.train(self.test_data, batches=self.batches, batch_size=self.batch_size,
                                       burn_in_epochs=burn_in_epochs, burn_in_batches=burn_in_batches)
         self.models.append({
-            'name': 'burn_in_alabama',
+            'name': f'burn_in_{state}',
             'model': trainer.model,
             'training_history': pd.DataFrame(train_results)
         })
         return train_results
 
-    def train(self, state_names, burn_in_states=None, model_index=None):
+    def train(self, state_names, burn_in_states=None, model_index=None, training_rate=0.1):
         if burn_in_states is None:
             burn_in_states = []
         model_index = model_index if model_index else -1
@@ -317,7 +319,7 @@ class StateComparison(object):
             'burn_in_loaders': [DataLoader(x, batch_size=1, shuffle=self.shuffle) for x in burn_in_states],
             'tr_loaders': [DataLoader(x, batch_size=1, shuffle=self.shuffle) for x in train_data]
         }
-        optimizer = torch.optim.SGD(model.parameters(), .1)
+        optimizer = torch.optim.SGD(model.parameters(), training_rate)
         trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
         train_results = trainer.train(self.test_data,
                                       batches=self.batches, batch_size=self.batch_size,
@@ -348,23 +350,28 @@ if __name__ == "__main__":
 
     epochs = 4
     batch_size = 5
-    batches = 100
+    batches = 500
 
-    burn_in_epochs = 1
+    burn_in_epochs = 4
     burn_in_batch_size = 5
-    burn_in_batches = 50
+    burn_in_batches = 200
 
-    state_comparison = StateComparison(batches=batches, batch_size=batch_size, epochs=epochs, shuffle=True)
+    training_rate = 0.001
 
-    alabama_burn_in_result = state_comparison.burn_in_alabama(burn_in_batches=burn_in_batches,
-                                                              burn_in_epochs=burn_in_epochs)
+    state_comparison = StateComparison(batches=batches, batch_size=batch_size, epochs=epochs, shuffle=False)
+
+    alabama_burn_in_result = state_comparison.burn_in(state='al',
+                                                      burn_in_batches=burn_in_batches,
+                                                      burn_in_epochs=burn_in_epochs,
+                                                      training_rate=training_rate)
     alabama_burn_in_df = pd.DataFrame(alabama_burn_in_result)
 
-    alabama_result = state_comparison.burn_in_alabama(burn_in_batches=burn_in_batches,
-                                                      burn_in_epochs=burn_in_epochs)
-    alabama_df = pd.DataFrame(alabama_result)
+    # vermont_burn_in_result = state_comparison.burn_in(state='vt',
+    #                                                   burn_in_batches=burn_in_batches,
+    #                                                   burn_in_epochs=burn_in_epochs)
+    # vermont_burn_in_df = pd.DataFrame(vermont_burn_in_result)
 
-    vermont_result = state_comparison.train(['vt'], model_index=1)
-    vermont_df = pd.DataFrame(vermont_result)
+    alabama_result = state_comparison.train(['al'], training_rate=training_rate, model_index=-1)
+    vermont_result = state_comparison.train(['vt'], training_rate=training_rate, model_index=1)
 
     state_comparison.save(base_dir='results')

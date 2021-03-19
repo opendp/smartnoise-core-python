@@ -11,13 +11,13 @@ from multiprocessing import Pool
 from torch.utils.data import DataLoader
 from dp_gradient_select import DPGradientSelector
 
-# import random
-# random.seed(0)
-#
-# import numpy as np
-# np.random.seed(0)
-#
-# torch.manual_seed(5)
+import random
+random.seed(0)
+
+import numpy as np
+np.random.seed(0)
+
+torch.manual_seed(5)
 
 
 class GradientTransfer(object):
@@ -106,7 +106,6 @@ class GradientTransfer(object):
                             y = sample[1].cuda()
                             loss = self.model.loss((x, y, ))
                             loss.backward()
-
                         self.optimizer.step()
                         self.optimizer.zero_grad()
 
@@ -119,7 +118,7 @@ class GradientTransfer(object):
                               f'Average Loss {total_loss / (i + 1)} | {state_index} | '
                               f'{time_lapsed} ms/batch',
                               flush=True)
-                        result.append((-1, i, batch_loss, batch_size, total_loss, global_index, -1, time_lapsed))
+                        result.append((-1, i, batch_loss/batch_size, batch_size, total_loss, global_index, -1, time_lapsed))
 
             if not self.train_loaders:
                 print("no train loader found")
@@ -151,14 +150,13 @@ class GradientTransfer(object):
                     for name, grad in self.gradients.items():
                         # Use gradient selector for DP Median selection
                         dp_gradient_selector = DPGradientSelector(self.gradients[name], epsilon=1.0)
-                        gradient_result = dp_gradient_selector.another_select_gradient_tensor(debug=True, verbose=True)
+                        gradient_result = dp_gradient_selector.another_select_gradient_tensor(debug=False, verbose=False)
                         gradient = gradient_result['point'].cuda()
                         # print(gradient)
                         # medians = dp_gradient_selector.select_gradient_tensor()
                         # Names are of the form "linear1.weight"
                         layer, param = name.split('.')
                         getattr(getattr(self.model, layer), param).grad = gradient
-
                     self.optimizer.step()
                     self.optimizer.zero_grad()
 
@@ -179,7 +177,7 @@ class GradientTransfer(object):
                           f'Average Loss {total_loss / (global_index + 1)} | {state_index+1} | '
                           f'{time_lapsed} ms/batch',
                           flush=True)
-                    result.append((epoch, batch, batch_loss, batch_size, total_loss, global_index,
+                    result.append((epoch, batch, batch_loss/batch_size, batch_size, total_loss, global_index,
                                    state_index, time_lapsed))
         return pd.DataFrame(result, columns=['epoch', 'batch', 'batch_loss', 'batch_size', 'total_loss',
                                              'total_samples', 'state', 'time'])
