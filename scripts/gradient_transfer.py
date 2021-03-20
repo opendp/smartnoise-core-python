@@ -34,7 +34,13 @@ class GradientTransfer(object):
         :param learning_rate: Used by optimizer
         """
         self.dataloader = dataloader
-        self.train_loaders = dataloader.get('tr_loaders')
+        self.train_loaders = None
+        if dataloader.get('tr_loaders'):
+            self.states = [x[0] for x in dataloader.get('tr_loaders')]
+            self.train_loaders = dataloader.get('tr_loaders')
+        if dataloader.get('burn_in_loaders'):
+            self.burn_in_states = [x[0] for x in dataloader.get('burn_in_loaders')]
+            self.burn_in_loaders = dataloader.get('burn_in_loaders')
         # self.test_loader = dataloader['cv_loader']
         self.model = model
         self.learning_rate = learning_rate
@@ -91,7 +97,7 @@ class GradientTransfer(object):
 
         if burn_in:
             for epoch in range(0, burn_in_epochs):
-                for state_index, train_loader in enumerate(self.dataloader['burn_in_loaders']):
+                for state, train_loader in self.dataloader['burn_in_loaders']:
                     burn_in_iter = iter(train_loader)
                     for batch in range(0, burn_in_batches):
                         start = time.time()
@@ -115,10 +121,10 @@ class GradientTransfer(object):
                             total_loss += batch_loss
                         time_lapsed = 1000 * (time.time() - start) / (batch + 1)
                         print(f'Epoch {epoch} (burn_in) | Batch {batch} | Batch Loss {batch_loss / batch_size} | '
-                              f'Average Loss {total_loss / (i + 1)} | {state_index} | '
+                              f'Average Loss {total_loss / (i + 1)} | {state} | '
                               f'{time_lapsed} ms/batch',
                               flush=True)
-                        result.append((-1, i, batch_loss/batch_size, batch_size, total_loss, global_index, -1, time_lapsed))
+                        result.append((-1, i, batch_loss/batch_size, batch_size, total_loss, global_index, state, time_lapsed))
 
             if not self.train_loaders:
                 print("no train loader found")
@@ -127,7 +133,7 @@ class GradientTransfer(object):
 
         for epoch in range(0, self.epochs):
             print(f'\nStarting train: batches {batches}, batch_size {batch_size}, epochs {self.epochs}\n')
-            for state_index, train_loader in enumerate(self.train_loaders):
+            for state, train_loader in self.train_loaders:
                 total_samples = 0
                 train_data_iter = iter(train_loader)
                 for batch in range(0, batches):
@@ -174,11 +180,11 @@ class GradientTransfer(object):
                     total_loss += batch_loss
                     time_lapsed = 1000 * (time.time() - start) / (batch + 1)
                     print(f'Epoch {epoch} | Batch {batch} | Batch Loss {batch_loss / batch_size} | '
-                          f'Average Loss {total_loss / (global_index + 1)} | {state_index+1} | '
+                          f'Average Loss {total_loss / (global_index + 1)} | {state} | '
                           f'{time_lapsed} ms/batch',
                           flush=True)
                     result.append((epoch, batch, batch_loss/batch_size, batch_size, total_loss, global_index,
-                                   state_index, time_lapsed))
+                                   state, time_lapsed))
         return pd.DataFrame(result, columns=['epoch', 'batch', 'batch_loss', 'batch_size', 'total_loss',
                                              'total_samples', 'state', 'time'])
 
