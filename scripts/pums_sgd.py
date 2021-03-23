@@ -264,6 +264,8 @@ class StateComparison(object):
         {'year': 2010, 'record_type': 'person', 'state': 'ct'},
         {'year': 2010, 'record_type': 'person', 'state': 'ma'},
         {'year': 2010, 'record_type': 'person', 'state': 'vt'},
+        {'year': 2010, 'record_type': 'person', 'state': 'ri'},
+        {'year': 2010, 'record_type': 'person', 'state': 'nh'},
     ]
 
     def __init__(self, batches=10, batch_size=10, epochs=1, learning_rate=0.001, shuffle=True, test_data_size=None):
@@ -372,24 +374,30 @@ if __name__ == "__main__":
 
     run_order = [
         {
-            'state': 'vt',
+            'state': 'ct',
             'model_index': 1
         },
         {
-            'state': 'ct'
+            'state': 'nh'
         },
         {
             'state': 'ma'
         },
         {
-            'state': 'vt'
+            'state': 'ri'
         },
         {
             'state': 'ct'
         },
         {
+            'state': 'nh'
+        },
+        {
             'state': 'ma'
         },
+        {
+            'state': 'ri'
+        }
     ]
 
     results = []

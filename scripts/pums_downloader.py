@@ -45,6 +45,9 @@ datasets = [
     {'public': False, 'year': 2010, 'record_type': 'person', 'state': 'ct'},
     {'public': False, 'year': 2010, 'record_type': 'person', 'state': 'ma'},
     {'public': False, 'year': 2010, 'record_type': 'person', 'state': 'vt'},
+    {'public': False, 'year': 2010, 'record_type': 'person', 'state': 'ri'},
+    {'public': False, 'year': 2010, 'record_type': 'person', 'state': 'nh'},
+    {'public': False, 'year': 2010, 'record_type': 'person', 'state': 'me'},
 ]
 
 if __name__ == '__main__':
