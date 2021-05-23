@@ -37,7 +37,7 @@ Differentially private computations are specified as a protobuf analysis graph t
 
 ### Components
 
-For a full listing of the extensive set of components available in the library [see this documentation.](https://opendifferentialprivacy.github.io/smartnoise-core/doc/smartnoise_validator/docs/components/index.html)
+For a full listing of the extensive set of components available in the library [see this documentation.](https://opendp.github.io/smartnoise-core/doc/smartnoise_validator/docs/components/index.html)
 
 ### Architecture
 
