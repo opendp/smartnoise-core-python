@@ -1,5 +1,3 @@
-[**Please note that we have recently renamed this system.**](https://projects.iq.harvard.edu/opendp/blog/building-inclusive-community)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.com/opendifferentialprivacy/smartnoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/smartnoise-core-python)
 
@@ -10,6 +8,7 @@
 \
 This repository contains python bindings to the [SmartNoise Core library](https://github.com/opendifferentialprivacy/smartnoise-core) and its underlying Rust binaries.
 
+- Please see the accompanying [SmartNoise Documentation](https://docs.opendp.org/en/latest/smartnoise/).
 - For examples of this library in action, please see the Python notebooks in the [Samples repository](https://github.com/opendifferentialprivacy/smartnoise-samples).
 - In addition, see the accompanying [SmartNoise SDK repository](https://github.com/opendifferentialprivacy/smartnoise-sdk) which includes tools for differential privacy.
 
