@@ -27,6 +27,8 @@ np.random.seed(0)
 
 torch.manual_seed(5)
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 
 # defaults to predicting ambulatory difficulty based on age, weight and cognitive difficulty
 ACTIVE_PROBLEM = 'medicare'
@@ -290,7 +292,7 @@ class StateComparison(object):
 
     def burn_in(self, state='al', burn_in_batches=10, burn_in_epochs=1):
         model = copy.deepcopy(self.models[-1]['model'])
-        model.cuda()
+        model.to(device)
 
         burn_in_data = self.datasets[state]
 
@@ -313,7 +315,7 @@ class StateComparison(object):
             burn_in_states = []
         model_index = model_index if model_index else -1
         model = copy.deepcopy(self.models[model_index]['model'])
-        model.cuda()
+        model.to(device)
 
         burn_in_data = [(x, self.datasets.get(x),) for x in burn_in_states]
         burn_in = True if burn_in_data else False
@@ -352,13 +354,13 @@ class StateComparison(object):
 
 if __name__ == "__main__":
 
-    epochs = 4
+    epochs = 1
     batch_size = 5
-    batches = 250
+    batches = 10
 
-    burn_in_epochs = 4
+    burn_in_epochs = 1
     burn_in_batch_size = 5
-    burn_in_batches = 250
+    burn_in_batches = 10
 
     learning_rate = 0.001
 

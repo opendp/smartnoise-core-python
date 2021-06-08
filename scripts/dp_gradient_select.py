@@ -4,7 +4,7 @@ import itertools
 import torch
 import numpy as np
 
-from medians import l1_median_tensor
+from medians import Median
 
 
 class DPGradientSelector(object):
@@ -29,7 +29,7 @@ class DPGradientSelector(object):
         :return: tuple of (index, distance)
         """
         candidates = candidates if candidates else self.tensor_list
-        median = l1_median_tensor(self.tensor_list, max_iters=10**4)
+        median = Median(self.tensor_list).l1_median_tensor(max_iters=10**4)
         # We need to compare candidate tensors to a central measure. For now,
         # let's use the norm of the tensor describing the distance.
         dists = [(i, torch.norm(torch.abs(x-median))) for i, x in enumerate(candidates)]

@@ -19,10 +19,11 @@ np.random.seed(0)
 
 torch.manual_seed(5)
 
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
 
 class GradientTransfer(object):
 
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     def __init__(self, dataloader, model, optimizer=None, learning_rate=0.01, epochs=1):
         """
@@ -67,14 +68,14 @@ class GradientTransfer(object):
 
     def _calculate_gradient(self, i, sample):
         # print(f"Gradient for sample {i}")
-        x = sample[0].cuda()
-        y = sample[1].cuda()
+        x = sample[0].to(device)
+        y = sample[1].to(device)
         gradients = dict((name, []) for name, _ in self.model.named_parameters())
         loss = self.model.loss((x, y, ))
         loss.backward()
         for name, param in self.model.named_parameters():
             if param.requires_grad:
-                grad = param.grad.detach().clone().to(self.device)
+                grad = param.grad.detach().clone().to(device)
                 gradients[name].append(grad)
         return gradients
 
@@ -108,15 +109,15 @@ class GradientTransfer(object):
                             continue
                         for i, sample in enumerate(burn_in_data):
                             # print(f"sample {i}")
-                            x = sample[0].cuda()
-                            y = sample[1].cuda()
+                            x = sample[0].to(device)
+                            y = sample[1].to(device)
                             loss = self.model.loss((x, y, ))
                             loss.backward()
                         self.optimizer.step()
                         self.optimizer.zero_grad()
 
                         for i, test_sample in enumerate(test_data):
-                            loss = self.model.loss((test_sample[0].cuda(), test_sample[1].cuda(), ))
+                            loss = self.model.loss((test_sample[0].to(device), test_sample[1].to(device), ))
                             batch_loss += loss.item()
                             total_loss += batch_loss
                         time_lapsed = 1000 * (time.time() - start) / (batch + 1)
@@ -157,7 +158,7 @@ class GradientTransfer(object):
                         # Use gradient selector for DP Median selection
                         dp_gradient_selector = DPGradientSelector(self.gradients[name], epsilon=1.0)
                         gradient_result = dp_gradient_selector.another_select_gradient_tensor(debug=False, verbose=False)
-                        gradient = gradient_result['point'].cuda()
+                        gradient = gradient_result['point'].to(device)
                         # print(gradient)
                         # medians = dp_gradient_selector.select_gradient_tensor()
                         # Names are of the form "linear1.weight"
@@ -173,7 +174,7 @@ class GradientTransfer(object):
                             continue
 
                     for i, sample in enumerate(test_data):
-                        loss = self.model.loss((sample[0].cuda(), sample[1].cuda(), ))
+                        loss = self.model.loss((sample[0].to(device), sample[1].to(device), ))
                         batch_loss += loss.item()
                         global_index += 1
 
@@ -207,8 +208,8 @@ class GradientTransfer(object):
                 except StopIteration:
                     continue
                 for sample in train_data:
-                    x = sample[0].cuda()
-                    y = sample[1].cuda()
+                    x = sample[0].to(device)
+                    y = sample[1].to(device)
                     loss = self.model.loss((x, y, ))
                     loss.backward()
                     self.optimizer.step()
@@ -216,7 +217,7 @@ class GradientTransfer(object):
 
                 batch_loss = 0.0
                 for i, sample in enumerate(train_data):
-                    loss = self.model.loss((sample[0].cuda(), sample[1].cuda(), ))
+                    loss = self.model.loss((sample[0].to(device), sample[1].to(device), ))
                     batch_loss += loss.item()
 
                     global_index += 1

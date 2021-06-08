@@ -8,9 +8,10 @@ from torch.utils.data import DataLoader
 from opendp.smartnoise.transfer.dp_gradient_select import DPGradientSelector
 
 
-class GradientTransfer(object):
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+class GradientTransfer(object):
 
     def __init__(self, dataloader, model, optimizer=None, learning_rate=0.01, epochs=100):
         """
@@ -49,8 +50,8 @@ class GradientTransfer(object):
 
     def _calculate_gradient(self, i, sample):
         # print(f"Gradient for sample {i}")
-        x = sample[0].cuda()
-        y = sample[1].cuda()
+        x = sample[0].to(device)
+        y = sample[1].to(device)
         gradients = dict((name, []) for name, _ in self.model.named_parameters())
         loss = self.model(x, y)
         loss.backward()
@@ -93,7 +94,7 @@ class GradientTransfer(object):
                     # Use gradient selector for DP Median selection
                     dp_gradient_selector = DPGradientSelector(self.gradients[name], epsilon=1.0)
                     gradient_result = dp_gradient_selector.another_select_gradient_tensor()
-                    gradient = gradient_result['point'].cuda()
+                    gradient = gradient_result['point'].to(device)
                     # print(gradient)
                     # medians = dp_gradient_selector.select_gradient_tensor()
                     # Names are of the form "linear1.weight"
@@ -104,7 +105,7 @@ class GradientTransfer(object):
 
                 batch_loss = 0.0
                 for i, sample in enumerate(train_data):
-                    loss = self.model(sample['features'].cuda(), sample['labels'].cuda())
+                    loss = self.model(sample['features'].to(device), sample['labels'].to(device))
                     batch_loss += loss.item()
 
                     global_index += 1
@@ -129,8 +130,8 @@ class GradientTransfer(object):
         for epoch in range(epoch_size):
             for i, batch in enumerate(self.train_loader):
                 # print(f"Batch {i}")
-                x = batch['features'].cuda()
-                y = batch['labels'].cuda()
+                x = batch['features'].to(device)
+                y = batch['labels'].to(device)
                 # print("Calculating Loss")
                 loss = self.model(x, y)
                 # print("Backward")
