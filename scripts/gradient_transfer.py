@@ -194,10 +194,10 @@ class GradientTransfer(object):
 
     def train_plain(self, batches=10, batch_size=10):
         """
+        TODO: Marked for deletion
         For comparison, run without any gradient transfers
         :return:
         """
-        start = time.time()
         total_loss = 0.0
         global_index = 0
 
@@ -206,6 +206,7 @@ class GradientTransfer(object):
         for epoch in range(0, self.epochs):
             data_iter = iter(self.train_loader)
             for batch in range(batches):
+                start = time.perf_counter()
                 try:
                     train_data = [next(data_iter) for _ in range(batch_size)]
                 except StopIteration:
@@ -226,7 +227,7 @@ class GradientTransfer(object):
                     global_index += 1
 
                 total_loss += batch_loss
-                time_lapsed = 1000 * (time.time() - start) / (global_index + 1)
+                time_lapsed = (time.perf_counter() - start)
                 print(f'Epoch {epoch} | Batch {batch} | Batch Loss {batch_loss / batch_size} | '
                       f'Average Loss {total_loss / (global_index + 1)} | '
                       f'{time_lapsed} ms/batch',

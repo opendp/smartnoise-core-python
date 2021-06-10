@@ -72,7 +72,6 @@ class GradientTransfer(object):
         Run training with the gradient transfer process
         :return:
         """
-        start = time.time()
         batches = 2
         batch_size = 10
         # print(f"Train length: {self.sample_limit}")
@@ -82,6 +81,7 @@ class GradientTransfer(object):
         for epoch in range(0, self.epochs):
             data_iter = iter(self.train_loader)
             for batch in range(batches):
+                start = time.perf_counter()
                 self._init_gradient()
                 # self.gradients = dict((name, []) for name, _ in self.model.named_parameters())
                 # for i in range(len(self.train_loader)):
@@ -112,7 +112,7 @@ class GradientTransfer(object):
                 total_loss += batch_loss
                 print(f'Epoch {epoch} | Batch {batch} | Batch Loss {batch_loss / batch_size} | '
                       f'Average Loss {total_loss / (global_index + 1)} | '
-                      f'{1000 * (time.time() - start) / (global_index + 1)} ms/batch',
+                      f'{(time.perf_counter() - start)} s/batch',
                       flush=True)
 
                 # accuracy = self.evaluate()
@@ -123,12 +123,12 @@ class GradientTransfer(object):
         For comparison, run without any gradient transfers
         :return:
         """
-        start = time.time()
         sample_limit = sample_limit if sample_limit else len(self.train_loader)
         # optimizer = torch.optim.Adam(model.parameters(), self.learning_rate)
         total_loss = 0.0
         for epoch in range(epoch_size):
             for i, batch in enumerate(self.train_loader):
+                start = time.perf_counter()
                 # print(f"Batch {i}")
                 x = batch['features'].to(device)
                 y = batch['labels'].to(device)
@@ -145,6 +145,6 @@ class GradientTransfer(object):
                     break
                 total_loss += loss.item()
                 print('Epoch {0} | Iter {1} | Average Loss {2:.3f} |' 
-                      'Current Loss {3:.6f} | {4:.1f} ms/batch'.format(
+                      'Current Loss {3:.6f} | {4:.1f} s/batch'.format(
                             epoch + 1, i + 1, total_loss / (i + 1),
-                            loss.item(), 1000 * (time.time() - start) / (i + 1)), flush=True)
+                            loss.item(), (time.perf_counter() - start)), flush=True)
