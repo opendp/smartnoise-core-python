@@ -24,7 +24,6 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 class GradientTransfer(object):
 
-
     def __init__(self, dataloader, model, optimizer=None, learning_rate=0.01, epochs=1):
         """
         Train a model, replacing the gradient at each epoch with the DP Median
@@ -101,7 +100,7 @@ class GradientTransfer(object):
                 for state, train_loader in self.dataloader['burn_in_loaders']:
                     burn_in_iter = iter(train_loader)
                     for batch in range(0, burn_in_batches):
-                        start = time.time()
+                        start = time.perf_counter()
                         batch_loss = 0.0
                         try:
                             burn_in_data = [next(burn_in_iter) for _ in range(batch_size)]
@@ -120,10 +119,12 @@ class GradientTransfer(object):
                             loss = self.model.loss((test_sample[0].to(device), test_sample[1].to(device), ))
                             batch_loss += loss.item()
                             total_loss += batch_loss
-                        time_lapsed = 1000 * (time.time() - start) / (batch + 1)
+                        # time_lapsed = 1000 * (time.time() - start) / (batch + 1)
+                        end = time.perf_counter()
+                        time_lapsed = end - start
                         print(f'Epoch {epoch} (burn_in) | Batch {batch} | Batch Loss {batch_loss / batch_size} | '
                               f'Average Loss {total_loss / (i + 1)} | {state} | '
-                              f'{time_lapsed} ms/batch',
+                              f'{time_lapsed} s/batch',
                               flush=True)
                         result.append((-1, i, batch_loss/batch_size, batch_size, total_loss, global_index, state, time_lapsed))
 
@@ -138,7 +139,7 @@ class GradientTransfer(object):
                 total_samples = 0
                 train_data_iter = iter(train_loader)
                 for batch in range(0, batches):
-                    start = time.time()
+                    start = time.perf_counter()
                     batch_loss = 0.0
                     try:
                         train_data = [next(train_data_iter) for _ in range(batch_size)]
@@ -179,10 +180,12 @@ class GradientTransfer(object):
                         global_index += 1
 
                     total_loss += batch_loss
-                    time_lapsed = 1000 * (time.time() - start) / (batch + 1)
+                    end = time.perf_counter()
+                    # time_lapsed = 1000 * (time.time() - start) / (batch + 1)
+                    time_lapsed = end - start
                     print(f'Epoch {epoch} | Batch {batch} | Batch Loss {batch_loss / batch_size} | '
                           f'Average Loss {total_loss / (global_index + 1)} | {state} | '
-                          f'{time_lapsed} ms/batch',
+                          f'{time_lapsed} s/batch',
                           flush=True)
                     result.append((epoch, batch, batch_loss/batch_size, batch_size, total_loss, global_index,
                                    state, time_lapsed))

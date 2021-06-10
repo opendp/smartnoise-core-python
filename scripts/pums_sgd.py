@@ -5,6 +5,7 @@ import math
 import os
 import pickle
 import sys
+import time
 from multiprocessing import Queue
 from random import randint
 
@@ -17,7 +18,7 @@ from torch.multiprocessing import Process
 from torch.utils.data import DataLoader, TensorDataset, SubsetRandomSampler
 
 from gradient_transfer import GradientTransfer
-from scripts.pums_downloader import get_pums_data_path, download_pums_data, datasets
+from pums_downloader import get_pums_data_path, download_pums_data, datasets
 
 import random
 random.seed(0)
@@ -322,14 +323,17 @@ class StateComparison(object):
         train_data = [(x, self.datasets[x],) for x in state_names]
 
         data_loaders = {
-            'burn_in_loaders': [(state, DataLoader(x, batch_size=1, shuffle=self.shuffle),) for state, x in burn_in_data],
-            'tr_loaders': [(state, DataLoader(x, batch_size=1, shuffle=self.shuffle),) for state, x in train_data]
+            'burn_in_loaders': [(state, DataLoader(x, batch_size=1, shuffle=self.shuffle),)
+                                for state, x in burn_in_data],
+            'tr_loaders': [(state, DataLoader(x, batch_size=1, shuffle=self.shuffle),)
+                           for state, x in train_data]
         }
         optimizer = torch.optim.SGD(model.parameters(), self.learning_rate)
         self.trainer = GradientTransfer(data_loaders, model, optimizer, epochs=epochs)
         train_results = self.trainer.train(self.test_data,
-                                      batches=self.batches, batch_size=self.batch_size,
-                                      burn_in=burn_in, burn_in_epochs=burn_in_epochs, burn_in_batches=burn_in_batches)
+                                           batches=self.batches, batch_size=self.batch_size,
+                                           burn_in=burn_in, burn_in_epochs=burn_in_epochs,
+                                           burn_in_batches=burn_in_batches)
         self.models.append({
             'name': ''.join(['train_on_', '_'.join(state_names)]),
             'model': self.trainer.model,
@@ -353,6 +357,7 @@ class StateComparison(object):
 
 
 if __name__ == "__main__":
+    print(f'Using device: {device}')
 
     epochs = 1
     batch_size = 5
@@ -363,6 +368,8 @@ if __name__ == "__main__":
     burn_in_batches = 10
 
     learning_rate = 0.001
+
+    start = time.perf_counter()
 
     state_comparison = StateComparison(batches=batches,
                                        batch_size=batch_size,
@@ -407,5 +414,8 @@ if __name__ == "__main__":
         results.append(state_comparison.train(['al']))
     for state_dict in run_order:
         results.append(state_comparison.train([state_dict['state']], model_index=state_dict.get('model_index')))
+
+    end = time.perf_counter()
+    print(f'\nTotal time: {end-start}')
 
     state_comparison.save(base_dir='results')
