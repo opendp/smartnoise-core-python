@@ -1,5 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.com/opendifferentialprivacy/smartnoise-core-python.svg?branch=develop)](https://travis-ci.com/opendifferentialprivacy/smartnoise-core-python)
+[![Python](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://www.python.org/)
 
 <a href="https://opendifferentialprivacy.github.io"><img src="https://raw.githubusercontent.com/opendifferentialprivacy/smartnoise-core/1b196bb1e375a9686ad6d44269036cf78a39fdf2/images/SmartNoise_Logos/SVG/LogoMark_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
 
