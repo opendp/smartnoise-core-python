@@ -27,7 +27,6 @@ Differentially private computations are specified as a protobuf analysis graph t
 - [Installation](#installation)
   - [Binaries](#binaries)
   - [From Source](#from-source)
-- [SmartNoise Core Documentation](#smartnoise-core-documentation)
 - [Communication](#communication)
 - [Releases and Contributing](#releases-and-contributing)
 
@@ -109,11 +108,6 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
     ```shell script
     ./scripts/build_docs.sh
     ```
-
-### SmartNoise Core Documentation
-
-- [Python library documentation](https://opendp.github.io/smartnoise-core-python)
-
 
 ## Communication
 
