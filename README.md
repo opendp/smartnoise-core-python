@@ -8,7 +8,7 @@
 \
 This repository contains python bindings to the [SmartNoise Core library](https://github.com/opendifferentialprivacy/smartnoise-core) and its underlying Rust binaries.
 
-- Please see the accompanying [SmartNoise Documentation](https://docs.opendp.org/en/latest/smartnoise/).
+- Please see the accompanying [SmartNoise Documentation](https://docs.smartnoise.org).
 - For examples of this library in action, please see the Python notebooks in the [Samples repository](https://github.com/opendifferentialprivacy/smartnoise-samples).
 - In addition, see the accompanying [SmartNoise SDK repository](https://github.com/opendifferentialprivacy/smartnoise-sdk) which includes tools for differential privacy.
 
@@ -41,7 +41,7 @@ For a full listing of the extensive set of components available in the library [
 
 ### Architecture
 
-The SmartNoise Core library system architecture [is described in the parent project](https://github.com/opendifferentialprivacy/smartnoise-core#Architecture).
+The SmartNoise Core library system architecture [is described in the parent project](https://github.com/opendp/smartnoise-core#Architecture).
 This package is an instance of the language bindings. The purpose of the language bindings is to provide a straightforward programming interface to Python for building and releasing analyses.
 
 Logic for determining if a component releases differentially private data, as well as the scaling of noise, property tracking, and accuracy estimates are handled by a native rust library called the Validator.
@@ -99,7 +99,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
    ```
 
 4. Generate code (rerun anytime SmartNoise Core changes)
-    Refer to [troubleshooting.md](https://github.com/opendifferentialprivacy/smartnoise-core/blob/develop/troubleshooting.md) if necessary.
+    Refer to [troubleshooting.md](https://github.com/opendp/smartnoise-core/blob/develop/troubleshooting.md) if necessary.
     ```shell script
     export WN_DEBUG=true # optional- for faster compilation and slower execution
     python3 scripts/code_generation.py
@@ -123,7 +123,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 ## Releases and Contributing
 
-Please let us know if you encounter a bug by [creating an issue](https://github.com/opendifferentialprivacy/smartnoise-core-python/issues).
+Please let us know if you encounter a bug by [creating an issue](https://github.com/opendp/smartnoise-core-python/issues).
 
 We appreciate all contributions and welcome pull requests with bug-fixes without prior discussion.
 
