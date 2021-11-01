@@ -1,0 +1,89 @@
+# NO LONGER USED starting in summer 2021
+# This Travis CI file was originally used to test packages/build docs, etc.
+#
+
+branches:
+  # all branches
+  only:
+  - gh-pages
+  - /.*/
+
+# all jobs should enable the release flag for compiler optimizations
+env:
+  global:
+  # Note: Without the IS_CI_BUILD set to True, the python tests will stall
+  - IS_CI_BUILD=True
+  - TWINE_USERNAME=__token__
+
+notifications:
+  email: false
+
+jobs:
+  include:
+  # -------------------------------------------------------
+  # All branches: Build & Run python tests
+  # On the master branch:
+  # - Update python docs on Github Pages
+  # - XBuild pypi OS X wheel
+  # -------------------------------------------------------
+  - name: Build/Test Python package
+    os: osx
+    osx_image: xcode11 # python3.7 comes installed with xcode11 image
+    language: rust
+    rust: stable
+    install:
+    - python3 -V; pip3 -V   # for debugging
+    - pip3 install -U setuptools
+    script:
+    - pip3 install -r requirements/dev.txt
+    # Build Rust libraries + python binaries + OS X wheel
+    - bash scripts/build_wheel.sh;
+    # Run python tests (build stops if these fail)
+    - python3 -m pytest -x -v;
+    # Build the python docs
+    - bash scripts/build_docs.sh;
+    deploy:
+      # -------------------------------------------------------
+      # Deploy docs to github pages
+      # -------------------------------------------------------
+      - provider: pages
+        skip_cleanup: true
+        local_dir: docs
+        github_token: $GITHUB_TOKEN
+        keep_history: true
+        target_branch: gh-pages
+        on:
+          branch: master
+
+  - name: Deploy production wheel
+    if: branch = xskip-job
+    os: osx
+    osx_image: xcode11 # python3.7 comes installed with xcode11 image
+    language: rust
+    rust: stable
+    services:
+      - docker
+    addons:
+      apt:
+        update: true
+        packages:
+          - python3-pip
+    env:
+      - DOCKER_IMAGE=quay.io/pypa/manylinux2010_x86_64
+    install:
+      - docker pull $DOCKER_IMAGE
+      - chmod +x scripts/build_manylinux_binaries.sh
+    script:
+      - docker run --rm -v `pwd`:/io $DOCKER_IMAGE /io/scripts/build_manylinux_binaries.sh
+      - cp smartnoise-core/target/release/libsmartnoise_ffi.so tmp_binaries
+      - python3 scripts/code_generation.py
+      - cp tmp_binaries/libsmartnoise_ffi.so opendp/smartnoise/core/lib
+      - python3 setup.py bdist_wheel -d ./wheelhouse
+    deploy:
+      skip_cleanup: true
+      provider: script
+      script:
+        # --repository testpypi
+        python3 -m pip install --upgrade pip && python3 -m pip install twine && python3 -m twine upload --verbose --skip-existing wheelhouse/*
+      on:
+        branch: develop
