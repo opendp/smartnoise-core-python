@@ -1,4 +1,6 @@
-
+# NO LONGER USED starting in summer 2021
+# This Travis CI file was originally used to test packages/build docs, etc.
+# (Renamed from ".travis.yml.disable" to ".travis.yml.disable")
 
 branches:
   # all branches
