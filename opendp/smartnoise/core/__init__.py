@@ -4,4 +4,3 @@ from .base import *
 # components.py is generated from scripts/code_generation.py
 # in opendifferentialprivacy/smartnoise-core-python
 from opendp.smartnoise.core.components import *
-
