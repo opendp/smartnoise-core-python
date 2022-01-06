@@ -1,7 +1,13 @@
+**Notice**: SmartNoise-Core is deprecated. Please migrate to the OpenDP library:
+- [OpenDP PyPi Package](https://pypi.org/project/opendp/)
+- [OpenDP GitHub Repo](https://github.com/opendp/opendp/)
+
+----------------------------------------------------
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://www.python.org/)
 
-<a href="https://opendifferentialprivacy.github.io"><img src="https://raw.githubusercontent.com/opendifferentialprivacy/smartnoise-core/1b196bb1e375a9686ad6d44269036cf78a39fdf2/images/SmartNoise_Logos/SVG/LogoMark_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
+<a href="https://opendp.org/"><img src="https://raw.githubusercontent.com/opendifferentialprivacy/smartnoise-core/1b196bb1e375a9686ad6d44269036cf78a39fdf2/images/SmartNoise_Logos/SVG/LogoMark_color.svg" align="left" height="65" vspace="8" hspace="18"></a>
 
 ## SmartNoise Core Differential Privacy Library Python Bindings 
 \
@@ -112,7 +118,7 @@ The binaries have been used on OS X and Ubuntu and are in the process of additio
 
 ### SmartNoise Core Documentation
 
-- [Python library documentation](https://opendp.github.io/smartnoise-core-python)
+- [Python library documentation](https://old-docs.smartnoise.org/)
 
 
 ## Communication
