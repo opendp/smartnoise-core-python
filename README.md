@@ -1,4 +1,4 @@
-**Notice**: SmartNoise-Core is deprecated. Please migrate to the OpenDP library:
+## **Notice**: SmartNoise-Core is deprecated. Please migrate to the OpenDP library:
 - [OpenDP PyPi Package](https://pypi.org/project/opendp/)
 - [OpenDP GitHub Repo](https://github.com/opendp/opendp/)
 
