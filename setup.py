@@ -1,9 +1,15 @@
 from setuptools import setup
-import os
-
+import sys
 import warnings
-warnings.warn('SmartNoise-Core is deprecated. Please migrate to the OpenDP library instead: https://docs.opendp.org', DeprecationWarning)
 
+warnings.warn('SmartNoise-Core is deprecated. Please migrate to the OpenDP library: https://github.com/opendp/opendp, https://docs.opendp.org', DeprecationWarning)
+
+
+setup()
+
+
+
+"""
 setup(
     extras_require={
         "plotting": [
@@ -25,3 +31,4 @@ setup(
         ]
     }
 )
+"""
